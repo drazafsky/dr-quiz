@@ -1,4 +1,27 @@
-<div class="p-4">
-    <h1 class="text-2xl font-bold">DR Quiz Quiz Details</h1>
-    <p class="mt-2">This is the page where quizzes will be edited.</p>
+@let vm = vm$ | async; @if (vm && vm.quiz) {
+<div class="p-4 flex flex-col">
+    @if (vm.quiz.id === undefined) {
+        <h1 class="text-xl font-bold">Create New Quiz</h1>
+    } @else {
+        <h1 class="text-xl font-bold">{{ vm.quiz.title }}</h1>
+    }
+
+    <div class="flex flex-col md:flex-row mt-4">
+        <button
+            type="button"
+            class="mt-4 border-solid"
+            (click)="handleSave()">Save</button>
+        <button
+            type="button"
+            class="mt-4 border-solid"
+            (click)="handlePublish()">Publish</button>
+        <button
+            type="button"
+            class="mt-4 border-solid"
+            (click)="handleDelete()">Delete</button>
+    </div>
+    
+
+    <pre>{{ vm.quiz | json }}</pre>
 </div>
+}
