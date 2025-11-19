@@ -38,6 +38,7 @@ export const QuizStore = signalStore(
                 title: '',
                 description: '',
                 timeLimit: 60, // Default is one minute
+                shuffleQuestions: false,
                 questions: [],
             } as Quiz;
         }
