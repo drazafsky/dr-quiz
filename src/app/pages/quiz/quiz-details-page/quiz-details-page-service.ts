@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -15,7 +15,7 @@ export class QuizDetailsPageService {
     map(params => params.get('quizId')),
   );
 
-  isLoading$ = toObservable(this.#quizStore.isLoading);
+  isLoading$ = toObservable(this.#quizStore.isLoading); 
 
   getById(id: number) {
     return this.#quizStore.getById(id);
