@@ -1,12 +1,31 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [AsyncPipe, RouterModule, RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.scss']
 })
 export class App {
-  protected readonly title = signal('dr-quiz');
+  readonly #title$ = signal('DR Quiz');
+  readonly #isNavOpen$ = signal(true);
+
+  vm$ = combineLatest([
+    toObservable(this.#title$),    
+    toObservable(this.#isNavOpen$),
+  ])
+  .pipe(
+    map(([title, isNavOpen]) => ({
+      title,
+      isNavOpen,
+    }))
+  )
+
+  toggleNav() {
+    this.#isNavOpen$.set(!this.#isNavOpen$());
+  }
 }
