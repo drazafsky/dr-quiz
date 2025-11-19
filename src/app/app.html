@@ -18,7 +18,10 @@
       <button class="md:hidden p-2 rounded bg-gray-800 text-white mr-4" (click)="toggleNav()">
         ☰
       </button>
-      <h1 [class.hidden]="vm.isNavOpen" class="text-xl font-semibold md:block!">{{ vm.title }}</h1>
+
+      <a [routerLink]="['..']">
+        <h1 [class.hidden]="vm.isNavOpen" class="text-xl font-semibold md:block!">{{ vm.title }}</h1>
+      </a>
     </header>
 
     <!-- Content -->
