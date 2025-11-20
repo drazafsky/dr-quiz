@@ -1,5 +1,5 @@
 import { Component, effect, inject } from '@angular/core';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter } from 'rxjs';
@@ -13,7 +13,7 @@ import { Test } from '../types/test';
 
 @Component({
   selector: 'app-take-quiz',
-  imports: [AsyncPipe, JsonPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, ReactiveFormsModule],
   providers: [QuizStore, TestStore, TakeQuizService],
   templateUrl: './take-quiz.html',
   styleUrl: './take-quiz.scss',
@@ -50,14 +50,14 @@ export class TakeQuiz {
       const test = this.#takeQuizService.test$();
 
       if (quiz) {
-        // Populate the form controls with values from the quiz
+        // Populate the form controls with values from the quiz and any saved answers
         this.#form.get('id')?.setValue(quiz.id || null);
         (this.#form.get('questions') as FormArray).clear();
         quiz.questions.forEach(question => this.addQuestion(question));
       }
 
       if (test) {
-        this.#form.get('timeTaken')?.setValue(test.timeTaken || 0);
+        this.#form.patchValue(test);
       }
     });
 
@@ -82,40 +82,14 @@ export class TakeQuiz {
     });
   }
 
-  get questions(): FormArray {
-    return this.#form.get('questions') as FormArray;
-  }
-
-  answers(question: AbstractControl): FormArray {
-    return question.get('answers') as FormArray;
-  }
-
   private addQuestion(question: Question) {
     const questionControls = this.#formBuilder.group({
-      required: [question?.required || false, Validators.required],
-      pointValue: [question?.pointValue || 1, Validators.required],
-      prompt: [question?.prompt || '', Validators.required],
-      answers: this.#formBuilder.array([]),
-      selectedAnswer: ['', question.required ? Validators.required : undefined],
+      id: [question?.id, Validators.required],
+      answer: [null, question.required ? Validators.required : undefined],
     });
-
-    if (question.answers.length) {
-      const answerControls = question.answers.map(answer => this.addAnswer(answer));
-      (questionControls.get('answers') as FormArray).push(answerControls);
-    }
 
     (this.#form.get('questions') as FormArray).push(questionControls);
   }
-
-  private addAnswer(answer: Answer) {
-    let answerControls: FormGroup;
-      answerControls = this.#formBuilder.group({
-        value: [answer.value, Validators.required],
-        isCorrect: [answer.isCorrect, Validators.required]
-      });
-
-      return answerControls;
-  } 
 
   handleSave() {
     const test = this.#form.value as Test;
