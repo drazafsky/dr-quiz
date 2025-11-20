@@ -13,8 +13,25 @@ export class TakeQuizService {
 
   readonly #testStore = inject(TestStore);
 
-  readonly quiz$ = computed(() => this.#quizStore.selectedQuiz());
-  readonly test$ = computed(() => this.#testStore.selectedTest());
+  readonly quiz$ = computed(() => {
+    const quiz = this.#quizStore.selectedQuiz()
+
+    if (quiz?.shuffleQuestions) {
+      quiz.questions.sort(() => Math.random() - 0.5);
+    }
+
+    return quiz;
+  });
+  readonly test$ = computed(() => {
+    const test = this.#testStore.selectedTest()
+    const quiz = this.quiz$();
+
+    if (quiz?.shuffleQuestions) {
+      // Order the test questions according to the quiz question order
+    }
+
+    return test;
+  });
 
   constructor() {
     this.#route.paramMap.subscribe(params => {
