@@ -2,14 +2,14 @@ import { Component, inject } from '@angular/core';
 import { QuizStore } from '../quiz.store';
 import { combineLatest, map } from 'rxjs';
 import { QuizListPageService } from './quiz-list-page-service';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Quiz } from '../types/quiz';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-quiz-list-page',
   templateUrl: './quiz-list-page.html',
-  imports: [AsyncPipe, JsonPipe],
+  imports: [AsyncPipe],
   styles: [],
   providers: [QuizStore, QuizListPageService],
 })
