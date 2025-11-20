@@ -1,6 +1,6 @@
 import { Component, effect, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
-import { BehaviorSubject, combineLatest, map, of, tap } from 'rxjs';
+import { combineLatest, map, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
@@ -9,6 +9,7 @@ import { Answer } from '../types/answer';
 import { Quiz } from '../types/quiz';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-quiz-details-page',
@@ -103,12 +104,9 @@ export class QuizDetailsPage {
     this.#quizDetailsService.publish(this.#form.value as Quiz)
   }
 
-  handleDelete() {
-    console.log('Deleting...');
-  }
-
   private addQuestion(question?: Question, disableControls?: boolean) {
     const questionControls = this.#formBuilder.group({
+      id: [question?.id || uuidv4(), Validators.required],
       required: [question?.required || false, Validators.required],
       pointValue: [question?.pointValue || 1, Validators.required],
       prompt: [question?.prompt || '', Validators.required],
@@ -137,11 +135,13 @@ export class QuizDetailsPage {
     let answerControls: FormGroup;
     if (answer) {
       answerControls = this.#formBuilder.group({
+        id: [answer.id, Validators.required],
         value: [answer.value, Validators.required],
         isCorrect: [answer.isCorrect, Validators.required]
       });
     } else {
       answerControls = this.#formBuilder.group({
+          id: [uuidv4(), Validators.required],
           value: ['', Validators.required],
           isCorrect: [false, Validators.required]
         });
