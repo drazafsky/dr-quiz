@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
-import { combineLatest, map, of, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, of, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
 import { Answer } from '../types/answer';
 import { Quiz } from '../types/quiz';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-quiz-details-page',
@@ -19,11 +20,37 @@ import { Quiz } from '../types/quiz';
 export class QuizDetailsPage {
   readonly #quizDetailsService = inject(QuizDetailsPageService); 
   readonly #formBuilder = inject(FormBuilder);
+  readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
 
-  #quiz$ = this.#quizDetailsService.quiz$
-  .pipe(
-    takeUntilDestroyed(),
-    tap(quiz => {
+
+  readonly #form = this.#formBuilder.group({
+    id: [''],
+    title: ['', Validators.required],
+    description: [''],
+    timeLimit: [60, Validators.required],
+    shuffleQuestions: [false, Validators.required],
+    questions: this.#formBuilder.array([])
+  });
+
+  vm$ = combineLatest([
+    toObservable(this.#quizDetailsService.quiz$),
+    of(this.#form),
+    this.#quizDetailsService.quizId$.asObservable(),
+  ]).pipe(
+    map(([ quiz, form, _quizId ]) => ({
+      quiz,
+      form,
+    }))
+  );
+
+  get questions(): FormArray {
+    return this.#form.get('questions') as FormArray;
+  }
+
+  constructor() {
+    effect(() => {
+      const quiz = this.#quizDetailsService.quiz$();
       if (quiz) {
         // Populate the form controls with values from the quiz
         this.#form.get('id')?.setValue(quiz.id || null);
@@ -42,33 +69,14 @@ export class QuizDetailsPage {
         (this.#form.get('questions') as FormArray).clear();
         quiz.questions.forEach(question => this.addQuestion(question, quiz.isPublished));
       }
+    });
+
+    effect(() => {
+      const quiz = this.#quizDetailsService.quiz$();
+      if (!!quiz?.id && quiz?.id !== 'create' && quiz?.id !== this.#quizDetailsService.quizId$.value) {
+        this.#router.navigate(['..', quiz?.id], { relativeTo: this.#route });
+      }
     })
-  );
-
-  readonly #form = this.#formBuilder.group({
-    id: [''],
-    title: ['', Validators.required],
-    description: [''],
-    timeLimit: [60, Validators.required],
-    shuffleQuestions: [false, Validators.required],
-    questions: this.#formBuilder.array([])
-  });
-
-  vm$ = combineLatest([
-    this.#quiz$,
-    this.#quizDetailsService.isLoading$,
-    of(this.#form),
-    this.#quizDetailsService.quizId$,
-  ]).pipe(
-    map(([ quiz, isLoading, form, _quizId ]) => ({
-      quiz,
-      isLoading,
-      form,
-    }))
-  );
-
-  get questions(): FormArray {
-    return this.#form.get('questions') as FormArray;
   }
 
   answers(question: AbstractControl): FormArray {

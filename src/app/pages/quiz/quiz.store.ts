@@ -6,13 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 type QuizState = {
     quizzes: Quiz[];
-    isLoading: boolean;
+    selectedQuiz: Quiz | undefined;
     isPublished: boolean;
 }
 
 const initialState: QuizState = {
     quizzes: [],
-    isLoading: false,
+    selectedQuiz: undefined,
     isPublished: false,
 }
 
@@ -20,21 +20,17 @@ export const QuizStore = signalStore(
     withState(initialState),
     withMethods((state, quizRepo = inject(QuizRepo)) => ({
         getAll() {
-            patchState(state, { isLoading: true });
             const quizzes = quizRepo.getAll();
-            patchState(state, { isLoading: false });
-            return quizzes;
+            patchState(state, { quizzes });
         },
 
         getById(id: string) {
-            patchState(state, { isLoading: true });
-            const quiz = quizRepo.getById(id);
-            setTimeout(() => patchState(state, { isLoading: false }), 10000);
-            return quiz;
+            const selectedQuiz = quizRepo.getById(id);
+            patchState(state, { selectedQuiz });
         },
 
         getNew() {
-            return {
+            const selectedQuiz = {
                 id: undefined,
                 title: '',
                 description: '',
@@ -43,28 +39,33 @@ export const QuizStore = signalStore(
                 shuffleQuestions: false,
                 questions: [],
             } as Quiz;
+            patchState(state, { selectedQuiz });
         },
 
         publish(quiz: Quiz) {
-            patchState(state, { isLoading: true });
+            if (quiz.isPublished) {
+                return;
+            }
+
             quiz.isPublished = true;
-            const savedQuiz = this.save(quiz);
+            const selectedQuiz = quizRepo.save(quiz);
+            patchState(state, { selectedQuiz });
             this.getAll();
-            patchState(state, { isLoading: false });
-            return savedQuiz;
         },
 
         save(quiz: Quiz) {
-            patchState(state, { isLoading: false });
+            if (quiz.isPublished) {
+                return;
+            }
+
             if (!quiz.id) {
                 // New quiz so add an id
                 quiz.id = uuidv4();
             }
 
-            const savedQuiz = quizRepo.save(quiz);
+            const selectedQuiz = quizRepo.save(quiz);
+            patchState(state, { selectedQuiz });
             this.getAll();
-            patchState(state, { isLoading: false });
-            return savedQuiz;
         },
     }))
 )

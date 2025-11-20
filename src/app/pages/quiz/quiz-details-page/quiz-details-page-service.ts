@@ -1,8 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, filter, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, filter, map } from 'rxjs';
 import { QuizStore } from '../quiz.store';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { Quiz } from '../types/quiz';
 
 @Injectable({
@@ -12,40 +11,37 @@ export class QuizDetailsPageService {
   readonly #route = inject(ActivatedRoute);
   readonly #quizStore = inject(QuizStore);
 
-  quizId$ = this.#route.paramMap.pipe(
-    map(params => params.get('quizId')),
-    filter(quizId => quizId !== null),
-    tap(quizId => {
-      if (quizId !== 'create') {
-         this.getById(quizId);
-      } else {
-        this.getNew();
-      }
-    })
-  );
+  readonly quizId$ = new BehaviorSubject<string | undefined>(undefined);
+  readonly quiz$ = computed(() => this.#quizStore.selectedQuiz());
 
-  readonly #quiz$ = new BehaviorSubject<Quiz | undefined>(undefined);
-  readonly quiz$ = this.#quiz$.asObservable();
+  constructor() {
+    this.#route.paramMap.pipe(
+      map(params => params.get('quizId')),
+      filter(quizId => quizId !== null)
+    ).subscribe(quizId => {
+        if (quizId !== 'create') {
+          this.getById(quizId);
+        } else {
+          this.getNew();
+        }
 
-  isLoading$ = toObservable(this.#quizStore.isLoading); 
+        this.quizId$.next(quizId);
+      });
+  }
 
   getById(id: string) {
-    this.#quiz$.next(this.#quizStore.getById(id));
+    this.#quizStore.getById(id);
   }
 
   getNew() {
-    this.#quiz$.next(this.#quizStore.getNew());
+    this.#quizStore.getNew();
   }
 
-  publish(quiz: Quiz): Quiz {
-    const savedQuiz = this.#quizStore.publish(quiz);
-    this.#quiz$.next(savedQuiz);
-    return savedQuiz;
+  publish(quiz: Quiz) {
+    this.#quizStore.publish(quiz);
   }
 
-  save(quiz: Quiz): Quiz {
-    const savedQuiz = this.#quizStore.save(quiz);
-    this.#quiz$.next(savedQuiz);
-    return savedQuiz;
+  save(quiz: Quiz) {
+    this.#quizStore.save(quiz);
   }
 }

@@ -5,6 +5,7 @@ import { QuizListPageService } from './quiz-list-page-service';
 import { AsyncPipe } from '@angular/common';
 import { Quiz } from '../types/quiz';
 import { ActivatedRoute, Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-quiz-list-page',
@@ -19,7 +20,7 @@ export class QuizListPage {
   readonly #router = inject(Router);
 
   vm$ = combineLatest([
-    this.#quizListService.quizzes$
+    toObservable(this.#quizListService.quizzes$),
   ]).pipe(
     map(([ quizzes ]) => ({
       quizzes,
