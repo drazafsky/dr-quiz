@@ -35,10 +35,12 @@
                             type="button"
                             class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
                             (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button>
-                        <button
-                            type="button"
-                            class="mt-4 mr-0 md:ml-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-                            (click)="handleTakeQuiz(quiz)">Take Quiz</button>
+                        @if (quiz.isPublished) {
+                            <button
+                                type="button"
+                                class="mt-4 mr-0 md:ml-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                                (click)="handleTakeQuiz(quiz)">Take Quiz</button>
+                        }
                     </td>
                 </tr>
             }
