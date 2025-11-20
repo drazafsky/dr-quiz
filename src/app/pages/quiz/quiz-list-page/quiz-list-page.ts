@@ -7,6 +7,7 @@ import { Quiz } from '../types/quiz';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TestStore } from '../test.store';
+import { Test } from '../types/test';
 
 @Component({
   selector: 'app-quiz-list-page',
@@ -41,5 +42,13 @@ export class QuizListPage {
   testTimeTaken(quiz: Quiz): number {
     const test = this.#quizListService.tests$().find(t => t.id === quiz.id);
     return test ? quiz.timeLimit - test.timeTaken : quiz.timeLimit;
+  }
+
+  getQuizTest(quiz: Quiz): Test | undefined {
+    return this.#quizListService.tests$().find(t => t.id === quiz.id);
+  }
+
+  getQuizMaxScore(quiz: Quiz): number {
+    return quiz.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
   }
 }
