@@ -39,7 +39,7 @@
                         <button
                             type="button"
                             class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-                            (click)="handleEdit(quiz)">Edit</button>
+                            (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button>
                         <button
                             type="button"
                             class="mt-4 mr-0 md:ml-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
