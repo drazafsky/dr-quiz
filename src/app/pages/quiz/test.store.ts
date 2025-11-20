@@ -5,7 +5,7 @@ import { Test } from './types/test';
 
 type TestState = {
   tests: any[];
-  selectedTest: any | undefined;
+  selectedTest: Test | undefined;
 };
 
 const initialState: TestState = {

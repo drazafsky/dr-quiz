@@ -26,15 +26,6 @@ export class TakeQuizService {
     });
   }
 
-  constructor() {
-    this.#route.paramMap.subscribe(params => {
-      const quizId = params.get('quizId');
-      if (quizId) {
-        this.#quizStore.getById(quizId);
-      }
-    });
-  }
-
   save(test: Test) {
     this.#testStore.save(test);
   }
