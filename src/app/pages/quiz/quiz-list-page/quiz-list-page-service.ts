@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { QuizStore } from '../quiz.store';
-import { of } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -8,5 +8,11 @@ import { of } from 'rxjs';
 export class QuizListPageService {
   readonly #quizStore = inject(QuizStore);
 
-  quizzes$ = of(this.#quizStore.getAll());
+  quizzes$ = computed(() => {
+    return this.#quizStore.quizzes();
+  });
+
+  constructor() {
+    this.#quizStore.getAll();
+  }
 }
