@@ -33,9 +33,12 @@ export class TakeQuiz {
 
   vm$ = combineLatest([
     toObservable(this.#takeQuizService.quiz$),
+    toObservable(this.#takeQuizService.test$),
     of(this.#form),
   ]).pipe(
-    map(([ quiz, form ]) => ({
+    map(([ quiz, test, form ]) => ({
+      quiz,
+      test,
       quiz,
       form,
     }))
