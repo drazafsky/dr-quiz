@@ -20,8 +20,3 @@ export class TakeQuizService {
     });
   }
 }
-  providedIn: 'root',
-})
-export class TakeQuizService {
-  
-}
