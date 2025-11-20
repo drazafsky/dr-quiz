@@ -26,8 +26,10 @@ export class TakeQuizService {
     const test = this.#testStore.selectedTest()
     const quiz = this.quiz$();
 
-    if (quiz?.shuffleQuestions) {
+    if (test && quiz?.shuffleQuestions) {
       // Order the test questions according to the quiz question order
+        const questionOrder = quiz.questions.map(q => q.id);
+        test.questions.sort((a, b) => questionOrder.indexOf(a.id) - questionOrder.indexOf(b.id));
     }
 
     return test;
