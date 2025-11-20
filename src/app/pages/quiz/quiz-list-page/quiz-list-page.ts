@@ -32,9 +32,14 @@ export class QuizListPage {
 
   handleEdit(quiz: Quiz) {
     this.#router.navigate([ quiz.id ], { relativeTo: this.#route });
-  }
+  } 
 
   handleTakeQuiz(quiz: Quiz) {
     this.#router.navigate([ quiz.id, 'take' ], { relativeTo: this.#route });
+  }
+
+  testTimeTaken(quiz: Quiz): number {
+    const test = this.#quizListService.tests$().find(t => t.id === quiz.id);
+    return test ? quiz.timeLimit - test.timeTaken : quiz.timeLimit;
   }
 }
