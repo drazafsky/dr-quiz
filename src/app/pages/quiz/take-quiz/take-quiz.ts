@@ -2,7 +2,8 @@ import { Component, effect, inject } from '@angular/core';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
-import { combineLatest, map, of } from 'rxjs';
+import { combineLatest, map, of, filter } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
 import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
@@ -18,6 +19,8 @@ import { Test } from '../types/test';
   styleUrl: './take-quiz.scss',
 })
 export class TakeQuiz {
+  private readonly #router = inject(Router);
+  private startTime: number = 0;
   readonly #formBuilder = inject(FormBuilder);
   readonly #takeQuizService = inject(TakeQuizService);
 
@@ -46,6 +49,11 @@ export class TakeQuiz {
         (this.#form.get('questions') as FormArray).clear();
         quiz.questions.forEach(question => this.addQuestion(question));
       }
+    });
+    this.#router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.startTime = Date.now();
     });
   }
 
