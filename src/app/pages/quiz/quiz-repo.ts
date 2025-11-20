@@ -14,7 +14,7 @@ export class QuizRepo {
     return quizzes === null ? [] : quizzes;
   }
 
-  getById(id: number) {
+  getById(id: string) {
     const allQuizzes = this.getAll();
     return allQuizzes.find(quiz => quiz.id === id);
   }

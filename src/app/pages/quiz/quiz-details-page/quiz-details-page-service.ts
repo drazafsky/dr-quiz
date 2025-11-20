@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map, of } from 'rxjs';
 import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { Quiz } from '../types/quiz';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,15 @@ export class QuizDetailsPageService {
 
   isLoading$ = toObservable(this.#quizStore.isLoading); 
 
-  getById(id: number) {
+  getById(id: string) {
     return this.#quizStore.getById(id);
   }
 
   getNew() {
     return this.#quizStore.getNew();
+  }
+
+  save(quiz: Quiz): Quiz {
+    return this.#quizStore.save(quiz);
   }
 }
