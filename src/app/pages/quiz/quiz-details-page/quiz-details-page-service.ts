@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, of } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap, tap } from 'rxjs';
 import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Quiz } from '../types/quiz';
@@ -14,23 +14,38 @@ export class QuizDetailsPageService {
 
   quizId$ = this.#route.paramMap.pipe(
     map(params => params.get('quizId')),
+    filter(quizId => quizId !== null),
+    tap(quizId => {
+      if (quizId !== 'create') {
+         this.getById(quizId);
+      } else {
+        this.getNew();
+      }
+    })
   );
+
+  readonly #quiz$ = new BehaviorSubject<Quiz | undefined>(undefined);
+  readonly quiz$ = this.#quiz$.asObservable();
 
   isLoading$ = toObservable(this.#quizStore.isLoading); 
 
   getById(id: string) {
-    return this.#quizStore.getById(id);
+    this.#quiz$.next(this.#quizStore.getById(id));
   }
 
   getNew() {
-    return this.#quizStore.getNew();
+    this.#quiz$.next(this.#quizStore.getNew());
   }
 
   publish(quiz: Quiz): Quiz {
-    return this.#quizStore.publish(quiz);
+    const savedQuiz = this.#quizStore.publish(quiz);
+    this.#quiz$.next(savedQuiz);
+    return savedQuiz;
   }
 
   save(quiz: Quiz): Quiz {
-    return this.#quizStore.save(quiz);
+    const savedQuiz = this.#quizStore.save(quiz);
+    this.#quiz$.next(savedQuiz);
+    return savedQuiz;
   }
 }

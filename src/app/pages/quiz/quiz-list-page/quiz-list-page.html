@@ -4,6 +4,7 @@
     <table class="min-w-full divide-y border-collapse border border-gray-300 w-full">
         <thead class="bg-gray-800 text-white sr-only md:not-sr-only">
             <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
@@ -14,6 +15,10 @@
         <tbody>
             @for(quiz of vm.quizzes; track quiz.id; let i = $index) {
                 <tr class="md:table-row block md:border-b odd:bg-gray-100 even:bg-white hover:bg-gray-200">
+                    <td class="block md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="md:hidden font-semibold not-sr-only">ID: </span>
+                        {{ quiz.id }}
+                    </td>
                     <td class="block md:table-cell border border-gray-300 px-4 py-2">
                         <span class="md:hidden font-semibold not-sr-only">Name: </span>
                         {{ quiz.title }}
