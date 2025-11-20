@@ -4,17 +4,16 @@
     <h2 class="text-lg font-semibold text-gray-700">{{ vm.quiz.description }}</h2>
 }
 
-<section id="questions">
-  @if (vm.quiz.questions.length > 0) {
-    @for (question of vm.quiz.questions; track question; let i = $index) {
-      <section class="question p-4 mb-4 bg-gray-50 border border-gray-200 rounded">
-        <h2 class="text-lg font-semibold">Question {{ i + 1 }}</h2>
-        <p class="mt-2">{{ question.prompt }}</p>
-      </section>
+<section class="mt-4">
+    @if (vm.quiz.questions.length > 0) {
+        @for (question of vm.quiz.questions; track question; let i = $index) {
+            <section class="question p-4 mb-4 bg-gray-50 border border-gray-200 rounded">
+            <h2 class="text-lg font-semibold">{{ question.prompt }}</h2>
+            </section>
+        }
+    } @else {
+        <p>No questions available for this quiz.</p>
     }
-  } @else {
-    <p>No questions available for this quiz.</p>
-  }
 </section>
 
 <pre class="p-4 bg-gray-100 rounded">
