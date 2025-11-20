@@ -60,11 +60,17 @@ export class TakeQuiz {
       this.#startTime = Date.now();
     });
 
-  this.#router.events.pipe(
+    this.#router.events.pipe(
       takeUntilDestroyed(),
       filter(event => event instanceof NavigationStart)
     ).subscribe(() => {
       this.#endTime = Date.now();
+      const elapsedTime = Math.floor((this.#endTime - this.#startTime) / 1000);
+
+      const test = this.#form.value as Test;
+      test.timeTaken = (test.timeTaken || 0) + elapsedTime;
+
+      this.#takeQuizService.save(test);
     });
   }
 
