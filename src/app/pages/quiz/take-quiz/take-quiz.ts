@@ -24,6 +24,16 @@ export class TakeQuiz {
     questions: this.#formBuilder.array([])
   });
 
+  vm$ = combineLatest([
+    toObservable(this.#takeQuizService.quiz$),
+    of(this.#form),
+  ]).pipe(
+    map(([ quiz, form ]) => ({
+      quiz,
+      form,
+    }))
+  );
+
   constructor() {
     effect(() => {
       const quiz = this.#takeQuizService.quiz$();
@@ -70,15 +80,13 @@ export class TakeQuiz {
       });
 
       return answerControls;
+  } 
+
+  handleSave() {
+    console.log(this.#form.value);
   }
 
-  vm$ = combineLatest([
-    toObservable(this.#takeQuizService.quiz$),
-    of(this.#form),
-  ]).pipe(
-    map(([ quiz, form ]) => ({
-      quiz,
-      form,
-    }))
-  );
+  handleSubmit() {
+    console.log(this.#form.value);
+  }
 }
