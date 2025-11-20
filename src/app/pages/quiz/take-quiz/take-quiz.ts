@@ -8,6 +8,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
 import { Answer } from '../types/answer';
 import { TestStore } from '../test.store';
+import { Test } from '../types/test';
 
 @Component({
   selector: 'app-take-quiz',
@@ -84,11 +85,12 @@ export class TakeQuiz {
   } 
 
   handleSave() {
-    const test = this.#form.value;
+    const test = this.#form.value as Test;
     this.#takeQuizService.save(test);
   }
 
   handleSubmit() {
-    console.log(this.#form.value);
+    const test = this.#form.value as Test;
+    this.#takeQuizService.submit(test);
   }
 }
