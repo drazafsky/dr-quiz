@@ -32,6 +32,6 @@ export class QuizListPage {
   }
 
   handleTakeQuiz(quiz: Quiz) {
-    this.#router.navigate([ 'take', quiz.id ], { relativeTo: this.#route });
+    this.#router.navigate([ quiz.id, 'take' ], { relativeTo: this.#route });
   }
 }
