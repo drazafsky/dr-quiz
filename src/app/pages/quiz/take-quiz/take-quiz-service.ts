@@ -34,4 +34,16 @@ export class TakeQuizService {
     test.isSubmitted = true;
     this.#testStore.submit(test);
   }
+
+  isAnswerCorrect(questionId: string, answerId: string): boolean {
+    const question = this.quiz$()?.questions.find(question => question.id === questionId);
+
+    if (question) {
+      return question.answers
+        .filter(answer => answer.id === answerId && answer.isCorrect)
+        ?.length > 0;
+    }
+
+    return false;
+  }
 }

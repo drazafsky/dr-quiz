@@ -107,4 +107,15 @@ export class TakeQuiz {
     const test = this.#form.value as Test;
     this.#takeQuizService.submit(test);
   }
+
+  isAnswerCorrect(question: Question): boolean {
+    const test = this.#takeQuizService.test$();
+    const testQuestion = test?.questions.find(tq => tq.id === question.id);
+
+    if (testQuestion) {
+      return this.#takeQuizService.isAnswerCorrect(testQuestion?.id, testQuestion?.answer);
+    }
+
+    return false;
+  }
 }
