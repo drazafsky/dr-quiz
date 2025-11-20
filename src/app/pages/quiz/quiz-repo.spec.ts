@@ -26,6 +26,25 @@ describe('QuizRepo', () => {
     service = TestBed.inject(QuizRepo);
   });
 
+  describe('getAll', () => {
+    it('should return an empty array if no quizzes are stored', () => {
+      mockRepo.getItem = vi.fn().mockReturnValue(null);
+
+      const result = service.getAll();
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return all stored quizzes', () => {
+      const mockQuizzes = [{ id: '1', title: 'Quiz 1' }, { id: '2', title: 'Quiz 2' }];
+      mockRepo.getItem = vi.fn().mockReturnValue(mockQuizzes);
+
+      const result = service.getAll();
+
+      expect(result).toEqual(mockQuizzes);
+    });
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
