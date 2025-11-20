@@ -2,6 +2,7 @@ import { computed, inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuizStore } from '../quiz.store';
 import { TestStore } from '../test.store';
+import { Test } from '../types/test';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +15,6 @@ export class TakeQuizService {
 
   readonly quiz$ = computed(() => this.#quizStore.selectedQuiz());
 
-  save(test: any) {
-    this.#testStore.save(test);
-  }
-
   constructor() {
     this.#route.paramMap.subscribe(params => {
       const quizId = params.get('quizId');
@@ -26,4 +23,13 @@ export class TakeQuizService {
       }
     });
   }
+
+  save(test: Test) {
+    this.#testStore.save(test);
+  }
+
+  submit(test: Test) {
+    test.isSubmitted = true;
+    this.#testStore.submit(test);
+  } 
 }

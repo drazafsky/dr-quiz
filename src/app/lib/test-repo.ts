@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Repo, StorageKeys } from './repo';
+import { Test } from '../pages/quiz/types/test';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class TestRepo {
     return allTests.find(test => test.id === id);
   }
 
-  save(test: any) {
+  save(test: Test) {
     const tests = this.getAll();
 
     const updatedTests = [
@@ -28,11 +29,5 @@ export class TestRepo {
     this.#repo.setItem<any[]>(StorageKeys.TESTS, updatedTests);
 
     return test;
-  }
-
-  deleteById(id: string) {
-    const tests = this.getAll();
-    const updatedTests = tests.filter(test => test.id !== id);
-    this.#repo.setItem<any[]>(StorageKeys.TESTS, updatedTests);
   }
 }

@@ -87,17 +87,6 @@ describe('TestRepo', () => {
     });
   });
 
-  describe('deleteById', () => {
-    it('should remove the test with the specified ID', () => {
-      const mockTests = [{ id: '1', name: 'Test 1' }, { id: '2', name: 'Test 2' }];
-      vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
-
-      service.deleteById('1');
-
-      expect(mockRepo.setItem).toHaveBeenCalledWith('TESTS', [{ id: '2', name: 'Test 2' }]);
-    });
-  });
-
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
