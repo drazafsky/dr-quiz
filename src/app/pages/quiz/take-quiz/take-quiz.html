@@ -9,6 +9,16 @@
         @for (question of vm.quiz.questions; track question; let i = $index) {
             <section class="question p-4 mb-4 bg-gray-50 border border-gray-200 rounded">
             <h2 class="text-lg font-semibold">{{ question.prompt }}</h2>
+              <ul class="mt-2">
+                @for (answer of question.answers; track answer; let j = $index) {
+                  <li>
+                    <label class="flex items-center">
+                      <input type="radio" name="question-{{ i }}" class="mr-2" />
+                      {{ answer.value }}
+                    </label>
+                  </li>
+                }
+              </ul>
             </section>
         }
     } @else {
