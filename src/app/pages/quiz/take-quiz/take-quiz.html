@@ -4,7 +4,7 @@
     <h2 class="text-lg font-semibold text-gray-700">{{ vm.quiz.description }}</h2>
 }
 
-@if (vm.quiz.isPublished) {
+@if (vm.test?.isSubmitted) {
     <h3 class="text-md font-medium text-gray-500">
         Score: {{ vm.test?.score }} / {{ maxScore$() }} : {{ scorePercent$() }}%
     </h3> 
