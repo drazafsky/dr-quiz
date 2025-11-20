@@ -46,22 +46,25 @@ export const QuizStore = signalStore(
         },
 
         publish(quiz: Quiz) {
-            if (!quiz.id) {
-                // New quiz so add an id
-                quiz.id = uuidv4();
-            }
-
+            patchState(state, { isLoading: true });
             quiz.isPublished = true;
-            return quizRepo.save(quiz);
+            const savedQuiz = this.save(quiz);
+            this.getAll();
+            patchState(state, { isLoading: false });
+            return savedQuiz;
         },
 
         save(quiz: Quiz) {
+            patchState(state, { isLoading: false });
             if (!quiz.id) {
                 // New quiz so add an id
                 quiz.id = uuidv4();
             }
 
-            return quizRepo.save(quiz);
+            const savedQuiz = quizRepo.save(quiz);
+            this.getAll();
+            patchState(state, { isLoading: false });
+            return savedQuiz;
         },
     }))
 )
