@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
-import { AsyncPipe, JsonPipe, ReactiveFormsModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, effect, inject } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, map, of } from 'rxjs';
 import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { Question } from '../types/question';
+import { Answer } from '../types/answer';
 
 @Component({
   selector: 'app-take-quiz',
@@ -18,32 +20,65 @@ export class TakeQuiz {
   readonly #takeQuizService = inject(TakeQuizService);
 
   readonly #form = this.#formBuilder.group({
-    questions: this.#formBuilder.array([]),
+    id: ['', Validators.required],
+    questions: this.#formBuilder.array([])
   });
+
+  constructor() {
+    effect(() => {
+      const quiz = this.#takeQuizService.quiz$();
+
+      if (quiz) {
+        // Populate the form controls with values from the quiz
+        this.#form.get('id')?.setValue(quiz.id || null);
+        (this.#form.get('questions') as FormArray).clear();
+        quiz.questions.forEach(question => this.addQuestion(question));
+      }
+    });
+  }
 
   get questions(): FormArray {
     return this.#form.get('questions') as FormArray;
   }
 
-  constructor() {
-    this.vm$.subscribe(({ quiz }) => {
-      if (quiz) {
-        this.questions.clear();
-        quiz.questions.forEach((question) => {
-          const questionGroup = this.#formBuilder.group({
-            selectedAnswer: [''],
-          });
-          this.questions.push(questionGroup);
-        });
-      }
+  answers(question: AbstractControl): FormArray {
+    return question.get('answers') as FormArray;
+  }
+
+  private addQuestion(question: Question) {
+    const questionControls = this.#formBuilder.group({
+      required: [question?.required || false, Validators.required],
+      pointValue: [question?.pointValue || 1, Validators.required],
+      prompt: [question?.prompt || '', Validators.required],
+      answers: this.#formBuilder.array([]),
+      selectedAnswer: ['', question.required ? Validators.required : undefined],
     });
+
+    if (question.answers.length) {
+      const answerControls = question.answers.map(answer => this.addAnswer(answer));
+      (questionControls.get('answers') as FormArray).push(answerControls);
+    }
+
+    (this.#form.get('questions') as FormArray).push(questionControls);
+  }
+
+  private addAnswer(answer: Answer) {
+    let answerControls: FormGroup;
+      answerControls = this.#formBuilder.group({
+        value: [answer.value, Validators.required],
+        isCorrect: [answer.isCorrect, Validators.required]
+      });
+
+      return answerControls;
   }
 
   vm$ = combineLatest([
     toObservable(this.#takeQuizService.quiz$),
+    of(this.#form),
   ]).pipe(
-    map(([ quiz ]) => ({
+    map(([ quiz, form ]) => ({
       quiz,
+      form,
     }))
   );
 }

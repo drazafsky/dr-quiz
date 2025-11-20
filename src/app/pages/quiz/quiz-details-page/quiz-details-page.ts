@@ -23,7 +23,6 @@ export class QuizDetailsPage {
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
 
-
   readonly #form = this.#formBuilder.group({
     id: [''],
     title: ['', Validators.required],
