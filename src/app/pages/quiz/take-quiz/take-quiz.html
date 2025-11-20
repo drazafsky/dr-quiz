@@ -1,4 +1,13 @@
-@let vm = vm$ | async; @if (vm) {
+@let vm = vm$ | async; @if (vm && vm.quiz) {
+<h1 class="text-xl font-bold">{{ vm.quiz.title }}</h1>
+@if (vm.quiz.description.trim().length > 0) {
+    <h2 class="text-lg font-semibold text-gray-700">{{ vm.quiz.description }}</h2>
+}
+
+<section id="questions">
+
+</section>
+
 <pre class="p-4 bg-gray-100 rounded">
   {{ vm | json }}
 </pre>
