@@ -6,20 +6,25 @@
         <h1 class="text-xl font-bold">{{ vm.quiz.title }}</h1>
     }
 
-    <div class="flex flex-col md:flex-row mt-4">
-        <button
-            type="button"
-            class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-            (click)="handleSave()">Save</button>
-        <button
-            type="button"
-            class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-            (click)="handlePublish()">Publish</button>
-        <button
-            type="button"
-            class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-            (click)="handleDelete()">Delete</button>
-    </div>
+    @if (!vm.quiz.isPublished) {
+        <div class="flex flex-col md:flex-row mt-4">
+            <button
+                type="button"
+                class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                [disabled]="vm.quiz.isPublished"
+                (click)="handleSave()">Save</button>
+            <button
+                type="button"
+                class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                [disabled]="vm.quiz.isPublished"
+                (click)="handlePublish()">Publish</button>
+            <button
+                type="button"
+                class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                [disabled]="vm.quiz.isPublished"
+                (click)="handleDelete()">Delete</button>
+        </div>
+    }
 
     <form [formGroup]="vm.form" class="mt-4 mb-4">
         <section class="quiz-details">
@@ -53,10 +58,12 @@
         <section class="questions" formArrayName="questions">
             <h1 class="text-xl font-bold">Questions</h1>
             
-            <button
-                type="button"
-                class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-                (click)="handleAddQuestion()">Add Question</button>
+            @if (!vm.quiz.isPublished) {
+                <button
+                    type="button"
+                    class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                    (click)="handleAddQuestion()">Add Question</button>
+            }
 
             @for(question of questions.controls; track question; let i = $index) {
                 <div [formGroupName]="i" class="mt-4"> 
@@ -84,10 +91,12 @@
                     <div formArrayName="answers" class="mt-4 ml-8: md:ml-16">
                         <h2 class="text-lg font-semibold">Answers</h2>
 
-                        <button
-                            type="button"
-                            class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-                            (click)="handleAddAnswer(question)">Add Answer</button>
+                        @if (!vm.quiz.isPublished) {
+                            <button
+                                type="button"
+                                class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                                (click)="handleAddAnswer(question)">Add Answer</button>
+                        }
                         @if (question.get('answers') !== null) {
                             @for(answer of answers(question).controls; track answer; let j = $index) {
                                 <div [formGroupName]="j" class="mt-2">
@@ -109,10 +118,12 @@
                                         </div>
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
-                                        (click)="handleDeleteAnswer(question, j)">Delete Answer</button>
+                                    @if (!vm.quiz.isPublished) {
+                                        <button
+                                            type="button"
+                                            class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                                            (click)="handleDeleteAnswer(question, j)">Delete Answer</button>
+                                    }
                                 </div>
                             }
                         } 
