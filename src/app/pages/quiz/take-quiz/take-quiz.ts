@@ -1,13 +1,12 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter } from 'rxjs';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
-import { Answer } from '../types/answer';
 import { TestStore } from '../test.store';
 import { Test } from '../types/test';
 
@@ -25,6 +24,11 @@ export class TakeQuiz {
 
   #startTime: number = 0;
   #endTime: number = 0;
+
+  readonly #elapsedTime$ = computed(() => {
+    const endTime = Date.now();
+    return Math.floor((endTime - this.#startTime) / 1000);
+  });
 
   readonly maxScore$ = computed(() => {
     return this.#takeQuizService.quiz$()?.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
@@ -90,13 +94,14 @@ export class TakeQuiz {
       takeUntilDestroyed(),
       filter(event => event instanceof NavigationStart)
     ).subscribe(() => {
-      this.#endTime = Date.now();
-      const elapsedTime = Math.floor((this.#endTime - this.#startTime) / 1000);
+      if (!this.#takeQuizService.test$()?.isSubmitted) {
+        const elapsedTime = this.#elapsedTime$();
 
-      const test = this.#form.value as Test;
-      test.timeTaken = (test.timeTaken || 0) + elapsedTime;
+        const test = this.#form.value as Test;
+        test.timeTaken = (test.timeTaken || 0) + elapsedTime;
 
-      this.#takeQuizService.save(test);
+        this.#takeQuizService.save(test);
+      }
     });
   }
 
@@ -115,11 +120,15 @@ export class TakeQuiz {
   }
 
   handleSubmit() {
+    const elapsedTime = this.#elapsedTime$();
     const test = this.#form.value as Test;
+
+    test.timeTaken = (test.timeTaken || 0) + elapsedTime;
+
     this.#takeQuizService.submit(test);
   }
 
-  isAnswerCorrect(question: Question): boolean {
+  isQuestionCorrect(question: Question): boolean {
     const test = this.#takeQuizService.test$();
     const testQuestion = test?.questions.find(tq => tq.id === question.id);
 
@@ -128,5 +137,9 @@ export class TakeQuiz {
     }
 
     return false;
+  }
+
+  isAnswerCorrect(question: Question, answerId: string): boolean {
+    return question.answers.filter(answer => answer.id === answerId && answer.isCorrect).length > 0;
   }
 }

@@ -31,7 +31,6 @@ export class TakeQuizService {
   }
 
   submit(test: Test) {
-    test.isSubmitted = true;
     this.#testStore.submit(test);
   }
 
