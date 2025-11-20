@@ -1,4 +1,32 @@
-<div class="p-4">
-    <h1 class="text-2xl font-bold">DR Quiz Quiz List</h1>
-    <p class="mt-2">This is the page where quizzes will be listed.</p>
+@let vm = vm$ | async; @if (vm) {
+<div class="p-4 flex flex-col">
+    <h1 class="text-xl font-bold w-full mb-4">Quiz List</h1>
+    <table class="table-auto">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(quiz of vm.quizzes; track quiz.id; let i = $index) {
+                <tr class="">
+                    <td>{{ quiz.title }}</td>
+                    <td>{{ quiz.description }}</td>
+                    <td>
+                        <button
+                            type="button"
+                            class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                            (click)="handleEdit(quiz)">Edit</button>
+                        <button
+                            type="button"
+                            class="mt-4 mr-0 md:ml-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                            (click)="handleTakeQuiz(quiz)">Take Quiz</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table> 
 </div>
+}

@@ -19,7 +19,7 @@ const initialState: QuizState = {
 export const QuizStore = signalStore(
     withState(initialState),
     withMethods((state, quizRepo = inject(QuizRepo)) => ({
-        loadAll() {
+        getAll() {
             patchState(state, { isLoading: true });
             const quizzes = quizRepo.getAll();
             patchState(state, { isLoading: false });

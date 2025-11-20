@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, filter, map, of, tap } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { AbstractControl, FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
