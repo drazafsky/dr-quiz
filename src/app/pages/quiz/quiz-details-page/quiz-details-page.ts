@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, filter, map, of, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
@@ -39,7 +39,14 @@ export class QuizDetailsPage {
         this.#form.get('timeLimit')?.setValue(quiz.timeLimit);
         this.#form.get('shuffleQuestions')?.setValue(quiz.shuffleQuestions);
 
-        quiz.questions.forEach(question => this.addQuestion(question));
+        if (quiz.isPublished) {
+          this.#form.get('title')?.disable();
+          this.#form.get('description')?.disable();
+          this.#form.get('timeLimit')?.disable();
+          this.#form.get('shuffleQuestions')?.disable();
+        }
+
+        quiz.questions.forEach(question => this.addQuestion(question, quiz.isPublished));
       }
     })
   );
@@ -90,14 +97,14 @@ export class QuizDetailsPage {
   }
 
   handlePublish() {
-    console.log('Publishing...');
+    this.#quizDetailsService.publish(this.#form.value as Quiz)
   }
 
   handleDelete() {
     console.log('Deleting...');
   }
 
-  private addQuestion(question?: Question) {
+  private addQuestion(question?: Question, disableControls?: boolean) {
     const questionControls = this.#formBuilder.group({
       required: [question?.required || false, Validators.required],
       pointValue: [question?.pointValue || 1, Validators.required],
@@ -105,11 +112,17 @@ export class QuizDetailsPage {
       answers: this.#formBuilder.array([])
     });
 
+    if (disableControls) {
+      questionControls.get('required')?.disable();
+      questionControls.get('pointValue')?.disable();
+      questionControls.get('prompt')?.disable();
+    }
+
     if (question?.answers.length) {
-      const answerControls = question.answers.map(answer => this.addAnswer(answer));
+      const answerControls = question.answers.map(answer => this.addAnswer(answer, disableControls));
       (questionControls.get('answers') as FormArray).push(answerControls);
     } else {
-      const answerControls = this.addAnswer();
+      const answerControls = this.addAnswer(undefined, disableControls);
 
       (questionControls.get('answers') as FormArray).push(answerControls);
     }
@@ -117,17 +130,25 @@ export class QuizDetailsPage {
     (this.#form.get('questions') as FormArray).push(questionControls);
   }
 
-  private addAnswer(answer?: Answer) {
+  private addAnswer(answer?: Answer, disableControls?: boolean) {
+    let answerControls: FormGroup;
     if (answer) {
-      return this.#formBuilder.group({
+      answerControls = this.#formBuilder.group({
         value: [answer.value, Validators.required],
         isCorrect: [answer.isCorrect, Validators.required]
       });
-    }
+    } else {
+      answerControls = this.#formBuilder.group({
+          value: ['', Validators.required],
+          isCorrect: [false, Validators.required]
+        });
+      }
 
-    return this.#formBuilder.group({
-        value: ['', Validators.required],
-        isCorrect: [false, Validators.required]
-      });
+      if (disableControls) {
+        answerControls.get('value')?.disable();
+        answerControls.get('isCorrect')?.disable();
+      }
+
+      return answerControls;
   }
 }

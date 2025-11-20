@@ -26,6 +26,10 @@ export class QuizDetailsPageService {
     return this.#quizStore.getNew();
   }
 
+  publish(quiz: Quiz): Quiz {
+    return this.#quizStore.publish(quiz);
+  }
+
   save(quiz: Quiz): Quiz {
     return this.#quizStore.save(quiz);
   }

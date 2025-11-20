@@ -45,6 +45,16 @@ export const QuizStore = signalStore(
             } as Quiz;
         },
 
+        publish(quiz: Quiz) {
+            if (!quiz.id) {
+                // New quiz so add an id
+                quiz.id = uuidv4();
+            }
+
+            quiz.isPublished = true;
+            return quizRepo.save(quiz);
+        },
+
         save(quiz: Quiz) {
             if (!quiz.id) {
                 // New quiz so add an id
