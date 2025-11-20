@@ -24,6 +24,14 @@
                         <ul class="mt-2">
                             <li>
                                 <label class="flex items-center">
+                                <span *ngIf="vm.test?.isSubmitted" class="mr-2">
+                                    <ng-container *ngIf="isAnswerCorrect(question.id, answer.id); else incorrectIcon">
+                                        <span class="text-green-500">✔</span>
+                                    </ng-container>
+                                    <ng-template #incorrectIcon>
+                                        <span class="text-red-500">✘</span>
+                                    </ng-template>
+                                </span>
                                 <input
                                     type="radio"
                                     formControlName="answer"
