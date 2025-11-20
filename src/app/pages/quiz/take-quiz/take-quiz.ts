@@ -28,6 +28,7 @@ export class TakeQuiz {
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
+    timeTaken: [0],
     questions: this.#formBuilder.array([])
   });
 
@@ -39,7 +40,6 @@ export class TakeQuiz {
     map(([ quiz, test, form ]) => ({
       quiz,
       test,
-      quiz,
       form,
     }))
   );
@@ -47,12 +47,17 @@ export class TakeQuiz {
   constructor() {
     effect(() => {
       const quiz = this.#takeQuizService.quiz$();
+      const test = this.#takeQuizService.test$();
 
       if (quiz) {
         // Populate the form controls with values from the quiz
         this.#form.get('id')?.setValue(quiz.id || null);
         (this.#form.get('questions') as FormArray).clear();
         quiz.questions.forEach(question => this.addQuestion(question));
+      }
+
+      if (test) {
+        this.#form.get('timeTaken')?.setValue(test.timeTaken || 0);
       }
     });
 
