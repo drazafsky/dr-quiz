@@ -19,7 +19,7 @@ export class QuizRepo {
     return allQuizzes.find(quiz => quiz.id === id);
   }
 
-  save(quiz: Quiz): Quiz {
+  save(quiz: Quiz) {
     const quizzes = this.getAll();
 
     const updatedQuizzes = [
