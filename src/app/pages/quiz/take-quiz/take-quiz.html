@@ -31,6 +31,17 @@
             <p>No questions available for this quiz.</p>
         }
     </section>
+
+    <div class="flex justify-end mt-4">
+        <button
+            type="button"
+            class="mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
+            (click)="handleSave()">Save</button>
+        <button
+            type="button"
+            class="border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
+            (click)="handleSubmit()">Submit</button>
+    </div>
 </form>
 
 <pre>{{ vm.quiz | json }}</pre>
