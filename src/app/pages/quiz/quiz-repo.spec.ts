@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { QuizRepo } from './quiz-repo';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { Repo } from '../../lib/repo';
+import { Quiz } from './types/quiz';
 
 describe('QuizRepo', () => {
   let service: QuizRepo;
@@ -36,7 +37,21 @@ describe('QuizRepo', () => {
     });
 
     it('should return all stored quizzes', () => {
-      const mockQuizzes = [{ id: '1', title: 'Quiz 1' }, { id: '2', title: 'Quiz 2' }];
+      const mockQuizzes: Quiz[] = [{
+        id: '1', title: 'Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }, {
+        id: '2', title: 'Quiz 2',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }];
       mockRepo.getItem = vi.fn().mockReturnValue(mockQuizzes);
 
       const result = service.getAll();
