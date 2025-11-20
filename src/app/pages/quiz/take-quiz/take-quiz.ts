@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
@@ -25,6 +25,17 @@ export class TakeQuiz {
 
   #startTime: number = 0;
   #endTime: number = 0;
+
+  readonly maxScore$ = computed(() => {
+    return this.#takeQuizService.quiz$()?.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
+  });
+
+  readonly scorePercent$ = computed(() => {
+    const maxScore = this.maxScore$();
+    const test = this.#takeQuizService.test$();
+
+    return Math.floor(((test?.score || 0) / (maxScore || 1)) * 100);
+  });
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
