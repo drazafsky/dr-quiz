@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { QuizRepo } from './quiz-repo';
 import { Quiz } from './types/quiz';
+import { v4 as uuidv4 } from 'uuid';
 
 type QuizState = {
     quizzes: Quiz[];
@@ -25,7 +26,7 @@ export const QuizStore = signalStore(
             return quizzes;
         },
 
-        getById(id: number) {
+        getById(id: string) {
             patchState(state, { isLoading: true });
             const quiz = quizRepo.getById(id);
             setTimeout(() => patchState(state, { isLoading: false }), 10000);
@@ -41,6 +42,15 @@ export const QuizStore = signalStore(
                 shuffleQuestions: false,
                 questions: [],
             } as Quiz;
-        }
+        },
+
+        save(quiz: Quiz) {
+            if (!quiz.id) {
+                // New quiz so add an id
+                quiz.id = uuidv4();
+            }
+
+            return quizRepo.save(quiz);
+        },
     }))
 )

@@ -52,36 +52,74 @@
 
         <section class="questions" formArrayName="questions">
             <h1 class="text-xl font-bold">Questions</h1>
-
             
-            <div *ngFor="let question of vm.form.get('questions').controls; let i = index" [formGroupName]="i" class="mt-4">
-                <div class="flex flex-col md:flex-row mb-4 md:items-center">
-                    <label for="prompt-{{i}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Question Prompt</label>
-                    <input id="prompt-{{i}}" type="text" formControlName="prompt" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
-                </div>
-                <div class="flex flex-col md:flex-row mb-4 md:items-center">
-                    <label for="pointValue-{{i}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Point Value</label>
-                    <input id="pointValue-{{i}}" type="number" formControlName="pointValue" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
-                </div>
-                <div formArrayName="answers" class="mt-4">
-                    <h2 class="text-lg font-semibold">Answers</h2>
-                    <div *ngFor="let answer of question.get('answers').controls; let j = index" [formGroupName]="j" class="mt-2">
-                        <div class="flex flex-col md:flex-row mb-4 md:items-center">
-                            <label for="answerValue-{{i}}-{{j}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Answer Value</label>
-                            <input id="answerValue-{{i}}-{{j}}" type="text" formControlName="value" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
-                        </div>
-                        <div class="flex items-center">
-                            <label for="isCorrect-{{i}}-{{j}}" class="flex items-center">
-                                <input id="isCorrect-{{i}}-{{j}}" type="checkbox" formControlName="isCorrect" class="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800" />
-                                <span class="ml-2 text-gray-700">Correct Answer</span>
+            <button
+                type="button"
+                class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                (click)="handleAddQuestion()">Add Question</button>
+
+            @for(question of questions.controls; track question; let i = $index) {
+                <div [formGroupName]="i" class="mt-4"> 
+                    <div class="flex flex-col md:flex-row mb-4 md:items-center">
+                        <label for="prompt-{{i}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Question</label>
+                        <input id="prompt-{{i}}" type="text" formControlName="prompt" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                    </div>
+                    <div class="flex flex-col md:flex-row mb-4 md:items-center">
+                        <label class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Required</label>
+                        <div class="flex items-center space-x-4 w-full">
+                            <label class="flex items-center">
+                                <input type="radio" formControlName="required" [value]="true" class="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                                <span class="ml-2 text-gray-700">Yes</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" formControlName="required" [value]="false" class="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                                <span class="ml-2 text-gray-700">No</span>
                             </label>
                         </div>
                     </div>
+                    <div class="flex flex-col md:flex-row mb-4 md:items-center">
+                        <label for="pointValue-{{i}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Point Value</label>
+                        <input id="pointValue-{{i}}" type="number" formControlName="pointValue" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                    </div>
+                    <div formArrayName="answers" class="mt-4 ml-8: md:ml-16">
+                        <h2 class="text-lg font-semibold">Answers</h2>
+
+                        <button
+                            type="button"
+                            class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                            (click)="handleAddAnswer(question)">Add Answer</button>
+                        @if (question.get('answers') !== null) {
+                            @for(answer of answers(question).controls; track answer; let j = $index) {
+                                <div [formGroupName]="j" class="mt-2">
+                                    <div class="flex flex-col md:flex-row mb-4 md:items-center">
+                                        <label for="answerValue-{{i}}-{{j}}" class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Answer</label>
+                                        <input id="answerValue-{{i}}-{{j}}" type="text" formControlName="value" class="border border-gray-300 rounded p-2 w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                                    </div> 
+                                    <div class="flex flex-col md:flex-row mb-4 md:items-center">
+                                        <label class="block w-full md:w-64 text-gray-700 font-medium mb-2 md:mb-0 md:mr-4">Is Correct</label>
+                                        <div class="flex items-center space-x-4 w-full">
+                                            <label class="flex items-center">
+                                                <input type="radio" formControlName="isCorrect" [value]="true" class="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                                                <span class="ml-2 text-gray-700">Yes</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="radio" formControlName="isCorrect" [value]="false" class="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800" />
+                                                <span class="ml-2 text-gray-700">No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="mt-4 md:mr-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                                        (click)="handleDeleteAnswer(question, j)">Delete Answer</button>
+                                </div>
+                            }
+                        } 
+                    </div>
                 </div>
-            </div>
+            } 
         </section>
     </form>
-
-    <pre>{{ vm.quiz | json }}</pre>
 </div>
 }
