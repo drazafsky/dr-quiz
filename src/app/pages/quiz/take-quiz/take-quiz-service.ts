@@ -14,6 +14,17 @@ export class TakeQuizService {
   readonly #testStore = inject(TestStore);
 
   readonly quiz$ = computed(() => this.#quizStore.selectedQuiz());
+  readonly test$ = computed(() => this.#testStore.selectedTest());
+
+  constructor() {
+    this.#route.paramMap.subscribe(params => {
+      const quizId = params.get('quizId');
+      if (quizId) {
+        this.#quizStore.getById(quizId);
+        this.#testStore.getById(quizId);
+      }
+    });
+  }
 
   constructor() {
     this.#route.paramMap.subscribe(params => {
