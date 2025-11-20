@@ -6,13 +6,14 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { Quiz } from '../types/quiz';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { TestStore } from '../test.store';
 
 @Component({
   selector: 'app-quiz-list-page',
   templateUrl: './quiz-list-page.html',
   imports: [AsyncPipe, DatePipe],
   styles: [],
-  providers: [QuizStore, QuizListPageService],
+  providers: [QuizStore, TestStore, QuizListPageService],
 })
 export class QuizListPage {
   readonly #quizListService = inject(QuizListPageService); 
@@ -21,9 +22,11 @@ export class QuizListPage {
 
   vm$ = combineLatest([
     toObservable(this.#quizListService.quizzes$),
+    toObservable(this.#quizListService.tests$),
   ]).pipe(
-    map(([ quizzes ]) => ({
+    map(([ quizzes, tests ]) => ({
       quizzes,
+      tests
     }))
   )
 
