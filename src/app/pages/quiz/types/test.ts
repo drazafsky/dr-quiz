@@ -8,4 +8,5 @@ export interface Test {
     shuffleQuestions: boolean;
     questions: Question[];
     isSubmitted: boolean;
+    timeTaken: number; // Number of seconds the user has been working on the test
 }

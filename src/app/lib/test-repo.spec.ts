@@ -76,7 +76,8 @@ describe('TestRepo', () => {
         timeLimit: 0,
         shuffleQuestions: false,
         questions: [],
-        isSubmitted: false
+        isSubmitted: false,
+        timeTaken: 0
       };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
@@ -94,7 +95,8 @@ describe('TestRepo', () => {
         timeLimit: 0,
         shuffleQuestions: false,
         questions: [],
-        isSubmitted: false
+        isSubmitted: false,
+        timeTaken: 0
       };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
