@@ -1,5 +1,6 @@
 @let vm = vm$ | async; @if (vm && vm.quiz) {
 <h1 class="text-xl font-bold">{{ vm.quiz.title }}</h1>
+<p class="text-md font-medium text-gray-500">Maximum Points: {{ vm.quiz.questions.reduce((sum, question) => sum + question.pointValue, 0) }}</p>
 @if (vm.quiz.description.trim().length > 0) {
     <h2 class="text-lg font-semibold text-gray-700">{{ vm.quiz.description }}</h2>
 }
