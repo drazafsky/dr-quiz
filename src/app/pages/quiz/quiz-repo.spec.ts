@@ -60,6 +60,97 @@ describe('QuizRepo', () => {
     });
   });
 
+  describe('getById', () => {
+    it('should return the quiz with the specified ID', () => {
+      const mockQuizzes: Quiz[] = [{
+        id: '1', title: 'Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }, {
+        id: '2', title: 'Quiz 2',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }];
+      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
+
+      const result = service.getById('1');
+
+      expect(result).toEqual(mockQuizzes[0]);
+    });
+
+    it('should return undefined if no quiz matches the specified ID', () => {
+      const mockQuizzes: Quiz[] = [{
+        id: '1', title: 'Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }];
+      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
+
+      const result = service.getById('3');
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('save', () => {
+    it('should add a new quiz if it does not already exist', () => {
+      const mockQuizzes: Quiz[] = [{
+        id: '1', title: 'Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }];
+      const newQuiz: Quiz = {
+        id: '2', title: 'Quiz 2',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      };
+      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
+
+      service.save(newQuiz);
+
+      expect(mockRepo.setItem).toHaveBeenCalledWith('QUIZZES', [...mockQuizzes, newQuiz]);
+    });
+
+    it('should update an existing quiz if it already exists', () => {
+      const mockQuizzes: Quiz[] = [{
+        id: '1', title: 'Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      }];
+      const updatedQuiz: Quiz = {
+        id: '1', title: 'Updated Quiz 1',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+      };
+      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
+
+      service.save(updatedQuiz);
+
+      expect(mockRepo.setItem).toHaveBeenCalledWith('QUIZZES', [updatedQuiz]);
+    });
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
