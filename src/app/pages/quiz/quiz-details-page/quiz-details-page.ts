@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, filter, map, of, tap } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Question } from '../types/question';
 
 @Component({
   selector: 'app-quiz-details-page',
@@ -46,9 +47,16 @@ export class QuizDetailsPage {
     timeLimit: [60, Validators.required],
     shuffleQuestions: [false, Validators.required],
     questions: this.#formBuilder.array([
-      this.#formBuilder.array([
-        this.#formBuilder.control('')
-      ])
+      this.#formBuilder.group({
+        pointValue: [1, Validators.required],
+        prompt: ['', Validators.required],
+        answers: this.#formBuilder.array([
+          this.#formBuilder.group({
+            value: ['', Validators.required],
+            isCorrect: [false, Validators.required]
+          })
+        ])
+      })
     ])
   });
 
@@ -63,6 +71,10 @@ export class QuizDetailsPage {
       form
     }))
   );
+
+  get questions(): FormArray {
+    return this.#form.get('questions') as FormArray;
+  }
 
   handleSave() {
     console.log('Saving...');
