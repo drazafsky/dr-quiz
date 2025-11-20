@@ -7,11 +7,12 @@ import { QuizStore } from '../quiz.store';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
 import { Answer } from '../types/answer';
+import { TestStore } from '../test.store';
 
 @Component({
   selector: 'app-take-quiz',
   imports: [AsyncPipe, JsonPipe, ReactiveFormsModule],
-  providers: [QuizStore, TakeQuizService],
+  providers: [QuizStore, TestStore, TakeQuizService],
   templateUrl: './take-quiz.html',
   styleUrl: './take-quiz.scss',
 })
@@ -83,7 +84,8 @@ export class TakeQuiz {
   } 
 
   handleSave() {
-    console.log(this.#form.value);
+    const test = this.#form.value;
+    this.#takeQuizService.save(test);
   }
 
   handleSubmit() {
