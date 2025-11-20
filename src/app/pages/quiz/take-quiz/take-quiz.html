@@ -1,7 +1,5 @@
-@let vm = vm$ | async;
-<pre *ngIf="vm; else loading" class="p-4 bg-gray-100 rounded">
+@let vm = vm$ | async; @if (vm) {
+<pre class="p-4 bg-gray-100 rounded">
   {{ vm | json }}
 </pre>
-<ng-template #loading>
-  <p>Loading quiz...</p>
-</ng-template>
+}
