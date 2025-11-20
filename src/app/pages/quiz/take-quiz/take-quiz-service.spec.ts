@@ -1,12 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TakeQuizService } from './take-quiz-service';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { QuizStore } from '../quiz.store';
 
 describe('TakeQuizService', () => {
   let service: TakeQuizService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([]),
+        QuizStore,
+      ]
+    });
     service = TestBed.inject(TakeQuizService);
   });
 

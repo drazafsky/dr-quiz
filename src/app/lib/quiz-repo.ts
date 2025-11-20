@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Repo, StorageKeys } from '../../lib/repo';
-import { Quiz } from './types/quiz';
+import { Repo, StorageKeys } from './repo';
+import { Quiz } from '../pages/quiz/types/quiz';
 
 @Injectable({
   providedIn: 'root',

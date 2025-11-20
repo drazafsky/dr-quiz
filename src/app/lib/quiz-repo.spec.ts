@@ -3,8 +3,8 @@ import { vi } from 'vitest';
 
 import { QuizRepo } from './quiz-repo';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { Repo } from '../../lib/repo';
-import { Quiz } from './types/quiz';
+import { Repo } from './repo';
+import { Quiz } from '../pages/quiz/types/quiz';
 
 describe('QuizRepo', () => {
   let service: QuizRepo;
