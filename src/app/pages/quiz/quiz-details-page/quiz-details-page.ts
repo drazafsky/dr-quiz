@@ -39,6 +39,7 @@ export class QuizDetailsPage {
           this.#form.get('shuffleQuestions')?.disable();
         }
 
+        (this.#form.get('questions') as FormArray).clear();
         quiz.questions.forEach(question => this.addQuestion(question, quiz.isPublished));
       }
     })
