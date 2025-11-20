@@ -6,14 +6,30 @@
             <tr>
                 <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
+                <th class="border border-gray-300 px-4 py-2 text-left"># of Questions</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
             @for(quiz of vm.quizzes; track quiz.id; let i = $index) {
                 <tr class="md:table-row block md:border-b odd:bg-gray-100 even:bg-white hover:bg-gray-200">
-                    <td class="block md:table-cell border border-gray-300 px-4 py-2">{{ quiz.title }}</td>
-                    <td class="block md:table-cell border border-gray-300 px-4 py-2">{{ quiz.description }}</td>
+                    <td class="block md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="md:hidden font-semibold not-sr-only">Name: </span>
+                        {{ quiz.title }}
+                    </td>
+                    <td class="block md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="md:hidden font-semibold not-sr-only">Description: </span>
+                        {{ quiz.description }}
+                    </td>
+                    <td class="block md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="md:hidden font-semibold not-sr-only">Status: </span>
+                        {{ quiz.isPublished ? 'Published' : 'Draft' }}
+                    </td>
+                    <td class="block md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="md:hidden font-semibold not-sr-only"># of Questions: </span>
+                        {{ quiz.questions.length }}
+                    </td>
                     <td class="block md:table-cell border border-gray-300 px-4 py-2 flex flex-col md:flex-row">
                         <button
                             type="button"

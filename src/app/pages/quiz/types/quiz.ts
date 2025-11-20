@@ -7,4 +7,5 @@ export interface Quiz {
     timeLimit: number; // Number of seconds allowed for taking the quiz
     shuffleQuestions: boolean;
     questions: Question[];
+    isPublished: boolean;
 }

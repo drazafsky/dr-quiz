@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, filter, map, of, tap } from 'rxjs';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,7 +11,7 @@ import { Quiz } from '../types/quiz';
 
 @Component({
   selector: 'app-quiz-details-page',
-  imports: [AsyncPipe, JsonPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, ReactiveFormsModule],
   templateUrl: './quiz-details-page.html',
   styleUrl: './quiz-details-page.scss',
   providers: [QuizStore, QuizDetailsPageService],
