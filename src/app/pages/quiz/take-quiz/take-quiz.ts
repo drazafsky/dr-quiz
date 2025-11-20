@@ -28,8 +28,15 @@ export class TakeQuiz {
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
+    questions: this.#formBuilder.array([
+      this.#formBuilder.group({
+        id: [''],
+        answer: ['']
+      })
+    ]),
+    isSubmitted: [false],
     timeTaken: [0],
-    questions: this.#formBuilder.array([])
+    score: [0],
   });
 
   vm$ = combineLatest([
