@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { TestRepo } from './test-repo';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { Repo } from './repo';
+import { Test } from '../pages/quiz/types/test';
 
 describe('TestRepo', () => {
   let service: TestRepo;
@@ -68,7 +69,15 @@ describe('TestRepo', () => {
   describe('save', () => {
     it('should add a new test if it does not already exist', () => {
       const mockTests = [{ id: '1', name: 'Test 1' }];
-      const newTest = { id: '2', name: 'Test 2' };
+      const newTest: Test = {
+        id: '2',
+        title: '',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isSubmitted: false
+      };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
       service.save(newTest);
@@ -78,7 +87,15 @@ describe('TestRepo', () => {
 
     it('should update an existing test if it already exists', () => {
       const mockTests = [{ id: '1', name: 'Test 1' }];
-      const updatedTest = { id: '1', name: 'Updated Test 1' };
+      const updatedTest: Test = {
+        id: '1',
+        title: '',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isSubmitted: false
+      };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
       service.save(updatedTest);
