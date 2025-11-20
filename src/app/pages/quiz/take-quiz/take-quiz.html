@@ -32,15 +32,17 @@
         }
     </section>
 
-    <div class="flex flex-col md:flex-row justify-start mt-4">
-        <button
-            type="button"
-            class="w-full md:w-32 mr-4 mb-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
-            (click)="handleSave()">Save</button>
-        <button
-            type="button"
-            class="w-full md:w-32 md:ml-auto mb-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
-            (click)="handleSubmit()">Submit</button>
-    </div>
+    @if (!vm.test?.isSubmitted) {
+        <div class="flex flex-col md:flex-row justify-start mt-4">
+            <button
+                type="button"
+                class="w-full md:w-32 mr-4 mb-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
+                (click)="handleSave()">Save</button>
+            <button
+                type="button"
+                class="w-full md:w-32 md:ml-auto mb-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700"
+                (click)="handleSubmit()">Submit</button>
+        </div>
+    }
 </form>
 }
