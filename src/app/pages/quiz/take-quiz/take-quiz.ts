@@ -3,9 +3,9 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter } from 'rxjs';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { QuizStore } from '../quiz.store';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
 import { Answer } from '../types/answer';
 import { TestStore } from '../test.store';
@@ -19,10 +19,12 @@ import { Test } from '../types/test';
   styleUrl: './take-quiz.scss',
 })
 export class TakeQuiz {
-  private readonly #router = inject(Router);
-  private startTime: number = 0;
+  readonly #router = inject(Router);
   readonly #formBuilder = inject(FormBuilder);
   readonly #takeQuizService = inject(TakeQuizService);
+
+  #startTime: number = 0;
+  #endTime: number = 0;
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
@@ -50,10 +52,19 @@ export class TakeQuiz {
         quiz.questions.forEach(question => this.addQuestion(question));
       }
     });
+
     this.#router.events.pipe(
+      takeUntilDestroyed(),
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.startTime = Date.now();
+      this.#startTime = Date.now();
+    });
+
+  this.#router.events.pipe(
+      takeUntilDestroyed(),
+      filter(event => event instanceof NavigationStart)
+    ).subscribe(() => {
+      this.#endTime = Date.now();
     });
   }
 
