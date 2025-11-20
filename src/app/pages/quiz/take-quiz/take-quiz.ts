@@ -23,7 +23,6 @@ export class TakeQuiz {
   readonly #takeQuizService = inject(TakeQuizService);
 
   #startTime: number = 0;
-  #endTime: number = 0;
 
   readonly #elapsedTime$ = computed(() => {
     const endTime = Date.now();
