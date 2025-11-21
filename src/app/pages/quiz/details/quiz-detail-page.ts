@@ -5,12 +5,14 @@ import { QuizStore } from '../../../lib/stores/quiz.store';
 import { CardComponent } from "../../../lib/components/card/card.component";
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
+import { ToolbarComponent } from "../../../lib/components/toolbar/toolbar.component";
 
 @Component({
   selector: 'app-quiz-detail-page',
   standalone: true,
-  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule],
+  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule, ToolbarComponent],
   templateUrl: './quiz-detail-page.html',
   providers: [QuizStore],
 })
@@ -25,12 +27,11 @@ export class QuizDetailPage {
   ));
 
   form: FormGroup = this.#fb.group({
-    title: [''],
-    description: [''],
-    timeLimit: [0],
-    shuffleQuestions: [false],
-    questions: [[]],
-    isPublished: [false],
+    title: ['', [Validators.required, notEmptyValidator()]],
+    description: ['', notEmptyValidator()],
+    timeLimit: [0, [Validators.min(0)]],
+    shuffleQuestions: [false, Validators.required],
+    questions: [[], Validators.minLength(1)],
   });
 
   quiz$ = computed(() => {
@@ -51,5 +52,13 @@ export class QuizDetailPage {
         this.form.patchValue(quiz);
       }
     })
+  }
+
+  handleSaveQuiz() {
+    console.log('Saving');
+  }
+
+  handlePublishQuiz() {
+    console.log('Publishing');
   }
 }
