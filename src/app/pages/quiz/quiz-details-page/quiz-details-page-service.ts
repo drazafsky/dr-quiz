@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, filter, map } from 'rxjs';
-import { Quiz } from '../types/quiz';
+import { Quiz } from '../../../lib/types/quiz';
 import { QuizStore } from '../../../lib/stores/quiz.store';
 
 @Injectable({

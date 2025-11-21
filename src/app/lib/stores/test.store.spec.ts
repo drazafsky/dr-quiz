@@ -1,8 +1,8 @@
 import { TestStore } from './test.store';
 import { TestRepo } from '../test-repo';
 import { QuizRepo } from '../quiz-repo';
-import { Test } from '../../pages/quiz/types/test';
-import { Quiz } from '../../pages/quiz/types/quiz';
+import { Test } from '../types/test';
+import { Quiz } from '../types/quiz';
 import { vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection, Signal } from '@angular/core';

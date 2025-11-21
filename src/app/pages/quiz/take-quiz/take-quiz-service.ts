@@ -1,9 +1,9 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TestStore } from '../../../lib/stores/test.store';
-import { Test } from '../types/test';
+import { Test } from '../../../lib/types/test';
 import { QuizStore } from '../../../lib/stores/quiz.store';
-import { Quiz } from '../types/quiz';
+import { Quiz } from '../../../lib/types/quiz';
 
 @Injectable({
   providedIn: 'root',

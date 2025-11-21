@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { QuizRepo } from '../../lib/quiz-repo';
 import { v4 as uuidv4 } from 'uuid';
-import { Quiz } from '../../pages/quiz/types/quiz';
+import { Quiz } from '../types/quiz';
 
 type QuizState = {
     quizzes: Quiz[];
