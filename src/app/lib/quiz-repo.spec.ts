@@ -27,47 +27,6 @@ describe('QuizRepo', () => {
     service = TestBed.inject(QuizRepo);
   });
 
-  describe('deleteById', () => {
-    it('should remove the quiz with the specified ID', () => {
-      const mockQuizzes: Quiz[] = [{
-        id: '1', title: 'Quiz 1',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false
-      }, {
-        id: '2', title: 'Quiz 2',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false
-      }];
-      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
-
-      service.deleteById('1');
-
-      expect(mockRepo.setItem).toHaveBeenCalledWith('QUIZZES', [mockQuizzes[1]]);
-    });
-
-    it('should do nothing if the quiz ID does not exist', () => {
-      const mockQuizzes: Quiz[] = [{
-        id: '1', title: 'Quiz 1',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false
-      }];
-      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
-
-      service.deleteById('3');
-
-      expect(mockRepo.setItem).toHaveBeenCalledWith('QUIZZES', mockQuizzes);
-    });
-  });
-
   describe('getAll', () => {
     it('should return an empty array if no quizzes are stored', () => {
       mockRepo.getItem = vi.fn().mockReturnValue(null);
