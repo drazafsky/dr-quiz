@@ -6,8 +6,9 @@
       <a [routerLink]="['..']">{{ vm.title }}</a>
     </div>
     <ul class="flex-1 p-4 space-y-2">
-      <li><a [routerLink]="['quiz']" class="block p-2 rounded hover:bg-gray-700">Browse</a></li>
-      <li><a [routerLink]="['quiz', 'create']" class="block p-2 rounded hover:bg-gray-700">Create</a></li>
+      <li><a [routerLink]="['dashboard']" class="block p-2 rounded hover:bg-gray-700">Dashboard</a></li>
+      <li><a [routerLink]="['quizzes']" class="block p-2 rounded hover:bg-gray-700">Quizzes</a></li>
+      <li><a [routerLink]="['tests', 'create']" class="block p-2 rounded hover:bg-gray-700">Tests</a></li>
     </ul>
   </nav>
 
