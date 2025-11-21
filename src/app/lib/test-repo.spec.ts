@@ -100,6 +100,31 @@ describe('TestRepo', () => {
     });
   });
 
+  describe('deleteById', () => {
+    it('should remove the test with the specified ID', () => {
+      const mockTests: Test[] = [
+        { id: '1', questions: [], isSubmitted: false, timeTaken: 0, score: 0 },
+        { id: '2', questions: [], isSubmitted: false, timeTaken: 0, score: 0 },
+      ];
+      vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
+
+      service.deleteById('1');
+
+      expect(mockRepo.setItem).toHaveBeenCalledWith('TESTS', [mockTests[1]]);
+    });
+
+    it('should do nothing if the test ID does not exist', () => {
+      const mockTests: Test[] = [
+        { id: '1', questions: [], isSubmitted: false, timeTaken: 0, score: 0 },
+      ];
+      vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
+
+      service.deleteById('3');
+
+      expect(mockRepo.setItem).toHaveBeenCalledWith('TESTS', mockTests);
+    });
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
