@@ -19,7 +19,6 @@ describe('Repo', () => {
   describe('setItem', () => {
     it('should store an item in localStorage', () => {
       const value = { id: 1, name: 'Test Item' };
-      service.STORAGE_KEY = 'TESTS';
       service.setItem(value);
 
       const storedValue = JSON.parse(localStorage.getItem('TESTS') || '{}');
@@ -28,7 +27,6 @@ describe('Repo', () => {
 
     it('should handle errors when storing an item', () => {
       const value = { id: 1, name: 'Test Item' };
-      service.STORAGE_KEY = 'TESTS';
       jest.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
@@ -40,7 +38,6 @@ describe('Repo', () => {
   describe('getItem', () => {
     it('should retrieve an item from localStorage', () => {
       const value = { id: 1, name: 'Test Item' };
-      service.STORAGE_KEY = 'TESTS';
       localStorage.setItem('TESTS', JSON.stringify(value));
 
       const result = service.getItem();
@@ -48,13 +45,11 @@ describe('Repo', () => {
     });
 
     it('should return null if the item does not exist', () => {
-      service.STORAGE_KEY = 'NON_EXISTENT_KEY';
       const result = service.getItem();
       expect(result).toBeNull();
     });
 
     it('should handle errors when retrieving an item', () => {
-      service.STORAGE_KEY = 'TESTS';
       jest.spyOn(localStorage, 'getItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
@@ -66,7 +61,6 @@ describe('Repo', () => {
 
   describe('removeItem', () => {
     it('should remove an item from localStorage', () => {
-      service.STORAGE_KEY = 'TESTS';
       localStorage.setItem('TESTS', JSON.stringify({ id: 1, name: 'Test Item' }));
 
       service.removeItem();
@@ -75,7 +69,6 @@ describe('Repo', () => {
     });
 
     it('should handle errors when removing an item', () => {
-      service.STORAGE_KEY = 'TESTS';
       jest.spyOn(localStorage, 'removeItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
