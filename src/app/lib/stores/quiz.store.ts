@@ -1,78 +1,50 @@
-import { inject } from '@angular/core';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { QuizRepo } from '../../lib/quiz-repo';
-import { v4 as uuidv4 } from 'uuid';
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { Quiz } from '../types/quiz';
+import { QuizRepo } from '../repos/quiz-repo';
 
 type QuizState = {
     quizzes: Quiz[];
-    selectedQuiz: Quiz;
-    isPublished: boolean;
+    selectedQuizId: string | undefined;
 }
 
 const initialState: QuizState = {
     quizzes: [],
-    selectedQuiz: {
-        title: '',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false
-    },
-    isPublished: false,
+    selectedQuizId: undefined,
 }
 
 export const QuizStore = signalStore(
     withState(initialState),
-    withMethods((state, quizRepo = inject(QuizRepo)) => ({
-        getAll() {
-            const quizzes = quizRepo.getAll()
-            patchState(state, { quizzes });
-        },
+    withMethods((state) => {
+        return {
+            selectQuiz(selectedQuizId: string) {
+                patchState(state, { selectedQuizId });
+            },
+        }
+    }),
+    withComputed((state) => ({
+        quizCount: computed(() => state.quizzes().length),
+    })),
+    withHooks((state) => {
+        const quizRepo = inject(QuizRepo);
+        return {
+            onInit() {
+                const quizzes = quizRepo.getItem();
+                if (quizzes !== null) {
+                    patchState(state, { quizzes });
+                } else {
+                    patchState(state, { quizzes: [] });
+                }
+            },
 
-        getById(id: string) {
-            const selectedQuiz = quizRepo.getById(id);
-            patchState(state, { selectedQuiz });
-        },
-
-        getNew() {
-            const selectedQuiz = {
-                id: undefined,
-                title: '',
-                description: '',
-                timeLimit: 60, // Default is one minute
-                isPublished: false,
-                shuffleQuestions: false,
-                questions: [],
-            } as Quiz;
-            patchState(state, { selectedQuiz });
-        },
-
-        publish(quiz: Quiz) {
-            if (quiz.isPublished) {
-                return;
+            onDestroy() {
+                const quizzes = quizRepo.getItem();
+                if (quizzes !== null) {
+                    quizRepo.setItem(quizzes);
+                } else {
+                    quizRepo.removeItem();
+                }
             }
-
-            quiz.isPublished = true;
-            const selectedQuiz = quizRepo.save(quiz);
-            patchState(state, { selectedQuiz });
-            this.getAll();
-        },
-
-        save(quiz: Quiz) {
-            if (quiz.isPublished) {
-                return;
-            }
-
-            if (!quiz.id) {
-                // New quiz so add an id
-                quiz.id = uuidv4();
-            }
-
-            const selectedQuiz = quizRepo.save(quiz);
-            patchState(state, { selectedQuiz });
-            this.getAll();
-        },
-    }))
+        }
+    })
 )
