@@ -111,6 +111,7 @@ describe('QuizRepo', () => {
         questions: [],
         isPublished: false
       }];
+
       const newQuiz: Quiz = {
         id: '2', title: 'Quiz 2',
         description: '',
@@ -119,7 +120,8 @@ describe('QuizRepo', () => {
         questions: [],
         isPublished: false
       };
-      vi.spyOn(service, 'getAll').mockReturnValue(mockQuizzes);
+
+      vi.spyOn(service, 'getAll').mockReturnValue([...mockQuizzes, newQuiz]);
 
       service.save(newQuiz);
 

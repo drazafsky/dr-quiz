@@ -71,13 +71,10 @@ describe('TestRepo', () => {
       const mockTests = [{ id: '1', name: 'Test 1' }];
       const newTest: Test = {
         id: '2',
-        title: '',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
         questions: [],
         isSubmitted: false,
-        timeTaken: 0
+        timeTaken: 0,
+        score: 0
       };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
@@ -90,13 +87,10 @@ describe('TestRepo', () => {
       const mockTests = [{ id: '1', name: 'Test 1' }];
       const updatedTest: Test = {
         id: '1',
-        title: '',
-        description: '',
-        timeLimit: 0,
-        shuffleQuestions: false,
         questions: [],
         isSubmitted: false,
-        timeTaken: 0
+        timeTaken: 0,
+        score: 0
       };
       vi.spyOn(service, 'getAll').mockReturnValue(mockTests);
 
