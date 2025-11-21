@@ -5,6 +5,7 @@ import { Repo } from './repo';
 
 describe('Repo', () => {
   let service: Repo;
+  const STORAGE_KEY = 'REPO-KEY';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,7 +23,7 @@ describe('Repo', () => {
       const value = { id: 1, name: 'Test Item' };
       service.setItem(value);
 
-      const storedValue = JSON.parse(localStorage.getItem('TESTS') || '{}');
+      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       expect(storedValue).toEqual(value);
     });
 
@@ -37,10 +38,13 @@ describe('Repo', () => {
   });
 
   describe('getItem', () => {
-    it('should retrieve an item from localStorage', () => {
-      const value = { id: 1, name: 'Test Item' };
-      localStorage.setItem('TESTS', JSON.stringify(value));
+    beforeEach(() => {
+      localStorage.removeItem(STORAGE_KEY);
+    });
 
+    it('should retrieve an item from localStorage', () => { 
+      let value = [{ id: 1, name: 'Test Item' }];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
       const result = service.getItem();
       expect(result).toEqual(value);
     });
@@ -62,11 +66,11 @@ describe('Repo', () => {
 
   describe('removeItem', () => {
     it('should remove an item from localStorage', () => {
-      localStorage.setItem('TESTS', JSON.stringify({ id: 1, name: 'Test Item' }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ id: 1, name: 'Test Item' }));
 
       service.removeItem();
 
-      expect(localStorage.getItem('TESTS')).toBeNull();
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
     });
 
     it('should handle errors when removing an item', () => {
