@@ -20,7 +20,7 @@ export const QuizStore = signalStore(
     withState(initialState),
     withMethods((state, quizRepo = inject(QuizRepo)) => ({
         getAll() {
-            const quizzes = quizRepo.getAll();
+            const quizzes = quizRepo.getAll()
             patchState(state, { quizzes });
         },
 

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
@@ -18,6 +18,11 @@ import { Test } from '../types/test';
   styleUrl: './take-quiz.scss',
 })
 export class TakeQuiz {
+  @HostListener('window:beforeunload', [])
+  beforeUnloadHandler() {
+    this.saveTestOnPageExit();
+  }
+
   readonly #router = inject(Router);
   readonly #formBuilder = inject(FormBuilder);
   readonly #takeQuizService = inject(TakeQuizService);
@@ -99,11 +104,7 @@ export class TakeQuiz {
       takeUntilDestroyed(),
       filter(event => event instanceof NavigationStart)
     ).subscribe(() => {
-      if (!this.#takeQuizService.test$()?.isSubmitted) {
-        const test = this.#form.value as Test;
-        test.timeTaken = (test.timeTaken || 0) + this.elapsedTime;
-        this.#takeQuizService.save(test);
-      }
+      this.saveTestOnPageExit();
     });
 
     this.startTimer();
@@ -165,5 +166,13 @@ export class TakeQuiz {
 
   isAnswerCorrect(question: Question, answerId: string): boolean {
     return question.answers.filter(answer => answer.id === answerId && answer.isCorrect).length > 0;
+  }
+
+  private saveTestOnPageExit() {
+    if (!this.#takeQuizService.test$()?.isSubmitted) {
+      const test = this.#form.value as Test;
+      test.timeTaken = (test.timeTaken || 0) + this.elapsedTime;
+      this.#takeQuizService.save(test);
+    }
   }
 }

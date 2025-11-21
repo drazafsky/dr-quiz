@@ -22,12 +22,13 @@ export class QuizRepo {
   save(quiz: Quiz) {
     const quizzes = this.getAll();
 
-    const updatedQuizzes = [
-      ...quizzes.filter(exisitingQuiz => exisitingQuiz.id !== quiz.id),
-      quiz
-    ];
+    const replaceIndex = quizzes.findIndex(existingQuiz => existingQuiz.id === quiz.id);
 
-    this.#repo.setItem<Quiz[]>(StorageKeys.QUIZZES, updatedQuizzes);
+    if (replaceIndex > -1) {
+      quizzes.splice(replaceIndex, 1, quiz);
+    }
+
+    this.#repo.setItem<Quiz[]>(StorageKeys.QUIZZES, quizzes);
 
     return quiz;
   }
