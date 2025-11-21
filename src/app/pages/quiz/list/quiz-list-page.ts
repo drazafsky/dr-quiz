@@ -12,9 +12,16 @@ import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.compon
   ],
   providers: [QuizStore],
   templateUrl: './quiz-list-page.html',
+import { Router } from '@angular/router';
+
 })
 export class QuizListPage {
   readonly #quizStore = inject(QuizStore);
+  readonly #router = inject(Router);
 
   quizzes$ = this.#quizStore.quizzes;
+
+  handleNew() {
+    this.#router.navigate(['create'], { relativeTo: this.#router.routerState.root });
+  }
 }
