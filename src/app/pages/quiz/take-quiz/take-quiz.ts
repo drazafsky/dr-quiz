@@ -5,11 +5,11 @@ import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter, interval, Subscription } from 'rxjs';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Question } from '../types/question';
+import { Question } from '../../../lib/types/question';
 import { TestStore } from '../../../lib/stores/test.store';
-import { Test } from '../types/test';
+import { Test } from '../../../lib/types/test';
 import { QuizStore } from '../../../lib/stores/quiz.store';
-import { Quiz } from '../types/quiz';
+import { Quiz } from '../../../lib/types/quiz';
 
 @Component({
   selector: 'app-take-quiz',

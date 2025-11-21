@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { combineLatest, map } from 'rxjs';
 import { QuizListPageService } from './quiz-list-page-service';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Quiz } from '../types/quiz';
+import { Quiz } from '../../../lib/types/quiz';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TestStore } from '../../../lib/stores/test.store';
-import { Test } from '../types/test';
+import { Test } from '../../../lib/types/test';
 import { QuizStore } from '../../../lib/stores/quiz.store';
 
 @Component({

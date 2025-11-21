@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 import { TestRepo } from './test-repo';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { Repo } from './repo';
-import { Test } from '../pages/quiz/types/test';
+import { Test } from './types/test';
 
 describe('TestRepo', () => {
   let service: TestRepo;
