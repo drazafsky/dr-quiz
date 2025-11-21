@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Repo, StorageKeys } from './repo';
+import { Repo, StorageKeys } from './repos/repo';
 import { Test } from './types/test';
 
 @Injectable({
