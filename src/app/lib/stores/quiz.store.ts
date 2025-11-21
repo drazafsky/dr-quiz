@@ -4,17 +4,26 @@ import { Quiz } from '../types/quiz';
 import { QuizRepo } from '../repos/quiz-repo';
 import { v4 as uuidv4 } from 'uuid';
 import { setLoading, stopLoading, withLoadingFeature } from './loading-feature';
+import { clearSaveStatus, setSuccess, withSaveStatusFeature } from './save-status-feature';
 
 type QuizState = {
     quizzes: Quiz[];
     selectedQuizId: string | undefined;
     loading: boolean;
+    save: {
+        success: boolean | undefined;
+        error: boolean | undefined;
+    }
 }
 
 const initialState: QuizState = {
     quizzes: [],
     selectedQuizId: undefined,
     loading: false,
+    save: {
+        success: undefined,
+        error: undefined
+    }
 }
 
 export const QuizStore = signalStore(
@@ -27,6 +36,8 @@ export const QuizStore = signalStore(
 
             saveQuiz(newQuiz: Quiz) {
                 patchState(state, setLoading());
+                patchState(state, clearSaveStatus());
+
                 let selectedQuizId = state.selectedQuizId();
 
                 if (
@@ -54,7 +65,12 @@ export const QuizStore = signalStore(
 
                 patchState(state, { quizzes, selectedQuizId: newQuiz.id });
                 quizRepo.setItem(quizzes);
-                setTimeout(() => patchState(state, stopLoading()), 1000);
+
+                // Simulate time taken by an API so that visual feedback can be given to the user
+                setTimeout(() => {
+                    patchState(state, stopLoading());
+                    patchState(state, setSuccess());
+                }, 1000);
             },
 
             newQuiz() {
@@ -109,4 +125,5 @@ export const QuizStore = signalStore(
         }
     }),
     withLoadingFeature(),
+    withSaveStatusFeature(),
 )

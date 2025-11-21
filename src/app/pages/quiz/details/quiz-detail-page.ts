@@ -30,6 +30,7 @@ export class QuizDetailPage {
 
   quiz$ = this.#quizStore.selectedQuiz;
   processing$ = this.#quizStore.loading;
+  saveStatus$ = this.#quizStore.save;
 
   form: FormGroup = this.#fb.group({
     title: ['', [Validators.required, notEmptyValidator()]],
