@@ -13,6 +13,4 @@ export class QuizListPage {
   readonly #quizStore = inject(QuizStore);
 
   quizzes$ = this.#quizStore.quizzes;
-
-  constructor() {}
 }
