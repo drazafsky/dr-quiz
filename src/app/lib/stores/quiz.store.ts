@@ -20,6 +20,19 @@ export const QuizStore = signalStore(
             selectQuiz(selectedQuizId: string) {
                 patchState(state, { selectedQuizId });
             },
+
+            saveQuiz(newQuiz: Quiz) {
+                const quizzes = state.quizzes();
+                const quizToReplace = quizzes.findIndex(eq => eq.id === newQuiz.id);
+
+                if (quizToReplace > -1) {
+                    quizzes.splice(quizToReplace, 1, newQuiz);
+                } else {
+                    quizzes.push(newQuiz);
+                }
+
+                patchState(state, { quizzes });
+            }
         }
     }),
     withComputed((state) => ({
