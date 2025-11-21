@@ -6,36 +6,17 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="card">
-      <div class="card-header">
+    <div class="border border-gray-300 rounded-lg shadow-md overflow-hidden">
+      <div class="p-2 bg-gray-100 border-b border-gray-200">
         <ng-content select="[header]"></ng-content>
       </div>
-      <div class="card-content">
+      <div class="p-4">
         <ng-content select="[content]"></ng-content>
       </div>
-      <div class="card-footer">
+      <div class="p-2 bg-gray-100 border-t border-gray-200">
         <ng-content select="[footer]"></ng-content>
       </div>
     </div>
   `,
-  styles: [`
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .card-header, .card-footer {
-      padding: 8px;
-      background-color: #f9f9f9;
-      border-bottom: 1px solid #eee;
-    }
-    .card-footer {
-      border-top: 1px solid #eee;
-    }
-    .card-content {
-      padding: 16px;
-    }
-  `]
 })
 export class CardComponent {}
