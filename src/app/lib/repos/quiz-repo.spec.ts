@@ -2,13 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { QuizRepo } from './quiz-repo';
 import { Quiz } from '../types/quiz';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('QuizRepo', () => {
   let service: QuizRepo;
   const STORAGE_KEY = 'QUIZZES';
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
     service = TestBed.inject(QuizRepo);
     localStorage.clear();
   });
