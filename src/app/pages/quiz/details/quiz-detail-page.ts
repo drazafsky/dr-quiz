@@ -29,6 +29,7 @@ export class QuizDetailPage {
   ));
 
   quiz$ = this.#quizStore.selectedQuiz;
+  processing$ = this.#quizStore.loading;
 
   form: FormGroup = this.#fb.group({
     title: ['', [Validators.required, notEmptyValidator()]],
@@ -45,10 +46,16 @@ export class QuizDetailPage {
 
       if (quiz !== undefined) {
         this.form.patchValue(quiz);
+
+        if (quiz.isPublished) {
+          this.form.disable();
+        }
       }
     });
 
     effect(() => {
+      // If the id of the quiz has changed (should only happen when saving a new quiz), redirect
+      // to the same page with the correct quiz id in the url
       const selectedQuizId = this.#quizStore.selectedQuizId();
       const urlQuizId = this.#quizId$();
 
