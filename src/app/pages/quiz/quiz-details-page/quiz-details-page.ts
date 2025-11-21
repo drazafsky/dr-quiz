@@ -42,9 +42,10 @@ export class QuizDetailsPage {
     this.#quizDetailsService.quizId$.asObservable(),
     toObservable(this.#displayErrors$),
   ]).pipe(
-    map(([ quiz, form, _quizId ]) => ({
+    map(([ quiz, form, _quizId, displayErrors ]) => ({
       quiz,
       form,
+      displayErrors,
     }))
   );
 
