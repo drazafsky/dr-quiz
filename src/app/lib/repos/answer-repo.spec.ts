@@ -24,8 +24,7 @@ describe('AnswerRepo', () => {
     it('should store an answer in localStorage', () => {
       const answer: Answer = {
         id: '1',
-        text: 'Sample Answer',
-        isCorrect: true,
+        value: 'Sample Answer',
       };
       service.setItem(answer);
 
@@ -36,8 +35,7 @@ describe('AnswerRepo', () => {
     it('should handle errors when storing an answer', () => {
       const answer: Answer = {
         id: '1',
-        text: 'Sample Answer',
-        isCorrect: true,
+        value: 'Sample Answer',
       };
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
@@ -51,8 +49,7 @@ describe('AnswerRepo', () => {
     it('should retrieve an answer from localStorage', () => {
       const answer: Answer = {
         id: '1',
-        text: 'Sample Answer',
-        isCorrect: true,
+        value: 'Sample Answer',
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(answer));
 
@@ -79,8 +76,7 @@ describe('AnswerRepo', () => {
     it('should remove an answer from localStorage', () => {
       const answer: Answer = {
         id: '1',
-        text: 'Sample Answer',
-        isCorrect: true,
+        value: 'Sample Answer',
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(answer));
 
