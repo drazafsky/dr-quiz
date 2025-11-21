@@ -1,6 +1,15 @@
+@let quiz = quiz$();
 <app-card>
     <div header>
-        <h1 class="text-2xl font-bold mb-4">Quiz Details</h1>
+        <app-toolbar>
+            <div left>
+                <h1 class="text-2xl font-bold mb-4">{{ quiz && quiz.title ? quiz.title : 'Edit Quiz Details' }}</h1>
+            </div>
+            <div right>
+                <button type="button" class="mr-4" (click)="handleSaveQuiz()">Save</button>
+                <button type="button" (click)="handlePublishQuiz()">Publish</button>
+            </div>
+        </app-toolbar>
     </div>
 
     <div content>
@@ -41,14 +50,5 @@
                 </label>
             </div>
         </form>
-    </div>
-
-    <div footer>
-        <app-toolbar>
-            <div right>
-                <button type="button" class="mr-4" (click)="handleSaveQuiz()">Save</button>
-                <button type="button" (click)="handlePublishQuiz()">Publish</button>
-            </div>
-        </app-toolbar>
     </div>
 </app-card>
