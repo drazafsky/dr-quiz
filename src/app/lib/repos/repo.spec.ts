@@ -3,8 +3,13 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Repo } from './repo';
 
+interface ITest {
+  id: number;
+  name: string;
+}
+
 describe('Repo', () => {
-  let service: Repo;
+  let service: Repo<ITest>;
   const STORAGE_KEY = 'REPO-KEY';
 
   beforeEach(() => {

@@ -4,5 +4,5 @@ import { Quiz } from "../types/quiz";
 
 @Injectable({ providedIn: 'root' })
 export class QuizRepo extends Repo<Quiz> {
-  readonly #STORAGE_KEY: string = 'QUIZZES';
+  override readonly STORAGE_KEY: string = 'QUIZZES';
 }
