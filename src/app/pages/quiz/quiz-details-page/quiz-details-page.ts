@@ -55,25 +55,18 @@ export class QuizDetailsPage {
 
   constructor() {
     effect(() => {
-      const quiz: Quiz = this.#quizDetailsService.quiz$();
+      const quiz = this.#quizDetailsService.quiz$();
 
       if (quiz) {
+        (this.#form.get('questions') as FormArray).clear();
+        quiz.questions.forEach(question => this.addQuestion(question));
+
         // Populate the form controls with values from the quiz
-        this.#form.get('id')?.setValue(quiz.id || null);
-        this.#form.get('title')?.setValue(quiz.title);
-        this.#form.get('description')?.setValue(quiz.description);
-        this.#form.get('timeLimit')?.setValue(quiz.timeLimit);
-        this.#form.get('shuffleQuestions')?.setValue(quiz.shuffleQuestions);
+        this.#form.patchValue(quiz);
 
         if (quiz.isPublished) {
-          this.#form.get('title')?.disable();
-          this.#form.get('description')?.disable();
-          this.#form.get('timeLimit')?.disable();
-          this.#form.get('shuffleQuestions')?.disable();
+          this.#form.disable();
         }
-
-        (this.#form.get('questions') as FormArray).clear();
-        quiz.questions.forEach(question => this.addQuestion(question, quiz.isPublished));
       }
     });
 
@@ -115,26 +108,20 @@ export class QuizDetailsPage {
     this.#quizDetailsService.publish(this.#form.value as Quiz)
   }
 
-  private addQuestion(question?: Question, disableControls?: boolean) {
+  private addQuestion(question?: Question) {
     const questionControls = this.#formBuilder.group({
       id: [question?.id || uuidv4(), Validators.required],
-      required: [question?.required || false, Validators.required],
-      pointValue: [question?.pointValue || 1, [Validators.required, Validators.min(0)]],
-      prompt: [question?.prompt || '', [Validators.required, notEmptyValidator()]],
+      required: [false, Validators.required],
+      pointValue: [1, [Validators.required, Validators.min(0)]],
+      prompt: ['', [Validators.required, notEmptyValidator()]],
       answers: this.#formBuilder.array([])
     });
 
-    if (disableControls) {
-      questionControls.get('required')?.disable();
-      questionControls.get('pointValue')?.disable();
-      questionControls.get('prompt')?.disable();
-    }
-
     if (question?.answers.length) {
-      const answerControls = question.answers.map(answer => this.addAnswer(answer, disableControls));
+      const answerControls = question.answers.map(() => this.addAnswer());
       (questionControls.get('answers') as FormArray).push(answerControls);
     } else {
-      const answerControls = this.addAnswer(undefined, disableControls);
+      const answerControls = this.addAnswer();
 
       (questionControls.get('answers') as FormArray).push(answerControls);
     }
@@ -142,27 +129,14 @@ export class QuizDetailsPage {
     (this.#form.get('questions') as FormArray).push(questionControls);
   }
 
-  private addAnswer(answer?: Answer, disableControls?: boolean) {
+  private addAnswer() {
     let answerControls: FormGroup;
-    if (answer) {
-      answerControls = this.#formBuilder.group({
-        id: [answer.id, Validators.required],
-        value: [answer.value, [Validators.required, notEmptyValidator()]],
-        isCorrect: [answer.isCorrect, Validators.required]
-      });
-    } else {
-      answerControls = this.#formBuilder.group({
-          id: [uuidv4(), Validators.required],
-          value: ['', [Validators.required, notEmptyValidator()]],
-          isCorrect: [false, Validators.required]
-        });
-      }
+    answerControls = this.#formBuilder.group({
+      id: [uuidv4(), Validators.required],
+      value: ['', [Validators.required, notEmptyValidator()]],
+      isCorrect: [false, Validators.required]
+    });
 
-      if (disableControls) {
-        answerControls.get('value')?.disable();
-        answerControls.get('isCorrect')?.disable();
-      }
-
-      return answerControls;
+    return answerControls;
   }
 }
