@@ -11,7 +11,7 @@
                 <th class="border border-gray-300 px-4 py-2 text-left">Score</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Duration</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Time Remaining</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
+                <th class="border border-gray-300 px-4 py-2 text-left" colspan="2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -50,15 +50,17 @@
                         <span class="md:hidden font-semibold not-sr-only">Time Remaining: </span>
                         {{ (testTimeTaken(quiz) * 1000) | date:'HH:mm:ss':'UTC' }}
                     </td>
-                    <td class="block md:table-cell border border-gray-300 px-4 py-2 flex flex-col md:flex-row">
+                    <td class="block md:table-cell border border-r-0 border-l-0 border-gray-300 px-4 py-2 flex flex-col md:flex-row">
                         <button
                             type="button"
-                            class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                            class="mt-4 mr-0 md:ml-auto border-b-1 border-t-1 border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
                             (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button>
+                    </td>
+                    <td class="block md:table-cell border border-r-0 border-l-0 border-gray-300 px-4 py-2 flex flex-col md:flex-row">
                         @if (quiz.isPublished) {
                             <button
                                 type="button"
-                                class="mt-4 mr-0 md:ml-4 border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
+                                class="mt-4 mr-0 md:ml-auto border border-gray-700 bg-gray-800 text-white p-2 rounded hover:bg-gray-700 md:w-32"
                                 (click)="handleTakeQuiz(quiz)">
                                 {{ test?.id
                                     ? 
