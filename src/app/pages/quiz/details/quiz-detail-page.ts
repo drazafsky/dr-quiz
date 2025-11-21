@@ -59,6 +59,11 @@ export class QuizDetailPage {
   }
 
   handlePublishQuiz() {
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      console.log('Form is invalid. Please fix the errors.');
+      return;
+    }
     console.log('Publishing');
   }
 }
