@@ -22,12 +22,7 @@ export class TakeQuiz {
   readonly #formBuilder = inject(FormBuilder);
   readonly #takeQuizService = inject(TakeQuizService);
 
-  #startTime: number = 0;
-
-  readonly #elapsedTime$ = computed(() => {
-    const endTime = Date.now();
-    return Math.floor((endTime - this.#startTime) / 1000);
-  });
+  #startTime: number = 0; 
 
   readonly maxScore$ = computed(() => {
     return this.#takeQuizService.quiz$()?.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
@@ -67,6 +62,11 @@ export class TakeQuiz {
     }))
   );
 
+  get elapsedTime(): number {
+    const endTime = Date.now();
+    return Math.floor((endTime - this.#startTime) / 1000);
+  }
+
   constructor() {
     effect(() => {
       const quiz = this.#takeQuizService.quiz$();
@@ -80,26 +80,10 @@ export class TakeQuiz {
       }
 
       if (test) {
+        this.#startTime = this.#startTime > 0 ? this.#startTime : new Date((new Date()).getTime() - (test.timeTaken * 1000)).getTime();
         this.#form.patchValue(test);
       }
-      this.startTimer();
     });
-  }
-
-  private startTimer() {
-    this.timerSubscription?.unsubscribe(); // Clear any existing timer
-    this.timerSubscription = interval(1000).subscribe(() => {
-      const elapsedTime = this.#elapsedTime$();
-      const quiz = this.#takeQuizService.quiz$();
-
-      if (quiz && elapsedTime >= quiz.timeLimit) {
-        console.log(`Time's up! Elapsed time: ${elapsedTime}s, Time limit: ${quiz.timeLimit}s`);
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.timerSubscription?.unsubscribe(); // Clean up the timer when the component is destroyed
 
     this.#router.events.pipe(
       takeUntilDestroyed(),
@@ -113,14 +97,34 @@ export class TakeQuiz {
       filter(event => event instanceof NavigationStart)
     ).subscribe(() => {
       if (!this.#takeQuizService.test$()?.isSubmitted) {
-        const elapsedTime = this.#elapsedTime$();
-
         const test = this.#form.value as Test;
-        test.timeTaken = (test.timeTaken || 0) + elapsedTime;
-
+        test.timeTaken = (test.timeTaken || 0) + this.elapsedTime;
         this.#takeQuizService.save(test);
       }
     });
+
+    this.startTimer();
+  }
+
+  private startTimer() {
+    this.timerSubscription?.unsubscribe(); // Clear any existing timer
+    this.timerSubscription = interval(1000)
+    .subscribe(() => {
+      const elapsedTime = this.elapsedTime;
+      const test = this.#takeQuizService.test$();
+      const quiz = this.#takeQuizService.quiz$();
+
+      const testTimeTakePreviously = test?.timeTaken || 0;
+
+      if (quiz && (elapsedTime + testTimeTakePreviously) >= quiz.timeLimit) {
+        this.handleSubmit();
+        this.timerSubscription?.unsubscribe();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription?.unsubscribe(); // Clean up the timer when the component is destroyed 
   }
 
   private addQuestion(question: Question) {
@@ -134,15 +138,13 @@ export class TakeQuiz {
 
   handleSave() {
     const test = this.#form.value as Test;
+    test.timeTaken = test.timeTaken + this.elapsedTime;
     this.#takeQuizService.save(test);
   }
 
   handleSubmit() {
-    const elapsedTime = this.#elapsedTime$();
     const test = this.#form.value as Test;
-
-    test.timeTaken = (test.timeTaken || 0) + elapsedTime;
-
+    test.timeTaken = (test.timeTaken || 0) + this.elapsedTime;
     this.#takeQuizService.submit(test);
   }
 
