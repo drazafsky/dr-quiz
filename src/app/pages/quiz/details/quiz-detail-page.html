@@ -53,4 +53,18 @@
             </div>
         </form>
     </div>
+
+    <div footer>
+        @if (processing$()) {
+            <h3 class="alert">Saving...</h3>
+        }
+
+        @if (saveStatus$().success) {
+            <h3 class="success">Quiz saved successfully.</h3>
+        }
+
+        @if (saveStatus$().error) {
+            <h3 class="alert">An error occurred while saving the quiz. Please try again.</h3>
+        }
+    </div>
 </app-card>
