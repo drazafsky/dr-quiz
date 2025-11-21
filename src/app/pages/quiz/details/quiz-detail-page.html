@@ -1,20 +1,42 @@
-@let quiz = quiz$();
-
 <app-card>
     <div header>
         <h1 class="text-2xl font-bold mb-4">Quiz Details</h1>
     </div>
+
     <div content>
-        @if (quiz !== undefined) {
+        <form [formGroup]="form" class="space-y-4">
             <div>
-                <p><strong>Title:</strong> {{ quiz.title }}</p>
-                <p><strong>Description:</strong> {{ quiz.description }}</p>
-                <p><strong>Time Limit:</strong> {{ quiz.timeLimit }} seconds</p>
-                <p><strong>Questions:</strong> {{ quiz.questions.length }}</p>
-                <p><strong>Published:</strong> {{ quiz.isPublished ? 'Yes' : 'No' }}</p>
+                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                <input id="title" formControlName="title" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
             </div>
-        } @else {
-            <p>Quiz not found.</p>
-        }
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" formControlName="description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+            </div>
+            <div>
+                <label for="timeLimit" class="block text-sm font-medium text-gray-700">Time Limit (seconds)</label>
+                <input id="timeLimit" formControlName="timeLimit" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            </div>
+            <div>
+                <label for="shuffleQuestions" class="inline-flex items-center">
+                    <input id="shuffleQuestions" formControlName="shuffleQuestions" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                    <span class="ml-2 text-sm text-gray-700">Shuffle Questions</span>
+                </label>
+            </div>
+            <div>
+                <label for="isPublished" class="inline-flex items-center">
+                    <input id="isPublished" formControlName="isPublished" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                    <span class="ml-2 text-sm text-gray-700">Published</span>
+                </label>
+            </div>
+        </form>
+    </div>
+
+    <div footer>
+        <app-toolbar>
+            <div right>
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded" (click)="saveQuiz()">Save</button>
+            </div>
+        </app-toolbar>
     </div>
 </app-card>
