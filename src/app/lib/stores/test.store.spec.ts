@@ -4,9 +4,26 @@ import { QuizRepo } from '../quiz-repo';
 import { Test } from '../../pages/quiz/types/test';
 import { Quiz } from '../../pages/quiz/types/quiz';
 import { vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection, Signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { QuizStore } from './quiz.store';
+import { StateSource } from '@ngrx/signals';
 
 describe('TestStore', () => {
-  let testStore: any;
+  let testStore: {
+    tests: Signal<any[]>;
+    selectedTest: Signal<Test | undefined>;
+    getAll: () => void;
+    getById: (id: string) => void;
+    save: (test: Test) => void;
+    submit: (test: Test) => void;
+    score: (test: Test) => number;
+  } & StateSource<{
+      tests: any[];
+      selectedTest: Test | undefined;
+  }>;
+
   let mockTestRepo: TestRepo;
   let mockQuizRepo: QuizRepo;
 
@@ -21,7 +38,18 @@ describe('TestStore', () => {
       getById: vi.fn(),
     } as unknown as QuizRepo;
 
-    testStore = TestStore.create(undefined, mockTestRepo, mockQuizRepo);
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([]),
+        { provide: QuizRepo, useValue: mockQuizRepo },
+        { provide: TestRepo, useValue: mockTestRepo },
+        TestStore,
+        QuizStore
+      ]
+    });
+
+    testStore = TestBed.inject(TestStore);
   });
 
   describe('getAll', () => {
@@ -31,7 +59,7 @@ describe('TestStore', () => {
 
       testStore.getAll();
 
-      expect(testStore.state().tests).toEqual(mockTests);
+      expect(testStore.tests()).toEqual(mockTests);
     });
   });
 
@@ -42,7 +70,7 @@ describe('TestStore', () => {
 
       testStore.getById('1');
 
-      expect(testStore.state().selectedTest).toEqual(mockTest);
+      expect(testStore.selectedTest()).toEqual(mockTest);
     });
   });
 
@@ -53,7 +81,7 @@ describe('TestStore', () => {
 
       testStore.save(mockTest);
 
-      expect(testStore.state().selectedTest).toEqual(mockTest);
+      expect(testStore.selectedTest()).toEqual(mockTest);
       expect(mockTestRepo.save).toHaveBeenCalledWith(mockTest);
     });
   });
@@ -75,8 +103,8 @@ describe('TestStore', () => {
 
       testStore.submit(mockTest);
 
-      expect(testStore.state().selectedTest?.isSubmitted).toBe(true);
-      expect(testStore.state().selectedTest?.score).toBe(0);
+      expect(testStore.selectedTest()?.isSubmitted).toBe(true);
+      expect(testStore.selectedTest()?.score).toBe(0);
       expect(mockTestRepo.save).toHaveBeenCalledWith({ ...mockTest, isSubmitted: true, score: 0 });
     });
   });

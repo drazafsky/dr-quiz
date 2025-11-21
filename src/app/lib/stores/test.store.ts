@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { TestRepo } from '../test-repo';
+import { TestRepo } from '../../lib/test-repo';
+import { QuizRepo } from '../../lib/quiz-repo';
 import { Test } from '../../pages/quiz/types/test';
-import { QuizRepo } from '../quiz-repo';
 
 type TestState = {
   tests: any[];
@@ -56,7 +56,7 @@ export const TestStore = signalStore(
 
           return 0;
         })
-        .reduce((acc, score) => acc + score);
+        .reduce((acc, score) => acc + score, 0);
       }
 
       return score;
