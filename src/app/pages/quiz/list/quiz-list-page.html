@@ -1,10 +1,12 @@
 <div class="p-4">
-    <h1 class="text-2xl font-bold">Quiz List</h1>
+    <h1 class="text-2xl font-bold">Quizzes</h1>
     <ul class="mt-4">
         @for(quiz of quizzes$(); track quiz.id) {
             <li>
                 {{ quiz.title }} - {{ quiz.description }}
             </li>
+        } @empty {
+            <p>There are no quizzes available.</p>
         }
     </ul>
 </div>
