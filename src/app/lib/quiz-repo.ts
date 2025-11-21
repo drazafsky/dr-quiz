@@ -26,6 +26,8 @@ export class QuizRepo {
 
     if (replaceIndex > -1) {
       quizzes.splice(replaceIndex, 1, quiz);
+    } else {
+      quizzes.push(quiz);
     }
 
     this.#repo.setItem<Quiz[]>(StorageKeys.QUIZZES, quizzes);
