@@ -1,11 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuizStore } from '../../../lib/stores/quiz.store';
+import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-quiz-list-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ToolbarComponent
+  ],
   providers: [QuizStore],
   templateUrl: './quiz-list-page.html',
 })
