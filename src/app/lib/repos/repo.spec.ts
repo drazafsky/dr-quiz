@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Repo } from './repo';
@@ -27,7 +28,7 @@ describe('Repo', () => {
 
     it('should handle errors when storing an item', () => {
       const value = { id: 1, name: 'Test Item' };
-      jest.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
 
@@ -50,7 +51,7 @@ describe('Repo', () => {
     });
 
     it('should handle errors when retrieving an item', () => {
-      jest.spyOn(localStorage, 'getItem').mockImplementation(() => {
+      vi.spyOn(localStorage, 'getItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
 
@@ -69,7 +70,7 @@ describe('Repo', () => {
     });
 
     it('should handle errors when removing an item', () => {
-      jest.spyOn(localStorage, 'removeItem').mockImplementation(() => {
+      vi.spyOn(localStorage, 'removeItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
 
