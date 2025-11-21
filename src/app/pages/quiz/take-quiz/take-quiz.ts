@@ -44,13 +44,14 @@ export class TakeQuiz {
   });
 
   private timerSubscription: Subscription | null = null;
+  readonly #displayErrors$ = signal<boolean>(false);
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
     questions: this.#formBuilder.array([
       this.#formBuilder.group({
         id: [''],
-        answer: ['']
+        answer: ['', Validators.required]
       })
     ]),
     isSubmitted: [false],
@@ -62,13 +63,15 @@ export class TakeQuiz {
     toObservable(this.#takeQuizService.quiz$),
     toObservable(this.#takeQuizService.test$),
     of(this.#form),
-    toObservable(this.#elapsedTime$)
+    toObservable(this.#elapsedTime$),
+    toObservable(this.#displayErrors$),
   ]).pipe(
-    map(([ quiz, test, form, elapsedTime ]) => ({
+    map(([ quiz, test, form, elapsedTime, displayErrors ]) => ({
       quiz,
       test,
       form,
       elapsedTime,
+      displayErrors,
     }))
   );
 
@@ -150,6 +153,11 @@ export class TakeQuiz {
   }
 
   handleSubmit() {
+    if (this.#form.invalid) {
+      this.#displayErrors$.set(true);
+      return;
+    }
+
     const test = this.#form.value as Test;
     test.timeTaken = (test.timeTaken || 0) + this.elapsedTime;
     this.#takeQuizService.submit(test);

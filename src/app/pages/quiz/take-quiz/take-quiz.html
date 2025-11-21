@@ -14,24 +14,34 @@
     </h3> 
 }
 
+@if (vm.displayErrors && vm.form.invalid) {
+    <div class="alert">Unable to submit. Correct the errors and try again.</div>
+}
+
 <form [formGroup]="vm.form" class="mt-4 mb-4">
     <section class="mt-4" formArrayName="questions">
         @if (vm.quiz.questions.length > 0) {
-            @for (question of vm.quiz.questions; track question; let i = $index) {
+            @for (question of vm.quiz.questions; track question; let i = $index) { 
                 <section
                     class="question p-4 mb-4 bg-gray-50 border border-gray-200 rounded"
                     [formGroupName]="i"
                     [class.bg-green-50]="vm.test?.isSubmitted && isQuestionCorrect(question)"
                     [class.bg-red-50]="vm.test?.isSubmitted && !isQuestionCorrect(question)">
+
                     <h2 class="text-lg font-semibold flex flex-col md:flex-row">
-                        {{ question.prompt }}
+                        <div class="flex flex-col md:flex-row w-full">
+                            <div class="w-full">{{ question.prompt }}</div>
+                            @if (question.required) {
+                                <div class="alert md:ml-auto">Required</div>
+                            }
+                        </div>
                         <div class="text-sm font-medium md:ml-auto">
                             @if (vm.test?.isSubmitted) {
                                 Points: {{ isQuestionCorrect(question) ? question.pointValue : 0 }} / {{ question.pointValue }}
                             }
                         </div>
                     </h2>
-                    @for (answer of question.answers; track answer; let j = $index) {
+                    @for (answer of question.answers; track answer) {
                         <ul class="mt-2">
                             <li>
                                 <label class="flex items-center">
@@ -48,7 +58,7 @@
                                     [value]="answer.id"
                                     class="mr-2"
                                 />
-                                {{ answer.value }}
+                                    {{ answer.value }}
                                 </label>
                             </li>
                         </ul>
