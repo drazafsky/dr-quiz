@@ -5,10 +5,8 @@ export class Repo<T> {
   protected readonly STORAGE_KEY: string = 'REPO-KEY';
 
   setItem(value: T): void {
-    try {
-      const jsonValue = JSON.stringify(value);
-      localStorage.setItem(this.STORAGE_KEY, jsonValue);
-    } catch (e) {}
+    const jsonValue = JSON.stringify(value);
+    localStorage.setItem(this.STORAGE_KEY, jsonValue);
   }
 
   getItem(): T | null {
@@ -22,8 +20,6 @@ export class Repo<T> {
   }
 
   removeItem(): void {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-    } catch (e) {}
+    localStorage.removeItem(this.STORAGE_KEY);
   }
 }

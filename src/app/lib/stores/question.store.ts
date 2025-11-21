@@ -1,8 +1,7 @@
 import { inject } from '@angular/core';
 import { QuestionRepo } from '../repos/question-repo';
 import { Question } from '../types/question';
-import { signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
-import { patchState } from '@ngrx/signals-store';
+import { signalStore, withHooks, withMethods, withState, patchState } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
 
 type QuestionState = {
