@@ -4,7 +4,6 @@
 @layer base {
     .alert {
         color: var(--color-red-500);
-        font-weight: var(--font-weight-semibold);
         font-size: var(--text-sm);
         line-height: var(--tw-leading, var(--text-sm--line-height));
     }
