@@ -3,15 +3,18 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withStat
 import { Quiz } from '../types/quiz';
 import { QuizRepo } from '../repos/quiz-repo';
 import { v4 as uuidv4 } from 'uuid';
+import { setLoading, stopLoading, withLoadingFeature } from './loading-feature';
 
 type QuizState = {
     quizzes: Quiz[];
     selectedQuizId: string | undefined;
+    loading: boolean;
 }
 
 const initialState: QuizState = {
     quizzes: [],
     selectedQuizId: undefined,
+    loading: false,
 }
 
 export const QuizStore = signalStore(
@@ -23,6 +26,7 @@ export const QuizStore = signalStore(
             },
 
             saveQuiz(newQuiz: Quiz) {
+                patchState(state, setLoading());
                 let selectedQuizId = state.selectedQuizId();
 
                 if (
@@ -50,6 +54,7 @@ export const QuizStore = signalStore(
 
                 patchState(state, { quizzes, selectedQuizId: newQuiz.id });
                 quizRepo.setItem(quizzes);
+                setTimeout(() => patchState(state, stopLoading()), 1000);
             },
 
             newQuiz() {
@@ -81,22 +86,27 @@ export const QuizStore = signalStore(
         const quizRepo = inject(QuizRepo);
         return {
             onInit() {
+                patchState(state, setLoading());
                 const quizzes = quizRepo.getItem();
                 if (quizzes !== null) {
                     patchState(state, { quizzes });
                 } else {
                     patchState(state, { quizzes: [] });
                 }
+                patchState(state, stopLoading());
             },
 
             onDestroy() {
+                patchState(state, setLoading());
                 const quizzes = quizRepo.getItem();
                 if (quizzes !== null) {
                     quizRepo.setItem(quizzes);
                 } else {
                     quizRepo.removeItem();
                 }
+                patchState(state, stopLoading());
             }
         }
-    })
+    }),
+    withLoadingFeature(),
 )
