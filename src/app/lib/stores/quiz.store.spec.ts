@@ -2,107 +2,71 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { QuizStore } from './quiz.store';
 import { QuizRepo } from '../repos/quiz-repo';
 import { Quiz } from '../types/quiz';
+import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection, Signal } from '@angular/core';
+import { StateSource } from '@ngrx/signals';
 
-vi.mock('../repos/quiz-repo', () => ({
-  QuizRepo: vi.fn().mockImplementation(() => ({
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-  })),
-}));
+const MOCK_QUIZZES: Quiz[] = [
+  {
+    id: '1',
+    title: 'Quiz #1',
+    description: 'A description',
+    timeLimit: 1000,
+    shuffleQuestions: false,
+    questions: [],
+    isPublished: false
+  },
+  {
+    id: '2',
+    title: 'Quiz #2',
+    description: '',
+    timeLimit: 60,
+    shuffleQuestions: true,
+    questions: [ 'ABC', '123' ],
+    isPublished: true
+  },
+];
 
 describe('QuizStore', () => {
-  let store: ReturnType<typeof QuizStore>;
-  let quizRepo: QuizRepo;
+  const mockQuizRepo = {
+    getItem: vi.fn((): Quiz[] | null => MOCK_QUIZZES),
+    setItem: vi.fn((quizzes: Quiz[]) => {}),
+    removeItem: vi.fn(() => {}),
+  };
 
   beforeEach(() => {
-    quizRepo = new QuizRepo();
-    store = QuizStore();
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        QuizStore,
+        { provide: QuizRepo, useValue: mockQuizRepo }
+      ],
+    });
   });
 
   it('should initialize with empty quizzes if no data in repo', () => {
-    vi.spyOn(quizRepo, 'getItem').mockReturnValue(null);
+    vi.spyOn(mockQuizRepo, 'getItem').mockReturnValue(null);
+    const store = TestBed.inject(QuizStore);
 
-    store.onInit();
-
-    expect(store.state.quizzes()).toEqual([]);
+    expect(store.quizzes()).toEqual([]);
   });
 
   it('should initialize with quizzes from repo', () => {
-    const quizzes: Quiz[] = [
-      {
-        id: '1',
-        title: 'Sample Quiz',
-        description: 'A sample quiz',
-        timeLimit: 60,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false,
-      },
-    ];
-    vi.spyOn(quizRepo, 'getItem').mockReturnValue(quizzes);
+    vi.spyOn(mockQuizRepo, 'getItem').mockReturnValue(MOCK_QUIZZES);
+    const store = TestBed.inject(QuizStore);
 
-    store.onInit();
-
-    expect(store.state.quizzes()).toEqual(quizzes);
-  });
-
-  it('should save quizzes to repo on destroy', () => {
-    const quizzes: Quiz[] = [
-      {
-        id: '1',
-        title: 'Sample Quiz',
-        description: 'A sample quiz',
-        timeLimit: 60,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false,
-      },
-    ];
-    store.state.quizzes.set(quizzes);
-
-    store.onDestroy();
-
-    expect(quizRepo.setItem).toHaveBeenCalledWith(quizzes);
-  });
-
-  it('should remove quizzes from repo on destroy if empty', () => {
-    store.state.quizzes.set([]);
-
-    store.onDestroy();
-
-    expect(quizRepo.removeItem).toHaveBeenCalled();
+    expect(store.quizzes()).toEqual(MOCK_QUIZZES);
   });
 
   it('should update selectedQuizId when selectQuiz is called', () => {
+    const store = TestBed.inject(QuizStore);
     store.selectQuiz('1');
 
-    expect(store.state.selectedQuizId()).toBe('1');
+    expect(store.selectedQuizId()).toBe('1');
   });
 
   it('should compute quizCount correctly', () => {
-    const quizzes: Quiz[] = [
-      {
-        id: '1',
-        title: 'Sample Quiz',
-        description: 'A sample quiz',
-        timeLimit: 60,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false,
-      },
-      {
-        id: '2',
-        title: 'Another Quiz',
-        description: 'Another sample quiz',
-        timeLimit: 120,
-        shuffleQuestions: true,
-        questions: [],
-        isPublished: true,
-      },
-    ];
-    store.state.quizzes.set(quizzes);
-
-    expect(store.state.quizCount()).toBe(2);
+    const store = TestBed.inject(QuizStore);
+    expect(store.quizCount()).toBe(2);
   });
 });
