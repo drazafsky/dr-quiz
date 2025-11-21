@@ -5,11 +5,12 @@ import { QuizStore } from '../../../lib/stores/quiz.store';
 import { CardComponent } from "../../../lib/components/card/card.component";
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-quiz-detail-page',
   standalone: true,
-  imports: [CommonModule, JsonPipe, CardComponent],
+  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule],
   templateUrl: './quiz-detail-page.html',
   providers: [QuizStore],
 })
@@ -23,6 +24,22 @@ export class QuizDetailPage {
   ));
 
 
+  form: FormGroup;
+
+  constructor() {
+    const fb = inject(FormBuilder);
+    const quiz = this.quiz$();
+
+    this.form = fb.group({
+      title: [quiz?.title || ''],
+      description: [quiz?.description || ''],
+      timeLimit: [quiz?.timeLimit || 0],
+      shuffleQuestions: [quiz?.shuffleQuestions || false],
+      questions: [quiz?.questions || []],
+      isPublished: [quiz?.isPublished || false],
+    });
+  }
+
   quiz$ = computed(() => {
     const quizId = this.#quizId$();
 
@@ -31,5 +48,5 @@ export class QuizDetailPage {
     }
 
     return this.#quizStore.quizzes().find(quiz => quiz.id === quizId);
-  })
+  });
 }
