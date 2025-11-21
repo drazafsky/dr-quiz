@@ -28,10 +28,9 @@ export class QuizDetailPage {
 
   form: FormGroup = this.#fb.group({
     title: ['', [Validators.required, notEmptyValidator()]],
-    description: ['', notEmptyValidator()],
-    timeLimit: [0, [Validators.min(0)]],
+    description: [''],
+    timeLimit: [60, [Validators.min(1)]],
     shuffleQuestions: [false, Validators.required],
-    questions: [[], Validators.minLength(1)],
   });
 
   quiz$ = computed(() => {
@@ -61,9 +60,9 @@ export class QuizDetailPage {
   handlePublishQuiz() {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
-      console.log('Form is invalid. Please fix the errors.');
       return;
     }
-    console.log('Publishing');
+
+    console.log(this.form.value);
   }
 }

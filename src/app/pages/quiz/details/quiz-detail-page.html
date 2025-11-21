@@ -8,24 +8,31 @@
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
                 <input id="title" formControlName="title" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-                <div *ngIf="form.get('title')?.touched && form.get('title')?.invalid" class="text-red-500 text-sm mt-1">
-                    <div *ngIf="form.get('title')?.errors?.['required']">Title is required.</div>
-                    <div *ngIf="form.get('title')?.errors?.['not-empty']">Title cannot be empty.</div>
-                </div>
+                @if (form.get('title')?.touched && form.get('title')?.invalid) {
+                    <div class="alert mt-1">
+                        @if (form.get('title')?.errors?.['required']) {
+                            <div>Title is required.</div>
+                        }
+                        @if (form.get('title')?.errors?.['not-empty']) {
+                            <div>Title cannot be empty.</div>
+                        }
+                    </div>
+                }
             </div>
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <input id="title" formControlName="description" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-                <div *ngIf="form.get('description')?.touched && form.get('description')?.invalid" class="text-red-500 text-sm mt-1">
-                    <div *ngIf="form.get('description')?.errors?.['not-empty']">Description cannot be empty.</div>
-                </div>
             </div>
             <div>
                 <label for="timeLimit" class="block text-sm font-medium text-gray-700">Time Limit (seconds)</label>
                 <input id="timeLimit" formControlName="timeLimit" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-                <div *ngIf="form.get('timeLimit')?.touched && form.get('timeLimit')?.invalid" class="text-red-500 text-sm mt-1">
-                    <div *ngIf="form.get('timeLimit')?.errors?.['min']">Time Limit must be a positive number.</div>
-                </div>
+                @if (form.get('timeLimit')?.touched && form.get('timeLimit')?.invalid) {
+                    <div class="alert mt-1">
+                        @if (form.get('timeLimit')?.errors?.['min']) {
+                            <div>Time Limit must be a positive number.</div>
+                        }
+                    </div>
+                }
             </div>
             <div>
                 <label for="shuffleQuestions" class="inline-flex items-center">
