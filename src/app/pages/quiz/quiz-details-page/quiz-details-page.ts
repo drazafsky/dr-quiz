@@ -10,6 +10,7 @@ import { Quiz } from '../types/quiz';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
+import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
 
 @Component({
   selector: 'app-quiz-details-page',
@@ -28,9 +29,9 @@ export class QuizDetailsPage {
 
   readonly #form = this.#formBuilder.group({
     id: [''],
-    title: ['', Validators.required],
+    title: ['', [Validators.required, notEmptyValidator()]],
     description: [''],
-    timeLimit: [60, Validators.required],
+    timeLimit: [60, [Validators.required, Validators.min(1)]],
     shuffleQuestions: [false, Validators.required],
     questions: this.#formBuilder.array([])
   });
@@ -116,8 +117,8 @@ export class QuizDetailsPage {
     const questionControls = this.#formBuilder.group({
       id: [question?.id || uuidv4(), Validators.required],
       required: [question?.required || false, Validators.required],
-      pointValue: [question?.pointValue || 1, Validators.required],
-      prompt: [question?.prompt || '', Validators.required],
+      pointValue: [question?.pointValue || 1, [Validators.required, Validators.min(0)]],
+      prompt: [question?.prompt || '', [Validators.required, notEmptyValidator()]],
       answers: this.#formBuilder.array([])
     });
 
