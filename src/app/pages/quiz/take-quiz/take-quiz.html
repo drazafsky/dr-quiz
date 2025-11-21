@@ -33,9 +33,9 @@
                     [class.bg-red-50]="vm.test?.isSubmitted && !isQuestionCorrect(question)">
 
                     <h2 class="text-lg font-semibold flex flex-col md:flex-row">
-                        <div class="flex flex-col md:flex-row w-full">
+                        <div class="flex flex-col w-full">
                             @if (question.required) {
-                                <div class="alert md:ml-auto">Required</div>
+                                <div class="alert">Required</div>
                             }
                             <div class="w-full">{{ question.prompt }}</div>
                         </div>
