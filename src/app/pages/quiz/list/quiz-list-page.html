@@ -1,13 +1,16 @@
-<div class="p-4">
-    <app-toolbar class="mb-4">
-        <div left>
-            <h1 class="text-2xl font-bold mb-4">Quizzes</h1>
-        </div>
-        <div right>
-            <button (click)="handleNew()">New</button>
-        </div>
-    </app-toolbar>
-    <div class="overflow-x-auto">
+<app-card>
+    <div class="p-4" header>
+        <app-toolbar class="mb-4">
+            <div left>
+                <h1 class="text-2xl font-bold mb-4">Quizzes</h1>
+            </div>
+            <div right>
+                <button (click)="handleNew()">New</button>
+            </div>
+        </app-toolbar>
+    </div>
+
+    <div class="overflow-x-auto" content>
         <table class="table-auto w-full border-collapse border border-gray-300">
             <thead>
                 <tr class="bg-gray-100">
@@ -35,4 +38,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</app-card>

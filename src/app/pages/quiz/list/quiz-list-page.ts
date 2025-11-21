@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { QuizStore } from '../../../lib/stores/quiz.store';
 import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CardComponent } from '../../../lib/components/card/card.component';
 
 @Component({
   selector: 'app-quiz-list-page',
   standalone: true,
   imports: [
     CommonModule,
-    ToolbarComponent
+    ToolbarComponent,
+    CardComponent
   ],
   providers: [QuizStore],
   templateUrl: './quiz-list-page.html',
