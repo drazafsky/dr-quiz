@@ -1,11 +1,11 @@
 import { Question } from "./question";
 
 export interface Quiz {
-    id?: string;
+    id: string;
     title: string;
     description: string;
     timeLimit: number; // Number of seconds allowed for taking the quiz
     shuffleQuestions: boolean;
-    questions: Question[];
+    questions: string[]; // Ids of questions to include in the quiz
     isPublished: boolean;
 }

@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 
 import { TestRepo } from './test-repo';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { Repo } from './repo';
+import { Repo } from './repos/repo';
 import { Test } from './types/test';
 
 describe('TestRepo', () => {
