@@ -1,0 +1,20 @@
+@let quiz = quiz$();
+
+<app-card>
+    <div header>
+        <h1 class="text-2xl font-bold mb-4">Quiz Details</h1>
+    </div>
+    <div content>
+        @if (quiz !== undefined) {
+            <div>
+                <p><strong>Title:</strong> {{ quiz.title }}</p>
+                <p><strong>Description:</strong> {{ quiz.description }}</p>
+                <p><strong>Time Limit:</strong> {{ quiz.timeLimit }} seconds</p>
+                <p><strong>Questions:</strong> {{ quiz.questions.length }}</p>
+                <p><strong>Published:</strong> {{ quiz.isPublished ? 'Yes' : 'No' }}</p>
+            </div>
+        } @else {
+            <p>Quiz not found.</p>
+        }
+    </div>
+</app-card>

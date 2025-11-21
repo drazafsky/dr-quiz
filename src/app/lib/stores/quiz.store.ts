@@ -32,7 +32,21 @@ export const QuizStore = signalStore(
                 }
 
                 patchState(state, { quizzes });
-            }
+            },
+
+            newQuiz() {
+                const quiz: Quiz = {
+                    id: '',
+                    title: '',
+                    description: '',
+                    timeLimit: 0,
+                    shuffleQuestions: false,
+                    questions: [],
+                    isPublished: false
+                };
+
+                return quiz;
+            },
         }
     }),
     withComputed((state) => ({
