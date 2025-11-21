@@ -1,5 +1,5 @@
 import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
-import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter, interval, Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { Quiz } from '../types/quiz';
 
 @Component({
   selector: 'app-take-quiz',
-  imports: [AsyncPipe, DatePipe, JsonPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, DatePipe, ReactiveFormsModule],
   providers: [QuizStore, TestStore, TakeQuizService],
   templateUrl: './take-quiz.html',
   styleUrl: './take-quiz.scss',
