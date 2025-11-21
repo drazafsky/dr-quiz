@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter, interval, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { Test } from '../types/test';
 
 @Component({
   selector: 'app-take-quiz',
-  imports: [AsyncPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, DatePipe, ReactiveFormsModule],
   providers: [QuizStore, TestStore, TakeQuizService],
   templateUrl: './take-quiz.html',
   styleUrl: './take-quiz.scss',
@@ -22,6 +22,7 @@ export class TakeQuiz {
   readonly #formBuilder = inject(FormBuilder);
   readonly #takeQuizService = inject(TakeQuizService);
 
+  readonly #elapsedTime$ = signal(0);
   #startTime: number = 0; 
 
   readonly maxScore$ = computed(() => {
@@ -54,11 +55,13 @@ export class TakeQuiz {
     toObservable(this.#takeQuizService.quiz$),
     toObservable(this.#takeQuizService.test$),
     of(this.#form),
+    toObservable(this.#elapsedTime$)
   ]).pipe(
-    map(([ quiz, test, form ]) => ({
+    map(([ quiz, test, form, elapsedTime ]) => ({
       quiz,
       test,
       form,
+      elapsedTime,
     }))
   );
 
@@ -115,6 +118,7 @@ export class TakeQuiz {
       const quiz = this.#takeQuizService.quiz$();
 
       const testTimeTakePreviously = test?.timeTaken || 0;
+      this.#elapsedTime$.set(elapsedTime + testTimeTakePreviously);
 
       if (quiz && (elapsedTime + testTimeTakePreviously) >= quiz.timeLimit) {
         this.timerSubscription?.unsubscribe();

@@ -8,6 +8,10 @@
     <h3 class="text-md font-medium text-gray-500">
         Score: {{ vm.test?.score }} / {{ maxScore$() }} : {{ scorePercent$() }}%
     </h3> 
+} @else {
+    <h3 class="text-md font-medium text-gray-500">
+        Time Remaining: {{ (vm.quiz.timeLimit - vm.elapsedTime) * 1000 | date:'HH:mm:ss':'UTC' }}
+    </h3> 
 }
 
 <form [formGroup]="vm.form" class="mt-4 mb-4">
