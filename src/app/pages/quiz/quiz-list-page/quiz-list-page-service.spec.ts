@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { QuizListPageService } from './quiz-list-page-service';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { QuizStore } from '../quiz.store';
-import { TestStore } from '../test.store';
+import { TestStore } from '../../../lib/stores/test.store';
+import { QuizStore } from '../../../lib/stores/quiz.store';
 
 describe('QuizListPageService', () => {
   let service: QuizListPageService;

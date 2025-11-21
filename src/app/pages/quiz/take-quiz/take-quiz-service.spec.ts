@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { TakeQuizService } from './take-quiz-service';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { QuizStore } from '../quiz.store';
-import { TestStore } from '../test.store';
+import { TestStore } from '../../../lib/stores/test.store';
+import { QuizStore } from '../../../lib/stores/quiz.store';
 
 describe('TakeQuizService', () => {
   let service: TakeQuizService;

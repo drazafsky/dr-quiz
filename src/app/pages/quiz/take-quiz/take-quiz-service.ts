@@ -1,8 +1,9 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { QuizStore } from '../quiz.store';
-import { TestStore } from '../test.store';
+import { TestStore } from '../../../lib/stores/test.store';
 import { Test } from '../types/test';
+import { QuizStore } from '../../../lib/stores/quiz.store';
+import { Quiz } from '../types/quiz';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class TakeQuizService {
   });
   readonly test$ = computed(() => {
     const test = this.#testStore.selectedTest()
-    const quiz = this.quiz$();
+    const quiz: Quiz = this.quiz$();
 
     if (test && quiz?.shuffleQuestions) {
       // Order the test questions according to the quiz question order
@@ -54,7 +55,8 @@ export class TakeQuizService {
   }
 
   isAnswerCorrect(questionId: string, answerId: string): boolean {
-    const question = this.quiz$()?.questions.find(question => question.id === questionId);
+    const quiz: Quiz = this.quiz$();
+    const question = quiz.questions.find(question => question.id === questionId);
 
     if (question) {
       return question.answers
