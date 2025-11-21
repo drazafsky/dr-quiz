@@ -145,13 +145,13 @@ export class QuizDetailsPage {
     if (answer) {
       answerControls = this.#formBuilder.group({
         id: [answer.id, Validators.required],
-        value: [answer.value, Validators.required],
+        value: [answer.value, [Validators.required, notEmptyValidator()]],
         isCorrect: [answer.isCorrect, Validators.required]
       });
     } else {
       answerControls = this.#formBuilder.group({
           id: [uuidv4(), Validators.required],
-          value: ['', Validators.required],
+          value: ['', [Validators.required, notEmptyValidator()]],
           isCorrect: [false, Validators.required]
         });
       }
