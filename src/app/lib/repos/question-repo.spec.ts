@@ -22,18 +22,20 @@ describe('QuestionRepo', () => {
 
   describe('setItem', () => {
     it('should store a question in localStorage', () => {
-      const question: Question = {
-        id: '1',
-        required: true,
-        pointValue: 10,
-        prompt: 'Sample Question',
-        answers: ['Answer1', 'Answer2'],
-        correctAnswer: 'Answer1',
-      };
-      service.setItem(question);
+      const questions: Question[] = [
+        {
+          id: '1',
+          required: true,
+          pointValue: 10,
+          prompt: 'Sample Question',
+          answers: ['Answer1', 'Answer2'],
+          correctAnswer: 'Answer1',
+        },
+      ];
+      service.setItem(questions);
 
-      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      expect(storedValue).toEqual(question);
+      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      expect(storedValue).toEqual(questions);
     });
 
     it('should handle errors when storing a question', () => {

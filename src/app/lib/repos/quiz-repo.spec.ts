@@ -22,19 +22,21 @@ describe('QuizRepo', () => {
 
   describe('setItem', () => {
     it('should store a quiz in localStorage', () => {
-      const quiz: Quiz = {
-        id: '1',
-        title: 'Sample Quiz',
-        description: 'A sample quiz',
-        timeLimit: 60,
-        shuffleQuestions: false,
-        questions: [],
-        isPublished: false,
-      };
-      service.setItem(quiz);
+      const quizzes: Quiz[] = [
+        {
+          id: '1',
+          title: 'Sample Quiz',
+          description: 'A sample quiz',
+          timeLimit: 60,
+          shuffleQuestions: false,
+          questions: [],
+          isPublished: false,
+        },
+      ];
+      service.setItem(quizzes);
 
-      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      expect(storedValue).toEqual(quiz);
+      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      expect(storedValue).toEqual(quizzes);
     });
 
     it('should handle errors when storing a quiz', () => {
