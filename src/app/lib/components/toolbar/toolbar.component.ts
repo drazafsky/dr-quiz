@@ -21,8 +21,6 @@ import { CommonModule } from '@angular/common';
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 8px;
       padding: 8px;
       box-sizing: border-box;
     }
