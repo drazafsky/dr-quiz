@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="toolbar mb-4">
+    <div class="toolbar">
       <div class="toolbar-left">
         <ng-content select="[left]"></ng-content>
       </div>
