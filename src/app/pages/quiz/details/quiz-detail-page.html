@@ -55,6 +55,14 @@
     </div>
 
     <div footer>
+        <app-card>
+            <div header>
+                <h2 class="text-xl font-bold">Questions</h2>
+            </div>
+            <div content>
+                <app-question-table [questions]="quiz?.questions"></app-question-table>
+            </div>
+        </app-card>
         @if (processing$()) {
             <h3 class="alert">Saving...</h3>
         }
