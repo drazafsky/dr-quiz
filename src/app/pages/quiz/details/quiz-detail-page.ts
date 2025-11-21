@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { QuizStore } from '../../../lib/stores/quiz.store';
@@ -17,28 +17,21 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 export class QuizDetailPage {
   readonly #route = inject(ActivatedRoute);
   readonly #quizStore = inject(QuizStore);
+  readonly #fb = inject(FormBuilder);
 
   #quizId$ = toSignal(this.#route.paramMap.pipe(
     takeUntilDestroyed(),
     map(params => params.get('quizId'))
   ));
 
-
-  form: FormGroup;
-
-  constructor() {
-    const fb = inject(FormBuilder);
-    const quiz = this.quiz$();
-
-    this.form = fb.group({
-      title: [quiz?.title || ''],
-      description: [quiz?.description || ''],
-      timeLimit: [quiz?.timeLimit || 0],
-      shuffleQuestions: [quiz?.shuffleQuestions || false],
-      questions: [quiz?.questions || []],
-      isPublished: [quiz?.isPublished || false],
-    });
-  }
+  form: FormGroup = this.#fb.group({
+    title: [''],
+    description: [''],
+    timeLimit: [0],
+    shuffleQuestions: [false],
+    questions: [[]],
+    isPublished: [false],
+  });
 
   quiz$ = computed(() => {
     const quizId = this.#quizId$();
@@ -49,4 +42,14 @@ export class QuizDetailPage {
 
     return this.#quizStore.quizzes().find(quiz => quiz.id === quizId);
   });
+
+  constructor() {
+    effect(() => {
+      const quiz = this.quiz$();
+
+      if (quiz !== undefined) {
+        this.form.patchValue(quiz);
+      }
+    })
+  }
 }
