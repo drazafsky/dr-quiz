@@ -15,7 +15,11 @@
 }
 
 @if (vm.displayErrors && vm.form.invalid) {
-    <div class="alert">Unable to submit. Correct the errors and try again.</div>
+    <div class="alert">
+        Unable to submit.
+        <br class="sm:hidden" />
+        Correct the errors and try again.
+    </div>
 }
 
 <form [formGroup]="vm.form" class="mt-4 mb-4">
@@ -30,10 +34,10 @@
 
                     <h2 class="text-lg font-semibold flex flex-col md:flex-row">
                         <div class="flex flex-col md:flex-row w-full">
-                            <div class="w-full">{{ question.prompt }}</div>
                             @if (question.required) {
                                 <div class="alert md:ml-auto">Required</div>
                             }
+                            <div class="w-full">{{ question.prompt }}</div>
                         </div>
                         <div class="text-sm font-medium md:ml-auto">
                             @if (vm.test?.isSubmitted) {
