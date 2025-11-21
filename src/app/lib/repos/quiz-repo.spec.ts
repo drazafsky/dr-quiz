@@ -40,7 +40,7 @@ describe('QuizRepo', () => {
     });
 
     it('should handle errors when storing a quiz', () => {
-      const quiz: Quiz = {
+      const quiz: Quiz[] = [{
         id: '1',
         title: 'Sample Quiz',
         description: 'A sample quiz',
@@ -48,7 +48,7 @@ describe('QuizRepo', () => {
         shuffleQuestions: false,
         questions: [],
         isPublished: false,
-      };
+      }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
