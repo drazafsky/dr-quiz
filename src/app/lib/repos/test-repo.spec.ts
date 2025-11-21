@@ -22,23 +22,25 @@ describe('TestRepo', () => {
 
   describe('setItem', () => {
     it('should store a test in localStorage', () => {
-      const test: Test = {
-        id: '1',
-        isSubmitted: false,
-        score: {
-          correct: 0,
-          incorrect: 1,
-          points: 0,
-          percent: 0
+      const tests: Test[] = [
+        {
+          id: '1',
+          isSubmitted: false,
+          score: {
+            correct: 0,
+            incorrect: 1,
+            points: 0,
+            percent: 0
+          },
+          questions: [],
+          quizId: '',
+          timeTaken: 0
         },
-        questions: [],
-        quizId: '',
-        timeTaken: 0
-      };
-      service.setItem(test);
+      ];
+      service.setItem(tests);
 
-      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      expect(storedValue).toEqual(test);
+      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      expect(storedValue).toEqual(tests);
     });
 
     it('should handle errors when storing a test', () => {
