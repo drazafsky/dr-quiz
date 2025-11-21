@@ -22,14 +22,16 @@ describe('AnswerRepo', () => {
 
   describe('setItem', () => {
     it('should store an answer in localStorage', () => {
-      const answer: Answer = {
-        id: '1',
-        value: 'Sample Answer',
-      };
-      service.setItem(answer);
+      const answers: Answer[] = [
+        {
+          id: '1',
+          value: 'Sample Answer',
+        },
+      ];
+      service.setItem(answers);
 
-      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      expect(storedValue).toEqual(answer);
+      const storedValue = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      expect(storedValue).toEqual(answers);
     });
 
     it('should handle errors when storing an answer', () => {
