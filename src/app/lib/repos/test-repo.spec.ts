@@ -44,7 +44,7 @@ describe('TestRepo', () => {
     });
 
     it('should handle errors when storing a test', () => {
-      const test: Test = {
+      const test: Test[] = [{
         id: '1',
         isSubmitted: false,
         score: {
@@ -56,7 +56,7 @@ describe('TestRepo', () => {
         questions: [],
         quizId: '',
         timeTaken: 0
-      };
+      }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
       });

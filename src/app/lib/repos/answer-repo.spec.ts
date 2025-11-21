@@ -35,10 +35,10 @@ describe('AnswerRepo', () => {
     });
 
     it('should handle errors when storing an answer', () => {
-      const answer: Answer = {
+      const answer: Answer[] = [{
         id: '1',
         value: 'Sample Answer',
-      };
+      }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
       });
