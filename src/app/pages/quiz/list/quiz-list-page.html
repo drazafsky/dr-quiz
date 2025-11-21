@@ -1,12 +1,31 @@
 <div class="p-4">
-    <h1 class="text-2xl font-bold">Quizzes</h1>
-    <ul class="mt-4">
-        @for(quiz of quizzes$(); track quiz.id) {
-            <li>
-                {{ quiz.title }} - {{ quiz.description }}
-            </li>
-        } @empty {
-            <p>There are no quizzes available.</p>
-        }
-    </ul>
+    <h1 class="text-2xl font-bold mb-4">Quizzes</h1>
+    <div class="overflow-x-auto">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-4 py-2 text-left">Title</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Questions</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Published</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(quiz of quizzes$(); track quiz.id) {
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">{{ quiz.title }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ quiz.description }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ quiz.timeLimit }} seconds</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ quiz.questions.length }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ quiz.isPublished ? 'Yes' : 'No' }}</td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="5" class="border border-gray-300 px-4 py-2 text-center">There are no quizzes available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
