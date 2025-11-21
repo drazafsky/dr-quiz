@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, map, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -24,6 +24,8 @@ export class QuizDetailsPage {
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
 
+  readonly #displayErrors$ = signal<boolean>(false);
+
   readonly #form = this.#formBuilder.group({
     id: [''],
     title: ['', Validators.required],
@@ -37,6 +39,7 @@ export class QuizDetailsPage {
     toObservable(this.#quizDetailsService.quiz$),
     of(this.#form),
     this.#quizDetailsService.quizId$.asObservable(),
+    toObservable(this.#displayErrors$),
   ]).pipe(
     map(([ quiz, form, _quizId ]) => ({
       quiz,
@@ -96,11 +99,16 @@ export class QuizDetailsPage {
     this.addQuestion();
   }
 
-  handleSave() {
+  handleSave() { 
     this.#quizDetailsService.save(this.#form.value as Quiz)
   }
 
   handlePublish() {
+    if (this.#form.invalid) {
+      this.#displayErrors$.set(true);
+      return;
+    }
+
     this.#quizDetailsService.publish(this.#form.value as Quiz)
   }
 
