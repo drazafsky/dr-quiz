@@ -1,7 +1,7 @@
 import { Question } from "./question";
 
 export interface Quiz {
-    id: string;
+    id?: string;
     title: string;
     description: string;
     timeLimit: number; // Number of seconds allowed for taking the quiz
