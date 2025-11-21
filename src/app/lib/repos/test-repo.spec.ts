@@ -25,8 +25,15 @@ describe('TestRepo', () => {
       const test: Test = {
         id: '1',
         isSubmitted: false,
-        score: 0,
+        score: {
+          correct: 0,
+          incorrect: 1,
+          points: 0,
+          percent: 0
+        },
         questions: [],
+        quizId: '',
+        timeTaken: 0
       };
       service.setItem(test);
 
@@ -38,8 +45,15 @@ describe('TestRepo', () => {
       const test: Test = {
         id: '1',
         isSubmitted: false,
-        score: 0,
+        score: {
+          correct: 0,
+          incorrect: 1,
+          points: 0,
+          percent: 0
+        },
         questions: [],
+        quizId: '',
+        timeTaken: 0
       };
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
@@ -54,8 +68,15 @@ describe('TestRepo', () => {
       const test: Test = {
         id: '1',
         isSubmitted: false,
-        score: 0,
+        score: {
+          correct: 0,
+          incorrect: 1,
+          points: 0,
+          percent: 0
+        },
         questions: [],
+        quizId: '',
+        timeTaken: 0
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(test));
 
@@ -83,8 +104,15 @@ describe('TestRepo', () => {
       const test: Test = {
         id: '1',
         isSubmitted: false,
-        score: 0,
+        score: {
+          correct: 0,
+          incorrect: 1,
+          points: 0,
+          percent: 0
+        },
         questions: [],
+        quizId: '',
+        timeTaken: 0
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(test));
 
