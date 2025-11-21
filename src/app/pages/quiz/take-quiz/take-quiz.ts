@@ -117,8 +117,8 @@ export class TakeQuiz {
       const testTimeTakePreviously = test?.timeTaken || 0;
 
       if (quiz && (elapsedTime + testTimeTakePreviously) >= quiz.timeLimit) {
-        this.handleSubmit();
         this.timerSubscription?.unsubscribe();
+        this.handleSubmit();
       }
     });
   }
