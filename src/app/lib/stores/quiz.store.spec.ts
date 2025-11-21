@@ -3,8 +3,7 @@ import { QuizStore } from './quiz.store';
 import { QuizRepo } from '../repos/quiz-repo';
 import { Quiz } from '../types/quiz';
 import { TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection, Signal } from '@angular/core';
-import { StateSource } from '@ngrx/signals';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 const MOCK_QUIZZES: Quiz[] = [
   {

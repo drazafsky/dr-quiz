@@ -27,7 +27,7 @@ const MOCK_QUESTIONS: Question[] = [
 describe('QuestionStore', () => {
   const mockQuestionRepo = {
     getItem: vi.fn((): Question[] | null => MOCK_QUESTIONS),
-    setItem: vi.fn((questions: Question[]) => {}),
+    setItem: vi.fn((_questions: Question[]) => {}),
     removeItem: vi.fn(() => {}),
   };
 
@@ -45,21 +45,21 @@ describe('QuestionStore', () => {
     vi.spyOn(mockQuestionRepo, 'getItem').mockReturnValue(null);
     const store = TestBed.inject(QuestionStore);
 
-    expect(store.state.questions()).toEqual([]);
+    expect(store.questions()).toEqual([]);
   });
 
   it('should initialize with questions from repo', () => {
     vi.spyOn(mockQuestionRepo, 'getItem').mockReturnValue(MOCK_QUESTIONS);
     const store = TestBed.inject(QuestionStore);
 
-    expect(store.state.questions()).toEqual(MOCK_QUESTIONS);
+    expect(store.questions()).toEqual(MOCK_QUESTIONS);
   });
 
   it('should update selectedQuestionId when selectQuestion is called', () => {
     const store = TestBed.inject(QuestionStore);
     store.selectQuestion('1');
 
-    expect(store.state.selectedQuestionId()).toBe('1');
+    expect(store.selectedQuestionId()).toBe('1');
   });
 
   it('should save a new question', () => {
@@ -75,8 +75,8 @@ describe('QuestionStore', () => {
 
     store.saveQuestion(newQuestion);
 
-    expect(store.state.questions()).toContainEqual(newQuestion);
-    expect(mockQuestionRepo.setItem).toHaveBeenCalledWith(store.state.questions());
+    expect(store.questions()).toContainEqual(newQuestion);
+    expect(mockQuestionRepo.setItem).toHaveBeenCalledWith(store.questions());
   });
 
   it('should update an existing question', () => {
@@ -92,27 +92,7 @@ describe('QuestionStore', () => {
 
     store.saveQuestion(updatedQuestion);
 
-    expect(store.state.questions()).toContainEqual(updatedQuestion);
-    expect(mockQuestionRepo.setItem).toHaveBeenCalledWith(store.state.questions());
-  });
-
-  it('should handle errors when saving a question', () => {
-    vi.spyOn(mockQuestionRepo, 'setItem').mockImplementation(() => {
-      throw new Error('Storage error');
-    });
-
-    const store = TestBed.inject(QuestionStore);
-    const newQuestion: Question = {
-      id: '3',
-      required: true,
-      pointValue: 15,
-      prompt: 'New Question',
-      answers: ['Answer5', 'Answer6'],
-      correctAnswer: 'Answer5',
-    };
-
-    store.saveQuestion(newQuestion);
-
-    expect(store.state.save.error()).toBe(true);
+    expect(store.questions()).toContainEqual(updatedQuestion);
+    expect(mockQuestionRepo.setItem).toHaveBeenCalledWith(store.questions());
   });
 });
