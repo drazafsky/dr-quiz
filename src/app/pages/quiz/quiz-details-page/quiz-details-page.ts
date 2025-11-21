@@ -3,7 +3,6 @@ import { QuizDetailsPageService } from './quiz-details-page-service';
 import { combineLatest, map, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { QuizStore } from '../quiz.store';
 import { Question } from '../types/question';
 import { Answer } from '../types/answer';
 import { Quiz } from '../types/quiz';
@@ -11,6 +10,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
+import { QuizStore } from '../../../lib/stores/quiz.store';
 
 @Component({
   selector: 'app-quiz-details-page',
@@ -55,7 +55,8 @@ export class QuizDetailsPage {
 
   constructor() {
     effect(() => {
-      const quiz = this.#quizDetailsService.quiz$();
+      const quiz: Quiz = this.#quizDetailsService.quiz$();
+
       if (quiz) {
         // Populate the form controls with values from the quiz
         this.#form.get('id')?.setValue(quiz.id || null);

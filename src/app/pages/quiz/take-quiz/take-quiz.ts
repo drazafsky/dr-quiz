@@ -4,11 +4,12 @@ import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { TakeQuizService } from './take-quiz-service';
 import { combineLatest, map, of, filter, interval, Subscription } from 'rxjs';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Question } from '../types/question';
-import { TestStore } from '../test.store';
+import { TestStore } from '../../../lib/stores/test.store';
 import { Test } from '../types/test';
+import { QuizStore } from '../../../lib/stores/quiz.store';
+import { Quiz } from '../types/quiz';
 
 @Component({
   selector: 'app-take-quiz',
@@ -31,7 +32,8 @@ export class TakeQuiz {
   #startTime: number = 0; 
 
   readonly maxScore$ = computed(() => {
-    return this.#takeQuizService.quiz$()?.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
+    const quiz: Quiz = this.#takeQuizService.quiz$();
+    return quiz.questions.reduce((sum, question) => sum + question.pointValue, 0) || 0;
   });
 
   readonly scorePercent$ = computed(() => {
@@ -77,7 +79,7 @@ export class TakeQuiz {
 
   constructor() {
     effect(() => {
-      const quiz = this.#takeQuizService.quiz$();
+      const quiz: Quiz = this.#takeQuizService.quiz$();
       const test = this.#takeQuizService.test$();
 
       if (quiz) {

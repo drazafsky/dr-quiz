@@ -1,18 +1,25 @@
 import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { QuizRepo } from '../../lib/quiz-repo';
-import { Quiz } from './types/quiz';
 import { v4 as uuidv4 } from 'uuid';
+import { Quiz } from '../../pages/quiz/types/quiz';
 
 type QuizState = {
     quizzes: Quiz[];
-    selectedQuiz: Quiz | undefined;
+    selectedQuiz: Quiz;
     isPublished: boolean;
 }
 
 const initialState: QuizState = {
     quizzes: [],
-    selectedQuiz: undefined,
+    selectedQuiz: {
+        title: '',
+        description: '',
+        timeLimit: 0,
+        shuffleQuestions: false,
+        questions: [],
+        isPublished: false
+    },
     isPublished: false,
 }
 

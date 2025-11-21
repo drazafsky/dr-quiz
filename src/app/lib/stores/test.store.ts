@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { TestRepo } from '../../lib/test-repo';
-import { Test } from './types/test';
-import { QuizRepo } from '../../lib/quiz-repo';
+import { TestRepo } from '../test-repo';
+import { Test } from '../../pages/quiz/types/test';
+import { QuizRepo } from '../quiz-repo';
 
 type TestState = {
   tests: any[];

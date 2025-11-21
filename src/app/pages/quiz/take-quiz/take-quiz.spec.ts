@@ -3,8 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TakeQuiz } from './take-quiz';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { QuizStore } from '../quiz.store';
-import { TakeQuizService } from './take-quiz-service';
+import { QuizStore } from '../../../lib/stores/quiz.store';
 
 describe('TakeQuiz', () => {
   let component: TakeQuiz;

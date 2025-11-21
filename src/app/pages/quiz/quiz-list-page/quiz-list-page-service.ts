@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { QuizStore } from '../quiz.store';
-import { TestStore } from '../test.store';
+import { TestStore } from '../../../lib/stores/test.store';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { QuizStore } from '../../../lib/stores/quiz.store';
 
 @Injectable({
   providedIn: 'root',
