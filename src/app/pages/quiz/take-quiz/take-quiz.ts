@@ -2,7 +2,7 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TakeQuizService } from './take-quiz-service';
-import { combineLatest, map, of, filter } from 'rxjs';
+import { combineLatest, map, of, filter, interval, Subscription } from 'rxjs';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { QuizStore } from '../quiz.store';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -39,6 +39,8 @@ export class TakeQuiz {
 
     return Math.floor(((test?.score || 0) / (maxScore || 1)) * 100);
   });
+
+  private timerSubscription: Subscription | null = null;
 
   readonly #form = this.#formBuilder.group({
     id: ['', Validators.required],
@@ -80,7 +82,24 @@ export class TakeQuiz {
       if (test) {
         this.#form.patchValue(test);
       }
+      this.startTimer();
     });
+  }
+
+  private startTimer() {
+    this.timerSubscription?.unsubscribe(); // Clear any existing timer
+    this.timerSubscription = interval(1000).subscribe(() => {
+      const elapsedTime = this.#elapsedTime$();
+      const quiz = this.#takeQuizService.quiz$();
+
+      if (quiz && elapsedTime >= quiz.timeLimit) {
+        console.log(`Time's up! Elapsed time: ${elapsedTime}s, Time limit: ${quiz.timeLimit}s`);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription?.unsubscribe(); // Clean up the timer when the component is destroyed
 
     this.#router.events.pipe(
       takeUntilDestroyed(),
