@@ -1,0 +1,27 @@
+<div class="overflow-x-auto">
+    @let qs = questions$();
+    <table class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-100">
+        <th class="border border-gray-300 px-4 py-2 text-left">Prompt</th>
+        <th class="border border-gray-300 px-4 py-2 text-left">Point Value</th>
+        <th class="border border-gray-300 px-4 py-2 text-left">Required</th>
+        <th class="border border-gray-300 px-4 py-2 text-left">Correct Answer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(question of qs; track question.id) {
+        <tr class="hover:bg-gray-50">
+            <td class="border border-gray-300 px-4 py-2">{{ question.prompt }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ question.pointValue }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ question.required ? 'Yes' : 'No' }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ question.correctAnswer }}</td>
+        </tr>
+        } @empty {
+        <tr class="alert">
+            <td colspan="4">There are no questions associated with this quiz.</td>
+        </tr>
+        }
+    </tbody>
+    </table>
+</div>

@@ -26,4 +26,8 @@
             background-color: var(--color-red-500);
         }
     }
+
+    app-card > div:first-child {
+        margin-bottom: calc(var(--spacing) * 4)
+    }
 }

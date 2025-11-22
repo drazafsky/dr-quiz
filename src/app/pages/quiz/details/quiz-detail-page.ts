@@ -2,17 +2,18 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuizStore } from '../../../lib/stores/quiz.store';
-import { CardComponent } from "../../../lib/components/card/card.component";
+import { CardComponent } from "../../../lib/components/card/card";
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, tap } from 'rxjs';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
 import { ToolbarComponent } from "../../../lib/components/toolbar/toolbar.component";
+import { QuestionTableComponent } from "../../../lib/components/question-table/question-table";
 
 @Component({
   selector: 'app-quiz-detail-page',
   standalone: true,
-  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule, ToolbarComponent],
+  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule, ToolbarComponent, QuestionTableComponent],
   templateUrl: './quiz-detail-page.html',
   providers: [QuizStore],
 })
@@ -40,8 +41,6 @@ export class QuizDetailPage {
   });
 
   constructor() {
-    
-
     effect(() => {
       const quiz = this.quiz$();
 
@@ -77,5 +76,17 @@ export class QuizDetailPage {
     }
 
     console.log(this.form.value);
+  }
+
+  handleCreateQuestion() {
+    if (this.form.dirty) {
+      return;
+    }
+
+    this.#router.navigate(['question', 'create'], { relativeTo: this.#route.parent });
+  }
+
+  handleDeleteQuestions() {
+    console.log('Delete questions');
   }
 }

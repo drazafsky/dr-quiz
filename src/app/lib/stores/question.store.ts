@@ -1,12 +1,13 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { QuestionRepo } from '../repos/question-repo';
 import { Question } from '../types/question';
-import { signalStore, withHooks, withMethods, withState, patchState } from '@ngrx/signals';
+import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
 
 type QuestionState = {
   questions: Question[];
   selectedQuestionId: string | undefined;
+  filterIds: string[] | undefined;
   loading: boolean;
   save: {
     success: boolean | undefined;
@@ -17,6 +18,7 @@ type QuestionState = {
 const initialState: QuestionState = {
   questions: [],
   selectedQuestionId: undefined,
+  filterIds: undefined,
   loading: false,
   save: {
     success: undefined,
@@ -30,6 +32,10 @@ export const QuestionStore = signalStore(
     return {
       selectQuestion(selectedQuestionId: string | undefined) {
         patchState(state, { selectedQuestionId });
+      },
+
+      filter(filterIds: string[] | undefined) {
+        patchState(state, { filterIds });
       },
 
       saveQuestion(newQuestion: Question) {
@@ -67,6 +73,9 @@ export const QuestionStore = signalStore(
       },
     };
   }),
+  withComputed((state) => ({
+    filteredQuestions: computed(() => state.questions().filter(question => state.filterIds()?.includes(question.id))),
+  })),
   withHooks((state) => {
     const questionRepo = inject(QuestionRepo);
     return {

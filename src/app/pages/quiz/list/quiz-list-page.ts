@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { QuizStore } from '../../../lib/stores/quiz.store';
 import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CardComponent } from '../../../lib/components/card/card.component';
+import { CardComponent } from '../../../lib/components/card/card';
 import { Quiz } from '../../../lib/types/quiz';
 
 @Component({
