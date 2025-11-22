@@ -1,24 +1,36 @@
-<div class="p-4">
-  <h1 class="text-2xl font-bold mb-4">Question Details</h1>
-  <form [formGroup]="form" class="space-y-4">
-    <div>
-      <label for="prompt" class="block text-sm font-medium text-gray-700">Prompt</label>
-      <input id="prompt" formControlName="prompt" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-    <div>
-      <label for="pointValue" class="block text-sm font-medium text-gray-700">Point Value</label>
-      <input id="pointValue" formControlName="pointValue" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-    <div>
-      <label for="required" class="inline-flex items-center">
-        <input id="required" formControlName="required" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-        <span class="ml-2 text-sm text-gray-700">Required</span>
-      </label>
-    </div>
-    <div>
-      <label for="correctAnswer" class="block text-sm font-medium text-gray-700">Correct Answer</label>
-      <input id="correctAnswer" formControlName="correctAnswer" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-    <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded" (click)="handleSave()">Save</button>
-  </form>
-</div>
+@let question = question$();
+<app-card>
+  <div header>
+    <app-toolbar>
+        <div left>
+            <h1 class="text-2xl font-bold mb-4">{{ question && question.prompt ? question.prompt : 'Edit Question Details' }}</h1>
+        </div>
+        <div right>
+            <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleSaveQuestion()">Save</button>
+        </div>
+    </app-toolbar>
+  </div>
+
+  <div content>
+    <form [formGroup]="form" class="space-y-4">
+      <div>
+        <label for="prompt" class="block text-sm font-medium text-gray-700">Prompt</label>
+        <input id="prompt" formControlName="prompt" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+      <div>
+        <label for="pointValue" class="block text-sm font-medium text-gray-700">Point Value</label>
+        <input id="pointValue" formControlName="pointValue" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+      <div>
+        <label for="required" class="inline-flex items-center">
+          <input id="required" formControlName="required" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+          <span class="ml-2 text-sm text-gray-700">Required</span>
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div footer>
+
+  </div>
+</app-card>
