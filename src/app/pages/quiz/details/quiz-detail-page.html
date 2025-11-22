@@ -77,7 +77,8 @@
             </div>
             @if (!quiz?.isPublished) {
                 <div right>
-                    <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleCreateQuestion()">Save</button>
+                    <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleCreateQuestion()">Create</button>
+                    <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleDeleteQuestions()">Delete</button>
                 </div>
             }
         </app-toolbar>
