@@ -83,7 +83,7 @@ export class QuizDetailPage {
       return;
     }
 
-    this.#router.navigate(['question', 'create'], { relativeTo: this.#route.parent });
+    this.#router.navigate(['question', 'create'], { relativeTo: this.#route });
   }
 
   handleDeleteQuestions() {
