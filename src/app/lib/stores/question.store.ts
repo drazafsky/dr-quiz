@@ -71,10 +71,33 @@ export const QuestionStore = signalStore(
           patchState(state, stopLoading());
         }
       },
+
+      newQuestion() {
+          const question: Question = {
+            id: '',
+            required: false,
+            pointValue: 1,
+            prompt: '',
+            answers: [],
+            correctAnswer: ''
+          };
+
+          return question;
+      },
     };
   }),
   withComputed((state) => ({
     filteredQuestions: computed(() => state.questions().filter(question => state.filterIds()?.includes(question.id))),
+    questionCount: computed(() => state.questions().length),
+    filteredQuestionCount: computed(() => state.questions().filter(question => state.filterIds()?.includes(question.id)).length || 0),
+    selectedQuestion: computed(() => {
+        const selectedQuestionId = state.selectedQuestionId();
+        if (!selectedQuestionId || selectedQuestionId?.toLowerCase() === 'create') {
+            return state.newQuestion();
+        }
+
+        return state.questions().find(q => q.id === selectedQuestionId);
+    }),
   })),
   withHooks((state) => {
     const questionRepo = inject(QuestionRepo);
