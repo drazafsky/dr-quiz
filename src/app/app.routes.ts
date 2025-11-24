@@ -4,4 +4,5 @@ import { IntroPage } from './pages/intro-page/intro-page';
 export const routes: Routes = [
   { path: '', component: IntroPage },
   { path: 'quizzes', loadChildren: () => import('./pages/quiz/quiz.routes').then(m => m.routes) },
+  { path: 'tests', loadChildren: () => import('./pages/tests/tests.routes').then(m => m.routes) },
 ];

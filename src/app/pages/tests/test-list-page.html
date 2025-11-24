@@ -1,0 +1,51 @@
+<app-card>
+  <div header>
+    <app-toolbar>
+      <div left>
+        <h1 class="text-2xl font-bold mb-4">Tests</h1>
+      </div>
+      <div right>
+        <button (click)="handleNew()">New</button>
+      </div>
+    </app-toolbar>
+  </div>
+
+  <div class="overflow-x-auto" content>
+    <table class="table-auto w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border border-gray-300 px-4 py-2 text-left">Title</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Published</th>
+          <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(test of tests$(); track test.id) {
+          <tr class="hover:bg-gray-50">
+            <td class="border border-gray-300 px-4 py-2">{{ test.title }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.description }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.timeLimit }} seconds</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.isPublished ? 'Yes' : 'No' }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              <button (click)="handleEdit(test)">{{ test.isPublished ? 'View' : 'Edit' }}</button>
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              @if (!test.isPublished) {
+                <button (click)="handlePublish(test)">Publish</button>
+              }
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <button (click)="handleDelete(test)">Delete</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="border border-gray-300 px-4 py-2 text-center">There are no tests available.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-card>
