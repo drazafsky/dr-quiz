@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Answer } from '../../types/answer';
 import { AnswerStore } from '../../stores/answer.store';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QuestionStore } from '../../stores/question.store';
 
 @Component({
   selector: 'app-answer-table',
@@ -11,14 +12,16 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './answer-table.html',
   providers: [
     AnswerStore,
+    QuestionStore,
   ]
 })
 export class AnswerTableComponent {
   readonly #answerStore = inject(AnswerStore);
+  readonly #questionStore = inject(QuestionStore);
   readonly #router = inject(Router);
   readonly #route = inject(ActivatedRoute);
 
-  questionId = input.required<string | undefined>();
+  questionId = input.required<string>();
   processing = input.required<boolean>();
   isPublished = input.required<boolean>();
 
@@ -37,5 +40,9 @@ export class AnswerTableComponent {
 
   handleDeleteAnswer(answer: Answer): void {
     this.#answerStore.deleteAnswer(answer);
+  }
+
+  handleMarkCorrectAnswer(questionId: string, answer: Answer) {
+    this.#questionStore.markAsAnswer(questionId, answer);
   }
 }

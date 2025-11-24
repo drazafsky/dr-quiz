@@ -4,6 +4,7 @@ import { Question } from '../types/question';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
 import { setSuccess } from './save-status-feature';
+import { Answer } from '../types/answer';
 
 type QuestionState = {
   quizId: string;
@@ -105,8 +106,29 @@ export const QuestionStore = signalStore(
         }, 1000);
       },
 
-      markAsAnswer(question: Question) {
+      markAsAnswer(questionId: string, answer: Answer) {
+        patchState(state, setLoading());
 
+        const questionIndex = state.questions().findIndex(question => question.id === questionId);
+
+        if (questionIndex > -1) {
+          const updatedQuestion = {
+            ...state.questions()[questionIndex],
+            correctAnswer: answer.id
+          };
+
+          const questions = [ ...state.questions() ];
+          questions.splice(questionIndex, 1, updatedQuestion);
+
+          patchState(state, { questions });
+          questionRepo.setItem(questions);
+        }
+
+        // Simulate time taken by an API so that visual feedback can be given to the user
+        setTimeout(() => {
+            patchState(state, stopLoading());
+            patchState(state, setSuccess());
+        }, 1000);
       },
     };
   }),
