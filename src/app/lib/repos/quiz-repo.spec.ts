@@ -29,7 +29,6 @@ describe('QuizRepo', () => {
           description: 'A sample quiz',
           timeLimit: 60,
           shuffleQuestions: false,
-          questions: [],
           isPublished: false,
         },
       ];
@@ -46,7 +45,6 @@ describe('QuizRepo', () => {
         description: 'A sample quiz',
         timeLimit: 60,
         shuffleQuestions: false,
-        questions: [],
         isPublished: false,
       }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
@@ -65,7 +63,6 @@ describe('QuizRepo', () => {
         description: 'A sample quiz',
         timeLimit: 60,
         shuffleQuestions: false,
-        questions: [],
         isPublished: false,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(quiz));
@@ -97,7 +94,6 @@ describe('QuizRepo', () => {
         description: 'A sample quiz',
         timeLimit: 60,
         shuffleQuestions: false,
-        questions: [],
         isPublished: false,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(quiz));

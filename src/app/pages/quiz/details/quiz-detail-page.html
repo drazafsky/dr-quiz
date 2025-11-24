@@ -84,6 +84,10 @@
         </app-toolbar>
     </div>
     <div content>
-        <app-question-table [questionIds]="quiz?.questions"></app-question-table>
+        <app-question-table
+            [quizId]="quiz?.id"
+            [processing]="processing$()"
+            [isPublished]="quiz?.isPublished || false">
+        </app-question-table>
     </div>
 </app-card>

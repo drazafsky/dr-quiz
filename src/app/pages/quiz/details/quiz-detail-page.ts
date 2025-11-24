@@ -13,7 +13,7 @@ import { QuestionTableComponent } from "../../../lib/components/question-table/q
 @Component({
   selector: 'app-quiz-detail-page',
   standalone: true,
-  imports: [CommonModule, JsonPipe, CardComponent, ReactiveFormsModule, ToolbarComponent, QuestionTableComponent],
+  imports: [CommonModule, CardComponent, ReactiveFormsModule, ToolbarComponent, QuestionTableComponent],
   templateUrl: './quiz-detail-page.html',
   providers: [QuizStore],
 })

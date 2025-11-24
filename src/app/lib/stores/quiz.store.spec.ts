@@ -12,7 +12,6 @@ const MOCK_QUIZZES: Quiz[] = [
     description: 'A description',
     timeLimit: 1000,
     shuffleQuestions: false,
-    questions: [],
     isPublished: false
   },
   {
@@ -21,7 +20,6 @@ const MOCK_QUIZZES: Quiz[] = [
     description: '',
     timeLimit: 60,
     shuffleQuestions: true,
-    questions: [ 'ABC', '123' ],
     isPublished: true
   },
 ];

@@ -16,17 +16,27 @@
       <div>
         <label for="prompt" class="block text-sm font-medium text-gray-700">Prompt</label>
         <input id="prompt" formControlName="prompt" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-        <div *ngIf="form.get('prompt')?.touched && form.get('prompt')?.invalid" class="text-red-500 text-sm mt-1">
-          <div *ngIf="form.get('prompt')?.errors?.['required']">Prompt is required.</div>
-          <div *ngIf="form.get('prompt')?.errors?.['not-empty']">Prompt cannot be empty.</div>
-        </div>
-        <div *ngIf="form.get('pointValue')?.touched && form.get('pointValue')?.invalid" class="text-red-500 text-sm mt-1">
-          <div *ngIf="form.get('pointValue')?.errors?.['min']">Point Value must be at least 1.</div>
-        </div>
+        @if(form.get('prompt')?.touched && form.get('prompt')?.invalid) {
+          <div class="alert mt-1">
+            @if(form.get('prompt')?.errors?.['required']) {
+              <div>Prompt is required.</div>
+            }
+            @if(form.get('prompt')?.errors?.['not-empty']) {
+              <div>Prompt cannot be empty.</div>
+            }
+          </div>
+        } 
       </div>
       <div>
         <label for="pointValue" class="block text-sm font-medium text-gray-700">Point Value</label>
         <input id="pointValue" formControlName="pointValue" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        @if(form.get('pointValue')?.touched && form.get('pointValue')?.invalid) {
+          <div class="alert mt-1">
+            @if(form.get('pointValue')?.errors?.['min']) {
+              <div>Point Value must be at least 1.</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="required" class="inline-flex items-center">
@@ -37,7 +47,17 @@
     </form>
   </div>
 
-  <div footer>
+  <div footer> 
+      @if (processing$()) {
+          <h3 class="alert">Saving...</h3>
+      }
 
-  </div>
+      @if (saveStatus$().success) {
+          <h3 class="success">Question saved successfully.</h3>
+      }
+
+      @if (saveStatus$().error) {
+          <h3 class="alert">An error occurred while saving the question. Please try again.</h3>
+      }
+    </div>
 </app-card>
