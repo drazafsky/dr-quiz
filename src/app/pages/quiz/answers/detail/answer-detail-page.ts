@@ -8,6 +8,7 @@ import { CardComponent } from "../../../../lib/components/card/card";
 import { ToolbarComponent } from "../../../../lib/components/toolbar/toolbar.component";
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { AnswerService } from '../answer-service';
 
 @Component({
   selector: 'app-answer-detail-page',
@@ -19,12 +20,13 @@ import { filter, map } from 'rxjs';
     ToolbarComponent
   ],
   templateUrl: './answer-detail-page.html',
-  providers: [AnswerStore],
+  providers: [AnswerService, AnswerStore],
 })
 export class AnswerDetailPage {
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly #answerStore = inject(AnswerStore);
+  readonly #answerService = inject(AnswerService);
   readonly #fb = inject(FormBuilder);
 
   #answerId$ = toSignal(this.#route.paramMap.pipe(
@@ -82,11 +84,10 @@ export class AnswerDetailPage {
       return;
     }
 
-    const updatedAnswer = {
+    const updatedAnswer = this.#answerService.convertToAnswerDTO({
       ...this.form.value,
-      id: this.#answerId$(),
       questionId: this.#questionId$()
-    };
+    });
 
     this.#answerStore.saveAnswer(updatedAnswer);
   }
