@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../lib/components/card/card';
 import { ToolbarComponent } from '../../lib/components/toolbar/toolbar.component';
@@ -8,6 +8,11 @@ import { QuizStore } from '../../lib/stores/quiz.store';
 import { computed } from '@angular/core';
 import { Test } from '../../lib/types/test';
 import { Quiz } from '../../lib/types/quiz';
+import { DialogComponent } from "../../lib/components/dialog/dialog";
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { QuizWithRelatedQuestions, TestService } from './test-service';
+import { Question } from '../../lib/types/question';
+import { QuestionStore } from '../../lib/stores/question.store';
 
 interface TestWithRelatedQuiz extends Test {
   quiz: Quiz;
@@ -16,46 +21,90 @@ interface TestWithRelatedQuiz extends Test {
 @Component({
   selector: 'app-test-list-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, ToolbarComponent],
+  imports: [CommonModule, CardComponent, ToolbarComponent, DialogComponent, ReactiveFormsModule],
   templateUrl: './test-list-page.html',
-  providers: [QuizStore, TestStore],
+  providers: [QuestionStore, QuizStore, TestService, TestStore],
 })
 export class TestListPage {
   readonly #testStore = inject(TestStore);
   readonly #quizStore = inject(QuizStore);
+  readonly #questionStore = inject(QuestionStore);
+  readonly #testService = inject(TestService);
   readonly #router = inject(Router);
   readonly #route = inject(ActivatedRoute);
+  readonly #fb = inject(FormBuilder);
 
-  quizzes$ = this.#quizStore.quizzes;
-  tests$ = computed(() => {
+  readonly #selectedQuiz$ = this.#quizStore.selectedQuiz;
+  readonly #selectedQuizQuestions$ = this.#questionStore.quizQuestions;
+  readonly publishedQuizzes$ = this.#quizStore.publishedQuizzes;
+
+  tests$: Signal<TestWithRelatedQuiz[]> = computed(() => {
     const tests = this.#testStore.tests();
-    const quizzes = this.quizzes$();
+    const quizzes = this.publishedQuizzes$();
 
     return tests.map(test => ({
       ...test,
       quiz: quizzes.find(quiz => quiz.id === test.quizId),
-    }));
+    }) as TestWithRelatedQuiz);
   });
 
-  dialogOpen = false;
-  selectedQuizId: string | undefined;
+  form = this.#fb.group({
+    selectedQuizId: ['', Validators.required],
+  });
+
+  isDialogOpen = false;
 
   handleNew() {
-    this.dialogOpen = true;
+    this.isDialogOpen = true;
   }
 
   handleDialogSave() {
-    if (this.selectedQuizId) {
-      this.#router.navigate(['create'], {
-        relativeTo: this.#route,
-        queryParams: { quizId: this.selectedQuizId },
-      });
+    const formValue = this.form.value;
+
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
     }
-    this.dialogOpen = false;
+
+    if (formValue.selectedQuizId ) {
+        const quizId = formValue.selectedQuizId;
+
+        this.#quizStore.selectQuiz(quizId);
+        this.#questionStore.setQuizId(quizId);
+
+        const quiz = this.#selectedQuiz$();
+
+        if (quiz && quiz.isPublished) {
+          const formTest: Test = {
+            id: '',
+            quizId,
+            questions: [],
+            isSubmitted: false,
+            deadLine: new Date(),
+            score: {
+              correct: 0,
+              incorrect: 0,
+              points: 0,
+              percent: 0
+            }
+          };
+
+          const quizWithQuestions: QuizWithRelatedQuestions = {
+            ...quiz,
+            questions: this.#selectedQuizQuestions$(),
+          }
+
+          const newTest: Test = this.#testService.convertToTestDTO(formTest, quizWithQuestions);
+
+          this.#testStore.saveTest(newTest);
+        }
+    }
+
+    this.isDialogOpen = false;
   }
 
   handleDialogCancel() {
-    this.dialogOpen = false;
+    this.isDialogOpen = false;
   }
 
   handleEdit(test: Test) {
