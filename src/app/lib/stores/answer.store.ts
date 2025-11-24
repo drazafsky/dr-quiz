@@ -4,9 +4,11 @@ import { Answer } from '../types/answer';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
 import { setSuccess } from './save-status-feature';
+import { Question } from '../types/question';
 
 type AnswerState = {
   questionId: string;
+  question: Question | undefined,
   answers: Answer[];
   selectedAnswerId: string | undefined;
   loading: boolean;
@@ -18,6 +20,7 @@ type AnswerState = {
 
 const initialState: AnswerState = {
   questionId: '',
+  question: undefined,
   answers: [],
   selectedAnswerId: undefined,
   loading: false,
@@ -100,6 +103,10 @@ export const AnswerStore = signalStore(
             patchState(state, stopLoading());
             patchState(state, setSuccess());
         }, 1000);
+      },
+
+      selectById(answerId: string) {
+        return state.answers().find(answer => answer.id === answerId);
       }
     };
   }),

@@ -67,16 +67,7 @@ export class QuizDetailPage {
 
   handleSaveQuiz() {
     this.#quizStore.saveQuiz(this.form.value);
-  }
-
-  handlePublishQuiz() {
-    this.form.markAllAsTouched();
-    if (this.form.invalid) {
-      return;
-    }
-
-    console.log(this.form.value);
-  }
+  } 
 
   handleCreateQuestion() {
     if (this.form.dirty) {
@@ -84,9 +75,5 @@ export class QuizDetailPage {
     }
 
     this.#router.navigate(['question', 'create'], { relativeTo: this.#route });
-  }
-
-  handleDeleteQuestions() {
-    console.log('Delete questions');
   }
 }

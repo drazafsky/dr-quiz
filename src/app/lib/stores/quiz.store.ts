@@ -84,6 +84,46 @@ export const QuizStore = signalStore(
 
                 return quiz;
             },
+
+            deleteQuiz(quiz: Quiz) {
+                patchState(state, setLoading());
+                const quizIndex = state.quizzes().findIndex(eq => eq.id === quiz.id);
+
+                if (quizIndex > -1) {
+                    const quizzes = [...state.quizzes()];
+                    quizzes.splice(quizIndex, 1);
+                    patchState(state, { quizzes });
+                    quizRepo.setItem(state.quizzes());
+                }
+
+                // Simulate time taken by an API so that visual feedback can be given to the user
+                setTimeout(() => {
+                    patchState(state, stopLoading());
+                    patchState(state, setSuccess());
+                }, 1000);
+            },
+
+            publish(quiz: Quiz) {
+                patchState(state, setLoading());
+                const quizIndex = state.quizzes().findIndex(eq => eq.id === quiz.id);
+
+                if (quizIndex > -1) {
+                    const quizzes = [...state.quizzes()];
+                    const updatedQuiz = {
+                        ...quizzes[quizIndex],
+                        isPublished: true,
+                    };
+                    quizzes.splice(quizIndex, 1, updatedQuiz);
+                    patchState(state, { quizzes });
+                    quizRepo.setItem(state.quizzes());
+                }
+
+                // Simulate time taken by an API so that visual feedback can be given to the user
+                setTimeout(() => {
+                    patchState(state, stopLoading());
+                    patchState(state, setSuccess());
+                }, 1000);
+            },
         }
     }),
     withComputed((state) => ({

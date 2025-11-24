@@ -31,8 +31,12 @@ export class QuizListPage {
   handleEdit(quiz: Quiz) {
     this.#router.navigate([quiz.id], { relativeTo: this.#route });
   }
-}
 
-handleDelete(quiz: Quiz) {
-  this.#quizStore.deleteQuiz(quiz);
+  handleDelete(quiz: Quiz) {
+    this.#quizStore.deleteQuiz(quiz);
+  }
+
+  handlePublish(quiz: Quiz) {
+    this.#quizStore.publish(quiz);
+  }
 }

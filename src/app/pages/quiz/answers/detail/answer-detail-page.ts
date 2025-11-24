@@ -86,6 +86,7 @@ export class AnswerDetailPage {
 
     const updatedAnswer = this.#answerService.convertToAnswerDTO({
       ...this.form.value,
+      id: this.#answerId$(),
       questionId: this.#questionId$()
     });
 
