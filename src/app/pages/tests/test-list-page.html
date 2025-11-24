@@ -4,29 +4,11 @@
       <div left>
         <h1 class="text-2xl font-bold mb-4">Tests</h1>
       </div>
-    </app-toolbar>
-  </div>
-
-  <app-dialog [isOpen]="dialogOpen">
-    <div header>
-      <h2 class="text-xl font-bold">Select a Quiz</h2>
-    </div>
-    <div content>
-      <label for="quiz-select" class="block text-sm font-medium text-gray-700">Quiz</label>
-      <select id="quiz-select" [(ngModel)]="selectedQuizId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-        <option *ngFor="let quiz of quizzes$()" [value]="quiz.id">{{ quiz.title }}</option>
-      </select>
-    </div>
-    <div footer>
-      <button class="mr-4" (click)="handleDialogSave()">Save</button>
-      <button (click)="handleDialogCancel()">Cancel</button>
-    </div>
-  </app-dialog>
       <div right>
         <button (click)="handleNew()">New</button>
       </div>
     </app-toolbar>
-  </div>
+  </div> 
 
   <div class="overflow-x-auto" content>
     <table class="table-auto w-full border-collapse border border-gray-300">
@@ -65,3 +47,30 @@
     </table>
   </div>
 </app-card>
+
+<app-dialog [isOpen]="isDialogOpen">
+  <div header>
+    <h2 class="text-xl font-bold">Select a Quiz</h2>
+  </div>
+  <div content>
+    <form [formGroup]="form">
+      <label for="quiz-select" class="block text-sm font-medium text-gray-700">Quiz</label>
+      <select id="quiz-select" formControlName="selectedQuizId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        <option value="" disabled selected>Select a quiz</option>
+        @for(quiz of publishedQuizzes$(); track quiz.id) {
+          <option [value]="quiz.id">{{ quiz.title }}{{ quiz.description ? ` - ${quiz.description}` : ''}}</option>
+        }
+      </select>
+    </form>
+  </div>
+  <div footer>
+    <app-toolbar>
+      <div left>
+        <button (click)="handleDialogCancel()">Cancel</button>
+      </div>
+      <div right>
+        <button (click)="handleDialogSave()">Save</button>
+      </div>
+    </app-toolbar>
+  </div>
+</app-dialog>

@@ -127,6 +127,7 @@ export const QuizStore = signalStore(
         }
     }),
     withComputed((state) => ({
+        publishedQuizzes: computed(() => state.quizzes().filter(quiz => quiz.isPublished)),
         quizCount: computed(() => state.quizzes().length),
         selectedQuiz: computed(() => {
             const selectedQuizId = state.selectedQuizId();

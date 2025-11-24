@@ -7,7 +7,6 @@ import { CardComponent } from '../card/card';
   standalone: true,
   imports: [CommonModule, CardComponent],
   templateUrl: './dialog.html',
-  styleUrls: ['./dialog.scss'],
 })
 export class DialogComponent {
   @Input() isOpen: boolean = false;
