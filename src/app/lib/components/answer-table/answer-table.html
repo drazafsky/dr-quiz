@@ -4,7 +4,7 @@
       <tr class="bg-gray-100">
         <th class="border border-gray-300 px-4 py-2 text-left">Answer</th>
         @if (!isPublished()) {
-          <th class="border border-gray-300 px-4 py-2 text-left" colspan="2">Actions</th>
+          <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
         }
       </tr>
     </thead>
@@ -14,10 +14,13 @@
           <td class="border border-gray-300 px-4 py-2">{{ answer.value }}</td>
           @if (!isPublished()) {
             <td class="border border-gray-300 px-4 py-2">
-              <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
+              <button type="button" class="mr-4" (click)="handleEditAnswer(answer)">Edit</button>
             </td>
             <td class="border border-gray-300 px-4 py-2">
               <button type="button" class="mr-4" (click)="handleMarkCorrectAnswer(questionId(), answer)">Mark Correct</button>
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
             </td>
           }
         </tr>

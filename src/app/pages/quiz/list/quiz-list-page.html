@@ -18,7 +18,7 @@
                     <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
                     <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
                     <th class="border border-gray-300 px-4 py-2 text-left">Published</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left" colspan="2">Actions</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +29,11 @@
                         <td class="border border-gray-300 px-4 py-2">{{ quiz.timeLimit }} seconds</td>
                         <td class="border border-gray-300 px-4 py-2">{{ quiz.isPublished ? 'Yes' : 'No' }}</td>
                         <td class="border border-gray-300 px-4 py-2"><button (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button></td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            @if (!quiz.isPublished) {
+                                <button (click)="handlePublish(quiz)">Publish</button>
+                            }
+                        </td>
                         <td class="border border-gray-300 px-4 py-2"><button (click)="handleDelete(quiz)">Delete</button></td>
                     </tr>
                 } @empty {

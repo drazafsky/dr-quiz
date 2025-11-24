@@ -25,7 +25,7 @@ export class AnswerTableComponent {
   processing = input.required<boolean>();
   isPublished = input.required<boolean>();
 
-  answers$ = this.#answerStore.answers;
+  answers$ = this.#answerStore.questionAnswers;
 
   constructor() {
     effect(() => {

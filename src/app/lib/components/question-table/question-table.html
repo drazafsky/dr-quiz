@@ -15,7 +15,7 @@
                 <td class="border border-gray-300 px-4 py-2">{{ question.prompt }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ question.pointValue }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ question.required ? 'Yes' : 'No' }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ question.correctAnswer }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ correctAnswer(question)?.value }}</td>
                 <td class="border border-gray-300 px-4 py-2">
                     <button type="button" class="mr-4" [disabled]="processing()" (click)="handleEditQuestion(question)">{{ isPublished() ? 'View' : 'Edit' }}</button>
                 </td>

@@ -3,16 +3,19 @@ import { CommonModule } from '@angular/common';
 import { QuestionStore } from '../../stores/question.store';
 import { Question } from '../../types/question';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnswerStore } from '../../stores/answer.store';
+import { Answer } from '../../types/answer';
 
 @Component({
   selector: 'app-question-table',
   standalone: true,
   imports: [CommonModule],
-  providers: [QuestionStore],
+  providers: [AnswerStore, QuestionStore],
   templateUrl: './question-table.html',
 })
 export class QuestionTableComponent {
   readonly #questionStore = inject(QuestionStore);
+  readonly #answerStore = inject(AnswerStore);
   readonly #router = inject(Router);
   readonly #route = inject(ActivatedRoute);
 
@@ -29,6 +32,10 @@ export class QuestionTableComponent {
     })
   }
 
+  correctAnswer(question: Question) {
+    return this.#answerStore.selectById(question.correctAnswer);
+  }
+
   handleEditQuestion(question: Question): void {
     this.#router.navigate(['question', question.id], { relativeTo: this.#route });
   }
@@ -37,3 +44,4 @@ export class QuestionTableComponent {
     this.#questionStore.deleteQuestion(question);
   }
 }
+
