@@ -4,6 +4,7 @@ import { Test } from '../types/test';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
 import { setSuccess } from './save-status-feature';
+import { QuestionStore } from './question.store';
 
 type TestState = {
   tests: Test[];
@@ -73,6 +74,7 @@ export const TestStore = signalStore(
             id: '',
             quizId: '',
             questions: [],
+            selectedAnswers: [],
             isSubmitted: false,
             deadLine: new Date((new Date()).getSeconds() + 60),
             score: {
@@ -80,7 +82,7 @@ export const TestStore = signalStore(
               incorrect: 0,
               points: 0,
               percent: 0
-            }
+            },
           };
 
           return test;
@@ -137,19 +139,47 @@ export const TestStore = signalStore(
         return state.tests().find(t => t.id === selectedTestId);
     }),
   })),
-  withHooks((state) => {
-    const testRepo = inject(TestRepo);
+  withComputed((state, questionStore = inject(QuestionStore)) => ({
+    nextUnasweredQuestion: computed(() => {
+      const test = state.selectedTest();
+      const answeredQuestions = test?.selectedAnswers || [];
+
+      questionStore.setQuizId(test?.quizId);
+      const questions = questionStore
+        .quizQuestions()
+        .sort((q1, q2) => (test?.questions.indexOf(q1.id) || 0) - (test?.questions.indexOf(q2.id) || 0));
+
+      return questions[answeredQuestions.length];
+    }),
+  })),
+  withHooks((state, testRepo = inject(TestRepo)) => {
     return {
       onInit() {
         patchState(state, setLoading());
         const tests = testRepo.getItem();
         if (tests !== null) {
+          // Mark all tests past the deadline as submitted
+          const now = new Date();
+
+          tests
+            .filter(test => !test.isSubmitted)
+            .forEach(test => {
+              const deadLine = new Date(test.deadLine);
+
+              if (deadLine < now) {
+                test.isSubmitted = true;
+              }
+            });
+
+          testRepo.setItem(tests);
+
           patchState(state, { tests });
         } else {
           patchState(state, { tests: [] });
         }
         patchState(state, stopLoading());
       },
+
       onDestroy() {
         patchState(state, setLoading());
         const tests = testRepo.getItem();

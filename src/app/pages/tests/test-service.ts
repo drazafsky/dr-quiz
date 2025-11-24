@@ -22,7 +22,7 @@ export class TestService {
             ...test,
             id,
             deadLine,
-            questions
+            questions: [...questions]
         };
 
         return dto;
