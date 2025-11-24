@@ -1,0 +1,24 @@
+<div class="overflow-x-auto">
+  <table class="table-auto w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="border border-gray-300 px-4 py-2 text-left">Answer</th>
+        <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (let answer of answers) {
+        <tr class="hover:bg-gray-50">
+          <td class="border border-gray-300 px-4 py-2">{{ answer.text }}</td>
+          <td class="border border-gray-300 px-4 py-2">
+            <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="2" class="text-center">No answers available.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
