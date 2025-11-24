@@ -66,13 +66,12 @@ export class AnswerDetailPage {
     });
 
     effect(() => {
-      // If the id of the answer has changed (should only happen when saving a new answer), redirect
-      // to the same page with the correct answer id in the url
+      // Redirect to the same page with the updated answerId parameter whenever it changes
       const selectedAnswerId = this.#answerStore.selectedAnswerId();
       const urlAnswerId = this.#answerId$();
 
       if (selectedAnswerId !== urlAnswerId) {
-        this.#router.navigate(['..', selectedAnswerId], { relativeTo: this.#route });
+        this.#router.navigate(['../', selectedAnswerId], { relativeTo: this.#route });
       }
     });
   }
