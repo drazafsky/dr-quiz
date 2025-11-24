@@ -14,30 +14,26 @@
     <table class="table-auto w-full border-collapse border border-gray-300">
       <thead>
         <tr class="bg-gray-100">
-          <th class="border border-gray-300 px-4 py-2 text-left">Title</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Quiz</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
-          <th class="border border-gray-300 px-4 py-2 text-left">Published</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Submitted</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Score</th>
           <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
         </tr>
       </thead>
       <tbody>
         @for(test of tests$(); track test.id) {
           <tr class="hover:bg-gray-50">
-            <td class="border border-gray-300 px-4 py-2">{{ test.title }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ test.description }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ test.timeLimit }} seconds</td>
-            <td class="border border-gray-300 px-4 py-2">{{ test.isPublished ? 'Yes' : 'No' }}</td>
+            <td class="border border-gray-300 px-4 py-2"></td>
+            <td class="border border-gray-300 px-4 py-2"></td>
+            <td class="border border-gray-300 px-4 py-2"></td>
+            <td class="border border-gray-300 px-4 py-2"></td>
             <td class="border border-gray-300 px-4 py-2">
-              <button (click)="handleEdit(test)">{{ test.isPublished ? 'View' : 'Edit' }}</button>
+              <button (click)="handleEdit(test)">Resume</button>
             </td>
             <td class="border border-gray-300 px-4 py-2">
-              @if (!test.isPublished) {
-                <button (click)="handlePublish(test)">Publish</button>
-              }
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <button (click)="handleDelete(test)">Delete</button>
+                <button (click)="handlePublish(test)">Submit</button>
             </td>
           </tr>
         } @empty {
