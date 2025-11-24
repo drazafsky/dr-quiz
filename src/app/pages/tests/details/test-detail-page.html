@@ -11,47 +11,7 @@
   </div>
 
   <div content>
-    <form [formGroup]="form" class="space-y-4">
-      <div>
-        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-        <input id="title" formControlName="title" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-        @if(form.get('title')?.touched && form.get('title')?.invalid) {
-          <div class="alert mt-1">
-            @if(form.get('title')?.errors?.['required']) {
-              <div>Title is required.</div>
-            }
-            @if(form.get('title')?.errors?.['not-empty']) {
-              <div>Title cannot be empty.</div>
-            }
-          </div>
-        }
-      </div>
-      <div>
-        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-        <textarea id="description" formControlName="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
-        @if(form.get('description')?.touched && form.get('description')?.invalid) {
-          <div class="alert mt-1">
-            @if(form.get('description')?.errors?.['required']) {
-              <div>Description is required.</div>
-            }
-            @if(form.get('description')?.errors?.['not-empty']) {
-              <div>Description cannot be empty.</div>
-            }
-          </div>
-        }
-      </div>
-      <div>
-        <label for="timeLimit" class="block text-sm font-medium text-gray-700">Time Limit (seconds)</label>
-        <input id="timeLimit" formControlName="timeLimit" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-        @if(form.get('timeLimit')?.touched && form.get('timeLimit')?.invalid) {
-          <div class="alert mt-1">
-            @if(form.get('timeLimit')?.errors?.['min']) {
-              <div>Time Limit must be at least 1 second.</div>
-            }
-          </div>
-        }
-      </div>
-    </form>
+    <pre>{{ currentQuestion$() | json }}</pre>
   </div>
 
   <div footer>

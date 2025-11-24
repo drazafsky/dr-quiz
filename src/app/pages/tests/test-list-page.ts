@@ -11,7 +11,6 @@ import { Quiz } from '../../lib/types/quiz';
 import { DialogComponent } from "../../lib/components/dialog/dialog";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizWithRelatedQuestions, TestService } from './test-service';
-import { Question } from '../../lib/types/question';
 import { QuestionStore } from '../../lib/stores/question.store';
 
 interface TestWithRelatedQuiz extends Test {
@@ -79,6 +78,7 @@ export class TestListPage {
             id: '',
             quizId,
             questions: [],
+            selectedAnswers: [],
             isSubmitted: false,
             deadLine: new Date(),
             score: {
@@ -86,7 +86,7 @@ export class TestListPage {
               incorrect: 0,
               points: 0,
               percent: 0
-            }
+            },
           };
 
           const quizWithQuestions: QuizWithRelatedQuestions = {
