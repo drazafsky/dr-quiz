@@ -9,18 +9,27 @@ import { ToolbarComponent } from "../../../../lib/components/toolbar/toolbar.com
 import { QuestionService } from '../question-service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { AnswerTableComponent } from '../../../../lib/components/answer-table/answer-table';
+import { QuizStore } from '../../../../lib/stores/quiz.store';
 
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CardComponent, ToolbarComponent, AnswerTableComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CardComponent,
+    ToolbarComponent,
+    AnswerTableComponent
+  ],
   templateUrl: './question-detail-page.html',
-  providers: [QuestionService, QuestionStore],
+  providers: [QuestionService, QuestionStore, QuizStore],
 })
 export class QuestionDetailPage {
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly #questionStore = inject(QuestionStore);
+  readonly #quizStore = inject(QuizStore);
   readonly #fb = inject(FormBuilder);
   readonly #questionService = inject(QuestionService);
 
@@ -36,6 +45,7 @@ export class QuestionDetailPage {
     filter(quizId => quizId !== null)
   ));
 
+  quiz$ = this.#quizStore.selectedQuiz;
   question$ = this.#questionStore.selectedQuestion;
   processing$ = this.#questionStore.loading;
   saveStatus$ = this.#questionStore.save;
@@ -52,6 +62,11 @@ export class QuestionDetailPage {
     if (question) {
       this.form.patchValue(question);
     }
+
+    effect(() => {
+      const quizId = this.#quizId$();
+      this.#quizStore.selectQuiz(quizId);
+    });
 
     effect(() => {
       const selectedQuestionId = this.#questionId$();
@@ -83,5 +98,9 @@ export class QuestionDetailPage {
     });
 
     this.#questionStore.saveQuestion(updatedQuestion);
+  }
+
+  handleCreateAnswer() {
+    this.#router.navigate(['answer', 'create'], { relativeTo: this.#route });
   }
 }

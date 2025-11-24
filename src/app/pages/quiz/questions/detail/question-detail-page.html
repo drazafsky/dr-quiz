@@ -23,7 +23,7 @@
             }
             @if(form.get('prompt')?.errors?.['not-empty']) {
               <div>Prompt cannot be empty.</div>
-            }
+            }/quest
           </div>
         } 
       </div>
@@ -62,4 +62,23 @@
     </div>
 </app-card>
 
-<app-answer-table></app-answer-table>
+<app-card>
+  <div header>
+    <app-toolbar>
+        <div left>
+            <h1 class="text-2xl font-bold mb-4">Answers</h1>
+        </div>
+        <div right>
+            <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleCreateAnswer()">Create</button>
+        </div>
+    </app-toolbar>
+  </div>
+
+  <div content>
+    <app-answer-table
+            [questionId]="question?.id"
+            [processing]="processing$()"
+            [isPublished]="quiz$()?.isPublished || false">
+        </app-answer-table>
+  </div>
+</app-card>
