@@ -37,8 +37,25 @@ export class TestListPage {
     }));
   });
 
+  dialogOpen = false;
+  selectedQuizId: string | undefined;
+
   handleNew() {
-    this.#router.navigate(['create'], { relativeTo: this.#route });
+    this.dialogOpen = true;
+  }
+
+  handleDialogSave() {
+    if (this.selectedQuizId) {
+      this.#router.navigate(['create'], {
+        relativeTo: this.#route,
+        queryParams: { quizId: this.selectedQuizId },
+      });
+    }
+    this.dialogOpen = false;
+  }
+
+  handleDialogCancel() {
+    this.dialogOpen = false;
   }
 
   handleEdit(test: Test) {
