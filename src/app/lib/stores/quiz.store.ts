@@ -79,7 +79,6 @@ export const QuizStore = signalStore(
                     description: '',
                     timeLimit: 60,
                     shuffleQuestions: false,
-                    questions: [],
                     isPublished: false
                 };
 

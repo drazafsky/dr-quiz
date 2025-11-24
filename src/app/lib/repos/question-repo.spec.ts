@@ -28,8 +28,8 @@ describe('QuestionRepo', () => {
           required: true,
           pointValue: 10,
           prompt: 'Sample Question',
-          answers: ['Answer1', 'Answer2'],
           correctAnswer: 'Answer1',
+          quizId: ''
         },
       ];
       service.setItem(questions);
@@ -44,8 +44,8 @@ describe('QuestionRepo', () => {
         required: true,
         pointValue: 10,
         prompt: 'Sample Question',
-        answers: ['Answer1', 'Answer2'],
         correctAnswer: 'Answer1',
+        quizId: ''
       }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
@@ -62,8 +62,8 @@ describe('QuestionRepo', () => {
         required: true,
         pointValue: 10,
         prompt: 'Sample Question',
-        answers: ['Answer1', 'Answer2'],
         correctAnswer: 'Answer1',
+        quizId: ''
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(question));
 
@@ -93,8 +93,8 @@ describe('QuestionRepo', () => {
         required: true,
         pointValue: 10,
         prompt: 'Sample Question',
-        answers: ['Answer1', 'Answer2'],
         correctAnswer: 'Answer1',
+        quizId: ''
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(question));
 

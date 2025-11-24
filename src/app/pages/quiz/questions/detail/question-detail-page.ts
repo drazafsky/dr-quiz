@@ -1,42 +1,73 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuestionStore } from '../../../../lib/stores/question.store';
 import { notEmptyValidator } from '../../../../lib/validators/not-empty.validator';
 import { CardComponent } from "../../../../lib/components/card/card";
 import { ToolbarComponent } from "../../../../lib/components/toolbar/toolbar.component";
-import { Question } from '../../../../lib/types/question';
+import { QuestionService } from '../question-service';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CardComponent, ToolbarComponent],
   templateUrl: './question-detail-page.html',
-  providers: [QuestionStore],
+  providers: [QuestionService, QuestionStore],
 })
 export class QuestionDetailPage {
   readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
   readonly #questionStore = inject(QuestionStore);
   readonly #fb = inject(FormBuilder);
+  readonly #questionService = inject(QuestionService);
 
-  questionId = this.#route.snapshot.paramMap.get('questionId');
-  quizId = this.#route.snapshot.paramMap.get('quizId');
+  #questionId$ = toSignal(this.#route.paramMap.pipe(
+    takeUntilDestroyed(),
+    map(params => params.get('questionId')),
+    filter(quizId => quizId !== null)
+  ));
+
+  #quizId$ = toSignal(this.#route.paramMap.pipe(
+    takeUntilDestroyed(),
+    map(params => params.get('quizId')),
+    filter(quizId => quizId !== null)
+  ));
 
   question$ = this.#questionStore.selectedQuestion;
   processing$ = this.#questionStore.loading;
+  saveStatus$ = this.#questionStore.save;
 
   form: FormGroup = this.#fb.group({
     prompt: ['', [Validators.required, notEmptyValidator()]],
-    pointValue: [0, [Validators.min(1)]],
+    pointValue: [1, [Validators.min(1)]],
     required: [false],
   });
 
   constructor() {
-    const question = this.#questionStore.questions().find((q) => q.id === this.questionId);
+    const question = this.#questionStore.questions().find((q) => q.id === this.#questionId$());
+
     if (question) {
       this.form.patchValue(question);
     }
+
+    effect(() => {
+      const selectedQuestionId = this.#questionId$();
+      this.#questionStore.selectQuestion(selectedQuestionId);
+    });
+
+    effect(() => {
+      // If the id of the question has changed (should only happen when saving a new question), redirect
+      // to the same page with the correct question id in the url
+      const selectedQuestionId = this.#questionStore.selectedQuestionId();
+      const urlQuestionId = this.#questionId$();
+
+      if (selectedQuestionId !== urlQuestionId) {
+        this.#router.navigate(['..', selectedQuestionId], { relativeTo: this.#route });
+      }
+    });
   }
 
   handleSaveQuestion() { 
@@ -45,7 +76,12 @@ export class QuestionDetailPage {
       return;
     }
 
-    const updatedQuestion = { ...this.form.value, id: this.questionId } as Question;
+    const updatedQuestion = this.#questionService.convertToQuestionDTO({
+      ...this.form.value,
+      id: this.#questionId$(),
+      quizId: this.#quizId$()
+    });
+
     this.#questionStore.saveQuestion(updatedQuestion);
   }
 }

@@ -26,6 +26,7 @@ describe('AnswerRepo', () => {
         {
           id: '1',
           value: 'Sample Answer',
+          questionId: ''
         },
       ];
       service.setItem(answers);
@@ -38,6 +39,7 @@ describe('AnswerRepo', () => {
       const answer: Answer[] = [{
         id: '1',
         value: 'Sample Answer',
+        questionId: ''
       }];
       vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage error');
@@ -52,6 +54,7 @@ describe('AnswerRepo', () => {
       const answer: Answer = {
         id: '1',
         value: 'Sample Answer',
+        questionId: ''
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(answer));
 
@@ -79,6 +82,7 @@ describe('AnswerRepo', () => {
       const answer: Answer = {
         id: '1',
         value: 'Sample Answer',
+        questionId: ''
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(answer));
 

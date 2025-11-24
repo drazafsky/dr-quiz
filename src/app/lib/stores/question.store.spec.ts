@@ -11,16 +11,16 @@ const MOCK_QUESTIONS: Question[] = [
     required: true,
     pointValue: 10,
     prompt: 'Sample Question 1',
-    answers: ['Answer1', 'Answer2'],
     correctAnswer: 'Answer1',
+    quizId: ''
   },
   {
     id: '2',
     required: false,
     pointValue: 5,
     prompt: 'Sample Question 2',
-    answers: ['Answer3', 'Answer4'],
     correctAnswer: 'Answer3',
+    quizId: ''
   },
 ];
 
@@ -69,8 +69,8 @@ describe('QuestionStore', () => {
       required: true,
       pointValue: 15,
       prompt: 'New Question',
-      answers: ['Answer5', 'Answer6'],
       correctAnswer: 'Answer5',
+      quizId: ''
     };
 
     store.saveQuestion(newQuestion);
@@ -86,8 +86,8 @@ describe('QuestionStore', () => {
       required: false,
       pointValue: 20,
       prompt: 'Updated Question',
-      answers: ['Answer7', 'Answer8'],
       correctAnswer: 'Answer7',
+      quizId: ''
     };
 
     store.saveQuestion(updatedQuestion);
