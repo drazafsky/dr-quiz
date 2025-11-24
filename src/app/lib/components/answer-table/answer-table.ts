@@ -1,21 +1,41 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Answer } from '../../types/answer';
-import { AnswerRepo } from '../../repos/answer-repo';
+import { AnswerStore } from '../../stores/answer.store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-answer-table',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './answer-table.html',
+  providers: [
+    AnswerStore,
+  ]
 })
 export class AnswerTableComponent {
-  readonly #answerRepo = inject(AnswerRepo);
+  readonly #answerStore = inject(AnswerStore);
+  readonly #router = inject(Router);
+  readonly #route = inject(ActivatedRoute);
 
-  answers: Answer[] = this.#answerRepo.getItem() || [];
+  questionId = input.required<string | undefined>();
+  processing = input.required<boolean>();
+  isPublished = input.required<boolean>();
+
+  answers$ = this.#answerStore.answers;
+
+  constructor() {
+    effect(() => {
+      const questionId = this.questionId();
+      this.#answerStore.setQuestionId(questionId);
+    })
+  }
+
+  handleEditAnswer(answer: Answer): void {
+    this.#router.navigate(['answer', answer.id], { relativeTo: this.#route });
+  }
 
   handleDeleteAnswer(answer: Answer): void {
-    this.answers = this.answers.filter(a => a !== answer);
-    this.#answerRepo.setItem(this.answers);
+    this.#answerStore.deleteAnswer(answer);
   }
 }

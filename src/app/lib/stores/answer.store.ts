@@ -3,7 +3,6 @@ import { AnswerRepo } from '../repos/answer-repo';
 import { Answer } from '../types/answer';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
-import { v4 as uuidv4 } from 'uuid';
 import { setSuccess } from './save-status-feature';
 
 type AnswerState = {
@@ -78,7 +77,7 @@ export const AnswerStore = signalStore(
       newAnswer() {
           const answer: Answer = {
             id: '',
-            text: '',
+            value: '',
             questionId: ''
           };
 

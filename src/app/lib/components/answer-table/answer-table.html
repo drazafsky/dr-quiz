@@ -7,9 +7,9 @@
       </tr>
     </thead>
     <tbody>
-      @for (let answer of answers) {
+      @for (answer of answers$(); track answer.id) {
         <tr class="hover:bg-gray-50">
-          <td class="border border-gray-300 px-4 py-2">{{ answer.text }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ answer.value }}</td>
           <td class="border border-gray-300 px-4 py-2">
             <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
           </td>

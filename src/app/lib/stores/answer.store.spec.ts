@@ -8,12 +8,12 @@ import { provideZonelessChangeDetection } from '@angular/core';
 const MOCK_ANSWERS: Answer[] = [
   {
     id: '1',
-    text: 'Sample Answer 1',
+    value: 'Sample Answer 1',
     questionId: ''
   },
   {
     id: '2',
-    text: 'Sample Answer 2',
+    value: 'Sample Answer 2',
     questionId: ''
   },
 ];
@@ -60,7 +60,7 @@ describe('AnswerStore', () => {
     const store = TestBed.inject(AnswerStore);
     const newAnswer: Answer = {
       id: '3',
-      text: 'New Answer',
+      value: 'New Answer',
       questionId: ''
     };
 
@@ -74,7 +74,7 @@ describe('AnswerStore', () => {
     const store = TestBed.inject(AnswerStore);
     const updatedAnswer: Answer = {
       id: '1',
-      text: 'Updated Answer',
+      value: 'Updated Answer',
       questionId: ''
     };
 

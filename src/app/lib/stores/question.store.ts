@@ -3,7 +3,6 @@ import { QuestionRepo } from '../repos/question-repo';
 import { Question } from '../types/question';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
-import { v4 as uuidv4 } from 'uuid';
 import { setSuccess } from './save-status-feature';
 
 type QuestionState = {
@@ -104,7 +103,11 @@ export const QuestionStore = signalStore(
             patchState(state, stopLoading());
             patchState(state, setSuccess());
         }, 1000);
-      }
+      },
+
+      markAsAnswer(question: Question) {
+
+      },
     };
   }),
   withComputed((state) => ({

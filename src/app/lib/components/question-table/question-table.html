@@ -6,7 +6,7 @@
         <th class="border border-gray-300 px-4 py-2 text-left">Point Value</th>
         <th class="border border-gray-300 px-4 py-2 text-left">Required</th>
         <th class="border border-gray-300 px-4 py-2 text-left">Correct Answer</th>
-        <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
+        <th class="border border-gray-300 px-4 py-2 text-left" colspan="2">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,11 +22,6 @@
             <td class="border border-gray-300 px-4 py-2">
                 @if (!isPublished()) {
                     <button type="button" class="mr-4" [disabled]="processing()" (click)="handleDeleteQuestion(question)">Delete</button>
-                }
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-                @if (!isPublished()) {
-                    <button type="button" class="mr-4" [disabled]="processing()" (click)="handleMarkAsAnswer(question)">Mark Correct</button>
                 }
             </td>
         </tr>

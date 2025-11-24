@@ -36,8 +36,4 @@ export class QuestionTableComponent {
   handleDeleteQuestion(question: Question): void {
     this.#questionStore.deleteQuestion(question);
   }
-
-  handleMarkAsAnswer(question: Question): void {
-    this.#questionStore.deleteQuestion(question);
-  }
 }
