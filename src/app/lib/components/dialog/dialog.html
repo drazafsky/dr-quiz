@@ -1,0 +1,12 @@
+@if(isOpen) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+  <div class="fixed inset-0 flex justify-center items-center z-50">
+    <div class="max-w-lg w-full bg-white rounded-lg shadow-lg">
+      <app-card>
+        <ng-content select="[header]"></ng-content>
+        <ng-content select="[content]"></ng-content>
+        <ng-content select="[footer]"></ng-content>
+      </app-card>
+    </div>
+  </div>
+}
