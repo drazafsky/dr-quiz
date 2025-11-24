@@ -33,7 +33,26 @@ export class TestDetailPage {
     filter(testId => testId !== null)
   ));
 
+  readonly #testId$ = toSignal(this.#route.paramMap.pipe(
+    takeUntilDestroyed(),
+    map(params => params.get('testId')),
+    filter(testId => testId !== null)
+  ));
+
   readonly test$ = this.#testStore.selectedTest;
+
+  constructor() {
+    const test = this.#testStore.tests().find((t) => t.id === this.#testId$());
+
+    if (test) {
+      this.form.patchValue(test);
+    }
+
+    effect(() => {
+      const selectedTestId = this.#testId$();
+      this.#testStore.selectTest(selectedTestId);
+    });
+  }
   readonly processing$ = this.#testStore.loading;
   readonly saveStatus$ = this.#testStore.save;
 
