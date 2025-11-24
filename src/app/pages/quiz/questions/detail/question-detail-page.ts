@@ -13,7 +13,7 @@ import { filter, map } from 'rxjs';
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CardComponent, ToolbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, CardComponent, ToolbarComponent, AnswerTableComponent],
   templateUrl: './question-detail-page.html',
   providers: [QuestionService, QuestionStore],
 })
