@@ -2,16 +2,27 @@
   <div header>
     <app-toolbar>
       <div left>
-        <h1 class="text-2xl font-bold mb-4">Edit Test Details</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ currentQuestion$()?.prompt || 'No Question Available' }}</h1>
       </div>
       <div right>
-        <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleSaveTest()">Save</button>
+        <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleSaveTest()">Submit</button>
       </div>
     </app-toolbar>
   </div>
 
   <div content>
-    <pre>{{ currentQuestion$() | json }}</pre>
+    <form [formGroup]="form">
+      <fieldset>
+        @for (let answer of currentQuestion$()?.answers || []) {
+          <div>
+            <label>
+              <input type="radio" [value]="answer.id" formControlName="selectedAnswer" />
+              {{ answer.value }}
+            </label>
+          </div>
+        }
+      </fieldset>
+    </form>
   </div>
 
   <div footer>
