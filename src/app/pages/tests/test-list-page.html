@@ -25,15 +25,17 @@
       <tbody>
         @for(test of tests$(); track test.id) {
           <tr class="hover:bg-gray-50">
-            <td class="border border-gray-300 px-4 py-2"></td>
-            <td class="border border-gray-300 px-4 py-2"></td>
-            <td class="border border-gray-300 px-4 py-2"></td>
-            <td class="border border-gray-300 px-4 py-2"></td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.quiz?.title || 'Unknown Quiz' }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.quiz?.description || 'No Description' }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.quiz?.timeLimit || 'N/A' }} seconds</td>
+            <td class="border border-gray-300 px-4 py-2">{{ test.isSubmitted ? 'Yes' : 'No' }}</td>
             <td class="border border-gray-300 px-4 py-2">
-              <button (click)="handleEdit(test)">Resume</button>
+              <button (click)="handleEdit(test)">{{ test.isSubmitted ? 'View' : 'Resume' }}</button>
             </td>
             <td class="border border-gray-300 px-4 py-2">
+              @if (!test.isSubmitted) {
                 <button (click)="handlePublish(test)">Submit</button>
+              }
             </td>
           </tr>
         } @empty {
