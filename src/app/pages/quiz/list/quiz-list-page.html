@@ -11,37 +11,50 @@
     </div>
 
     <div class="overflow-x-auto" content>
-        <table class="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border border-gray-300 px-4 py-2 text-left">Title</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Published</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(quiz of quizzes$(); track quiz.id) {
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-4 py-2">{{ quiz.title }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ quiz.description }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ quiz.timeLimit }} seconds</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ quiz.isPublished ? 'Yes' : 'No' }}</td>
-                        <td class="border border-gray-300 px-4 py-2"><button (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button></td>
-                        <td class="border border-gray-300 px-4 py-2">
+        <div class="grid grid-cols-1 gap-4 md:table md:w-full md:border-collapse md:border md:border-gray-300">
+            <div class="hidden md:table-header-group bg-gray-100">
+                <div class="md:table-row">
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Title</div>
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Description</div>
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Time Limit</div>
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Published</div>
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Actions</div>
+                </div>
+            </div>
+            @for(quiz of quizzes$(); track quiz.id) {
+                <div class="md:table-row hover:bg-gray-50">
+                    <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="font-bold md:hidden">Title:</span>
+                        {{ quiz.title }}
+                    </div>
+                    <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="font-bold md:hidden">Description:</span>
+                        {{ quiz.description }}
+                    </div>
+                    <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="font-bold md:hidden">Time Limit:</span>
+                        {{ formatDuration(quiz.timeLimit) }}
+                    </div>
+                    <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="font-bold md:hidden">Published:</span>
+                        {{ quiz.isPublished ? 'Yes' : 'No' }}
+                    </div>
+                    <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+                        <span class="font-bold md:hidden">Actions:</span>
+                        <div class="flex flex-col md:flex-row items-end md:items-start space-y-2">
+                            <button class="w-32 md:w-auto md:mr-4" (click)="handleEdit(quiz)">{{ quiz.isPublished ? 'View' : 'Edit' }}</button>
                             @if (!quiz.isPublished) {
-                                <button (click)="handlePublish(quiz)">Publish</button>
+                                <button class="w-32 md:w-auto md:mr-4" (click)="handlePublish(quiz)">Publish</button>
                             }
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2"><button (click)="handleDelete(quiz)">Delete</button></td>
-                    </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="5" class="border border-gray-300 px-4 py-2 text-center">There are no quizzes available.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            <button class="w-32 md:w-auto md:mr-4" (click)="handleDelete(quiz)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            } @empty {
+                <div class="md:table-row">
+                    <div class="md:table-cell border border-gray-300 px-4 py-2 text-center" colspan="5">There are no quizzes available.</div>
+                </div>
+            }
+        </div>
     </div>
 </app-card>
