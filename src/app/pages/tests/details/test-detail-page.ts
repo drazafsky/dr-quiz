@@ -45,6 +45,12 @@ export class TestDetailPage {
 
   readonly currentQuestion$ = this.#testStore.nextUnasweredQuestion;
   readonly currentAnswers$ = this.#testStore.nextUnasweredQuestionsAnswers;
+  showResults = false;
+
+  handleNextQuestion() {
+    this.showResults = false;
+    this.form.reset();
+  }
 
   constructor() {
     effect(() => {
@@ -71,10 +77,19 @@ export class TestDetailPage {
       return;
     }
 
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
+
     const test = this.test$();
+    const selectedAnswerId = this.form.value.selectedAnswer;
+
     if (test !== undefined) {
-      const updatedTest = this.#testService.addAnswer(test, this.form.value.selectedAnswer);
+      const updatedTest = this.#testService.addAnswer(test, selectedAnswerId);
       this.#testStore.saveTest(updatedTest);
     }
+
+    this.showResults = true;
   }
 }
