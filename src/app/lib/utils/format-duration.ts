@@ -4,5 +4,6 @@ export function formatDuration(seconds: number): string {
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = seconds % 60;
 
-  return `${days} days :${hours}:${minutes}:${secs}`;
+  const pad = (num: number) => String(num).padStart(2, '0');
+  return `${days} days ${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
