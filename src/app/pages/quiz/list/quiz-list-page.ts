@@ -5,6 +5,7 @@ import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.compon
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from '../../../lib/components/card/card';
 import { Quiz } from '../../../lib/types/quiz';
+import { formatDuration as calcDuration } from '../../../lib/utils/format-duration';
 
 @Component({
   selector: 'app-quiz-list-page',
@@ -38,5 +39,9 @@ export class QuizListPage {
 
   handlePublish(quiz: Quiz) {
     this.#quizStore.publish(quiz);
+  }
+
+  formatDuration(seconds: number): string {
+    return calcDuration(seconds);
   }
 }
