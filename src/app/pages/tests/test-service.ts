@@ -27,4 +27,16 @@ export class TestService {
 
         return dto;
     }
+
+    addAnswer(test: Test, answer: string): Test {
+        const dto: Test = {
+            ...test,
+            selectedAnswers: [
+                ...test.selectedAnswers,
+                answer
+            ]
+        };
+
+        return dto;
+    }
 }

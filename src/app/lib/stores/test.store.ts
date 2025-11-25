@@ -5,6 +5,8 @@ import { signalStore, withHooks, withMethods, withState, patchState, withCompute
 import { setLoading, stopLoading } from './loading-feature';
 import { setSuccess } from './save-status-feature';
 import { QuestionStore } from './question.store';
+import { Answer } from '../types/answer';
+import { AnswerStore } from './answer.store';
 
 type TestState = {
   tests: Test[];
@@ -46,8 +48,15 @@ export const TestStore = signalStore(
             selectedTestId: newTest.id,
           });
         } else {
-          // Updated test
-          const updatedTests = state.tests().map((test) =>
+          // Updated test 
+          const isSubmitted = newTest.questions.length === newTest.selectedAnswers.length;
+
+          newTest = {
+            ...newTest,
+            isSubmitted
+          }
+
+        const updatedTests = state.tests().map((test) =>
             test.id === newTest.id ? { ...newTest, id: test.id } : test
           );
           patchState(state, { tests: updatedTests });
@@ -150,6 +159,12 @@ export const TestStore = signalStore(
         .sort((q1, q2) => (test?.questions.indexOf(q1.id) || 0) - (test?.questions.indexOf(q2.id) || 0));
 
       return questions[answeredQuestions.length];
+    }),
+  })),
+  withComputed((state, answerStore = inject(AnswerStore)) => ({
+    nextUnasweredQuestionsAnswers: computed(() => {
+      const question = state.nextUnasweredQuestion();
+      return answerStore.getQuestionAnswers(question.id);
     }),
   })),
   withHooks((state, testRepo = inject(TestRepo)) => {

@@ -107,7 +107,11 @@ export const AnswerStore = signalStore(
 
       selectById(answerId: string) {
         return state.answers().find(answer => answer.id === answerId);
-      }
+      },
+
+      getQuestionAnswers(questionId: string) {
+        return state.answers().filter(answer => answer.questionId === questionId);
+      },
     };
   }),
   withComputed((state) => ({
