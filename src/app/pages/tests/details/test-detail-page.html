@@ -20,7 +20,13 @@
 
   <div content >
     @if (testCompleted()) {
-      Score goes here
+      <div class="space-y-4">
+        <h2 class="text-xl font-bold">Test Results</h2>
+        <p><strong>Correct Answers:</strong> {{ test$()?.score?.correct }}</p>
+        <p><strong>Incorrect Answers:</strong> {{ test$()?.score?.incorrect }}</p>
+        <p><strong>Total Points:</strong> {{ test$()?.score?.points }}</p>
+        <p><strong>Percentage:</strong> {{ test$()?.score?.percent }}%</p>
+      </div>
     } @else {
       <form [formGroup]="form">
         @if (showResults) {
