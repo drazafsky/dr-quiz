@@ -50,18 +50,40 @@ export const TestStore = signalStore(
           // Updated test 
           const isSubmitted = newTest.questions.length === newTest.selectedAnswers.length;
 
-          // Update the test score if the test has been submitted
-          const score = {
-            correct: 0,
-            incorrect: 0,
-            points: 0,
-            percent: 0
-          };
+          // Calculate the score if the test has been submitted
+          let correct = 0;
+          let incorrect = 0;
+          let points = 0;
+          const totalPoints = newTest.questions.reduce((sum, questionId) => {
+            const question = questionStore.questions().find(q => q.id === questionId);
+            return sum + (question?.pointValue || 0);
+          }, 0);
+
+          if (isSubmitted) {
+            newTest.selectedAnswers.forEach((answerId, index) => {
+              const questionId = newTest.questions[index];
+              const question = questionStore.questions().find(q => q.id === questionId);
+              if (question?.correctAnswer === answerId) {
+                correct++;
+                points += question.pointValue;
+              } else {
+                incorrect++;
+              }
+            });
+          }
+
+          const percent = totalPoints > 0 ? Math.round((points / totalPoints) * 100) : 0;
 
           newTest = {
             ...newTest,
-            isSubmitted
-          }
+            isSubmitted,
+            score: {
+              correct,
+              incorrect,
+              points,
+              percent,
+            },
+          };
 
         const updatedTests = state.tests().map((test) =>
             test.id === newTest.id ? { ...newTest, id: test.id } : test
