@@ -5,7 +5,6 @@ import { signalStore, withHooks, withMethods, withState, patchState, withCompute
 import { setLoading, stopLoading } from './loading-feature';
 import { setSuccess } from './save-status-feature';
 import { QuestionStore } from './question.store';
-import { Answer } from '../types/answer';
 import { AnswerStore } from './answer.store';
 
 type TestState = {
@@ -50,6 +49,14 @@ export const TestStore = signalStore(
         } else {
           // Updated test 
           const isSubmitted = newTest.questions.length === newTest.selectedAnswers.length;
+
+          // Update the test score if the test has been submitted
+          const score = {
+            correct: 0,
+            incorrect: 0,
+            points: 0,
+            percent: 0
+          };
 
           newTest = {
             ...newTest,
@@ -104,28 +111,6 @@ export const TestStore = signalStore(
         if (testIndex > -1) {
           const tests = [...state.tests()];
           tests.splice(testIndex, 1);
-          patchState(state, { tests });
-          testRepo.setItem(state.tests());
-        }
-
-        // Simulate time taken by an API so that visual feedback can be given to the user
-        setTimeout(() => {
-            patchState(state, stopLoading());
-            patchState(state, setSuccess());
-        }, 1000);
-      },
-
-      publish(test: Test) {
-        patchState(state, setLoading());
-        const testIndex = state.tests().findIndex(eq => eq.id === test.id);
-
-        if (testIndex > -1) {
-          const tests = [...state.tests()];
-          const updatedTest = {
-            ...tests[testIndex],
-            isPublished: true,
-          };
-          tests.splice(testIndex, 1, updatedTest);
           patchState(state, { tests });
           testRepo.setItem(state.tests());
         }
