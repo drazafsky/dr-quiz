@@ -17,6 +17,7 @@ import { AnswerStore } from '../../lib/stores/answer.store';
 
 interface TestWithRelatedQuiz extends Test {
   quiz: Quiz;
+  timeRemaining: Signal<string>;
 }
 
 @Component({
@@ -61,11 +62,11 @@ export class TestListPage {
       timeRemaining: computed(() => {
         if (test.deadLine) {
           const deadlineTime = new Date(test.deadLine).getTime();
-          return Math.max(0, (deadlineTime - this.currentTime()) / 1000);
+          return this.formatDuration(Math.max(0, (deadlineTime - this.currentTime()) / 1000));
         }
         return 0;
       }),
-    }) as TestWithRelatedQuiz;
+    }) as TestWithRelatedQuiz);
   });
 
   form = this.#fb.group({
