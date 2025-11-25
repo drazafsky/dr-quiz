@@ -1,34 +1,36 @@
 <div class="overflow-x-auto">
-  <table class="table-auto w-full border-collapse border border-gray-300">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="border border-gray-300 px-4 py-2 text-left">Answer</th>
+  <div class="grid grid-cols-1 gap-4 md:table md:w-full md:border-collapse md:border md:border-gray-300">
+    <div class="hidden md:table-header-group bg-gray-100">
+      <div class="md:table-row">
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Answer</div>
         @if (!isPublished()) {
-          <th class="border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</th>
+          <div class="md:table-cell border border-gray-300 px-4 py-2 text-left" colspan="3">Actions</div>
         }
-      </tr>
-    </thead>
-    <tbody>
-      @for (answer of answers$(); track answer.id) {
-        <tr class="hover:bg-gray-50">
-          <td class="border border-gray-300 px-4 py-2">{{ answer.value }}</td>
-          @if (!isPublished()) {
-            <td class="border border-gray-300 px-4 py-2">
-              <button type="button" class="mr-4" (click)="handleEditAnswer(answer)">Edit</button>
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <button type="button" class="mr-4" (click)="handleMarkCorrectAnswer(questionId(), answer)">Mark Correct</button>
-            </td>
-            <td class="border border-gray-300 px-4 py-2">
-              <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
-            </td>
-          }
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="2" class="text-center">No answers available.</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+      </div>
+    </div>
+    @for (answer of answers$(); track answer.id) {
+      <div class="md:table-row hover:bg-gray-50">
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Answer:</span>
+          {{ answer.value }}
+        </div>
+        @if (!isPublished()) {
+          <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+            <span class="font-bold md:hidden">Actions:</span>
+            <button type="button" class="mr-4" (click)="handleEditAnswer(answer)">Edit</button>
+          </div>
+          <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+            <button type="button" class="mr-4" (click)="handleMarkCorrectAnswer(questionId(), answer)">Mark Correct</button>
+          </div>
+          <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+            <button type="button" class="mr-4" (click)="handleDeleteAnswer(answer)">Delete</button>
+          </div>
+        }
+      </div>
+    } @empty {
+      <div class="md:table-row">
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-center" colspan="2">No answers available.</div>
+      </div>
+    }
+  </div>
 </div>

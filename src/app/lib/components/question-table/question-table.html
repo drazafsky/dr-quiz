@@ -1,35 +1,44 @@
 <div class="overflow-x-auto">
-    <table class="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-            <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2 text-left">Prompt</th>
-            <th class="border border-gray-300 px-4 py-2 text-left">Point Value</th>
-            <th class="border border-gray-300 px-4 py-2 text-left">Required</th>
-            <th class="border border-gray-300 px-4 py-2 text-left">Correct Answer</th>
-            <th class="border border-gray-300 px-4 py-2 text-left" colspan="2">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for(question of questions$(); track question.id) {
-            <tr class="hover:bg-gray-50">
-                <td class="border border-gray-300 px-4 py-2">{{ question.prompt }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ question.pointValue }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ question.required ? 'Yes' : 'No' }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ correctAnswer(question)?.value }}</td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <button type="button" class="mr-4" [disabled]="processing()" (click)="handleEditQuestion(question)">{{ isPublished() ? 'View' : 'Edit' }}</button>
-                </td>
-                <td class="border border-gray-300 px-4 py-2">
-                    @if (!isPublished()) {
-                        <button type="button" class="mr-4" [disabled]="processing()" (click)="handleDeleteQuestion(question)">Delete</button>
-                    }
-                </td>
-            </tr>
-            } @empty {
-            <tr>
-            <td colspan="2" class="text-center">No questions available.</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+  <div class="grid grid-cols-1 gap-4 md:table md:w-full md:border-collapse md:border md:border-gray-300">
+    <div class="hidden md:table-header-group bg-gray-100">
+      <div class="md:table-row">
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Prompt</div>
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Point Value</div>
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Required</div>
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Correct Answer</div>
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-left">Actions</div>
+      </div>
+    </div>
+    @for(question of questions$(); track question.id) {
+      <div class="md:table-row hover:bg-gray-50">
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Prompt:</span>
+          {{ question.prompt }}
+        </div>
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Point Value:</span>
+          {{ question.pointValue }}
+        </div>
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Required:</span>
+          {{ question.required ? 'Yes' : 'No' }}
+        </div>
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Correct Answer:</span>
+          {{ correctAnswer(question)?.value }}
+        </div>
+        <div class="grid grid-cols-2 md:table-cell border border-gray-300 px-4 py-2">
+          <span class="font-bold md:hidden">Actions:</span>
+          <button type="button" class="mr-4" [disabled]="processing()" (click)="handleEditQuestion(question)">{{ isPublished() ? 'View' : 'Edit' }}</button>
+          @if (!isPublished()) {
+            <button type="button" class="mr-4" [disabled]="processing()" (click)="handleDeleteQuestion(question)">Delete</button>
+          }
+        </div>
+      </div>
+    } @empty {
+      <div class="md:table-row">
+        <div class="md:table-cell border border-gray-300 px-4 py-2 text-center" colspan="2">No questions available.</div>
+      </div>
+    }
+  </div>
 </div>
