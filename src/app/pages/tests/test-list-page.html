@@ -19,6 +19,7 @@
           <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Time Remaining</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Submitted</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Points</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Score</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
         </tr>
@@ -31,6 +32,11 @@
             <td class="border border-gray-300 px-4 py-2">{{ formatDuration(test.quiz.timeLimit || 0) }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ test.timeRemaining() }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ test.isSubmitted ? 'Yes' : 'No' }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              @if (test.isSubmitted) {
+                {{ test.score.points }}
+              }
+            </td>
             <td class="border border-gray-300 px-4 py-2">
               @if (test.isSubmitted) {
                 {{ test.score.correct }} / {{ test.questions.length }} : {{ test.score.percent }}%

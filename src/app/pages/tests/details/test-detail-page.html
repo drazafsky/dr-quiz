@@ -63,18 +63,10 @@
   </div>
 
   <div footer>
-    <!--
-    @if (processing$()) {
-      <h3 class="alert">Saving...</h3>
+    @if (!testCompleted()) {
+      <div class="text-right">
+        <p><strong>Time Remaining:</strong> {{ formatDuration(timeRemaining$()) }}</p>
+      </div>
     }
-
-    @if (saveStatus$().success) {
-      <h3 class="success">Test saved successfully.</h3>
-    }
-
-    @if (saveStatus$().error) {
-      <h3 class="alert">An error occurred while saving the test. Please try again.</h3>
-    }
-    -->
   </div>
 </app-card>

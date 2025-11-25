@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,8 @@ import { QuestionStore } from '../../../lib/stores/question.store';
 import { AnswerStore } from '../../../lib/stores/answer.store';
 import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
 import { TestService } from '../test-service';
+import { formatDuration as calcDuration } from '../../../lib/utils/format-duration';
+import { Test } from '../../../lib/types/test';
 
 @Component({
   selector: 'app-test-detail-page',
@@ -49,9 +51,20 @@ export class TestDetailPage {
   readonly lastQuestionAnswers$ = this.#testStore.previousQuestionAnswers;
   readonly lastQuestionSubmittedAnswer$ = this.#testStore.previousQuestionSubmittedAnswer;
 
+  readonly currentTime = signal(Date.now());
+  readonly timeRemaining$ = computed(() => {
+    const test = this.test$();
+    if (test?.deadLine && !test.isSubmitted) {
+      const deadlineTime = new Date(test.deadLine).getTime();
+      return Math.max(0, (deadlineTime - this.currentTime()) / 1000);
+    }
+
+    return 0;
+  });
+
   readonly testCompleted = computed(() => {
     const test = this.test$();
-    return test?.questions.length === test?.selectedAnswers.length;
+    return test?.isSubmitted || (test?.questions.length === test?.selectedAnswers.length);
   });
 
   showResults = false; 
@@ -66,6 +79,28 @@ export class TestDetailPage {
       const test = this.test$(); 
       this.#quizStore.selectQuiz(test?.quizId);
       this.#questionStore.setQuizId(test?.quizId);
+    });
+
+    const interval = setInterval(() => {
+      this.currentTime.set(Date.now());
+    }, 1000);
+
+    const clearIntervalEffect = () => clearInterval(interval);
+
+    effect(() => {
+      const timeRemaining = this.timeRemaining$()
+      const test = this.test$();
+
+      if (timeRemaining <= 0 && !test?.isSubmitted) {
+        clearIntervalEffect();
+
+        const test = {
+          ...this.test$(),
+          isSubmitted: true,
+        } as Test;
+
+        this.#testStore.saveTest(test);
+      }
     });
   }
   readonly processing$ = this.#testStore.loading;
@@ -101,4 +136,8 @@ export class TestDetailPage {
     this.showResults = false;
     this.form.reset();
   } 
+
+  formatDuration(seconds: number): string {
+    return calcDuration(seconds);
+  }
 }
