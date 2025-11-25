@@ -12,6 +12,7 @@ import { DialogComponent } from "../../lib/components/dialog/dialog";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizWithRelatedQuestions, TestService } from './test-service';
 import { QuestionStore } from '../../lib/stores/question.store';
+import { AnswerStore } from '../../lib/stores/answer.store';
 
 interface TestWithRelatedQuiz extends Test {
   quiz: Quiz;
@@ -22,7 +23,7 @@ interface TestWithRelatedQuiz extends Test {
   standalone: true,
   imports: [CommonModule, CardComponent, ToolbarComponent, DialogComponent, ReactiveFormsModule],
   templateUrl: './test-list-page.html',
-  providers: [QuestionStore, QuizStore, TestService, TestStore],
+  providers: [AnswerStore, QuestionStore, QuizStore, TestService, TestStore],
 })
 export class TestListPage {
   readonly #testStore = inject(TestStore);

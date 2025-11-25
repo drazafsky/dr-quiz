@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject } from '@angular/core';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { Component, effect, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { CardComponent } from '../../../lib/components/card/card';
@@ -9,6 +9,9 @@ import { ToolbarComponent } from '../../../lib/components/toolbar/toolbar.compon
 import { TestStore } from '../../../lib/stores/test.store';
 import { QuizStore } from '../../../lib/stores/quiz.store';
 import { QuestionStore } from '../../../lib/stores/question.store';
+import { AnswerStore } from '../../../lib/stores/answer.store';
+import { notEmptyValidator } from '../../../lib/validators/not-empty.validator';
+import { TestService } from '../test-service';
 
 @Component({
   selector: 'app-test-detail-page',
@@ -18,16 +21,16 @@ import { QuestionStore } from '../../../lib/stores/question.store';
     ReactiveFormsModule,
     CardComponent,
     ToolbarComponent,
-    JsonPipe,
   ],
   templateUrl: './test-detail-page.html',
-  providers: [QuestionStore, QuizStore, TestStore],
+  providers: [AnswerStore, QuestionStore, QuizStore, TestService, TestStore],
 })
 export class TestDetailPage {
   readonly #route = inject(ActivatedRoute);
   readonly #testStore = inject(TestStore);
   readonly #questionStore = inject(QuestionStore);
   readonly #quizStore = inject(QuizStore);
+  readonly #testService = inject(TestService);
   readonly #fb = inject(FormBuilder);
 
   readonly #testId$ = toSignal(this.#route.paramMap.pipe(
@@ -41,6 +44,7 @@ export class TestDetailPage {
   readonly questions$ = this.#questionStore.quizQuestions;
 
   readonly currentQuestion$ = this.#testStore.nextUnasweredQuestion;
+  readonly currentAnswers$ = this.#testStore.nextUnasweredQuestionsAnswers;
 
   constructor() {
     effect(() => {
@@ -58,20 +62,19 @@ export class TestDetailPage {
   readonly saveStatus$ = this.#testStore.save;
 
   form: FormGroup = this.#fb.group({
-    isSubmitted: [false],
+    selectedAnswer: ['', [Validators.required, notEmptyValidator()]]
   });
 
-  handleSaveTest() {
+  handleSubmitAnswer() {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
     }
 
-    const updatedTest = {
-      ...this.form.value,
-      id: this.#testId$(),
-    };
-
-    this.#testStore.saveTest(updatedTest);
+    const test = this.test$();
+    if (test !== undefined) {
+      const updatedTest = this.#testService.addAnswer(test, this.form.value.selectedAnswer);
+      this.#testStore.saveTest(updatedTest);
+    }
   }
 }
