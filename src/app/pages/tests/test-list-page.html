@@ -17,6 +17,7 @@
           <th class="border border-gray-300 px-4 py-2 text-left">Quiz</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Time Limit</th>
+          <th class="border border-gray-300 px-4 py-2 text-left">Time Remaining</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Submitted</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Score</th>
           <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
@@ -28,6 +29,7 @@
             <td class="border border-gray-300 px-4 py-2">{{ test.quiz.title || 'Unknown Quiz' }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ test.quiz.description || 'No Description' }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ formatDuration(test.quiz.timeLimit || 0) }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ formatDuration(test.deadLine ? Math.max(0, (new Date(test.deadLine).getTime() - Date.now()) / 1000) : 0) }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ test.isSubmitted ? 'Yes' : 'No' }}</td>
             <td class="border border-gray-300 px-4 py-2">
               @if (test.isSubmitted) {
