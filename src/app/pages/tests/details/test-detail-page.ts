@@ -100,5 +100,5 @@ export class TestDetailPage {
   handleNextQuestion() {
     this.showResults = false;
     this.form.reset();
-  }
+  } 
 }

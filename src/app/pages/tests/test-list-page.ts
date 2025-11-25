@@ -4,7 +4,7 @@ import { CardComponent } from '../../lib/components/card/card';
 import { ToolbarComponent } from '../../lib/components/toolbar/toolbar.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TestStore } from '../../lib/stores/test.store';
-import { formatDuration } from '../../../lib/utils/format-duration';
+import { formatDuration as calcDuration } from '../../lib/utils/format-duration';
 import { QuizStore } from '../../lib/stores/quiz.store';
 import { computed } from '@angular/core';
 import { Test } from '../../lib/types/test';
@@ -119,5 +119,9 @@ export class TestListPage {
 
   handlePublish(test: Test) {
     this.#testStore.publish(test);
+  }
+
+  formatDuration(seconds: number): string {
+    return calcDuration(seconds);
   }
 }
