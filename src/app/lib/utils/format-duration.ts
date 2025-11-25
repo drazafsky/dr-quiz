@@ -2,7 +2,7 @@ export function formatDuration(seconds: number): string {
   const days = Math.floor(seconds / (24 * 3600));
   const hours = Math.floor((seconds % (24 * 3600)) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
+  const secs = Math.floor(seconds % 60);
 
   const pad = (num: number) => String(num).padStart(2, '0');
   return `${days} days ${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
