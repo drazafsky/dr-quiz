@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, Signal, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../lib/components/card/card';
 import { ToolbarComponent } from '../../lib/components/toolbar/toolbar.component';
@@ -39,6 +39,18 @@ export class TestListPage {
   readonly #selectedQuizQuestions$ = this.#questionStore.quizQuestions;
   readonly publishedQuizzes$ = this.#quizStore.publishedQuizzes;
 
+  currentTime = signal(Date.now());
+
+  constructor() {
+    effect(() => {
+      const interval = setInterval(() => {
+        this.currentTime.set(Date.now());
+      }, 1000);
+
+      return () => clearInterval(interval);
+    });
+  }
+
   tests$: Signal<TestWithRelatedQuiz[]> = computed(() => {
     const tests = this.#testStore.tests();
     const quizzes = this.publishedQuizzes$();
@@ -46,7 +58,14 @@ export class TestListPage {
     return tests.map(test => ({
       ...test,
       quiz: quizzes.find(quiz => quiz.id === test.quizId),
-    }) as TestWithRelatedQuiz);
+      timeRemaining: computed(() => {
+        if (test.deadLine) {
+          const deadlineTime = new Date(test.deadLine).getTime();
+          return Math.max(0, (deadlineTime - this.currentTime()) / 1000);
+        }
+        return 0;
+      }),
+    }) as TestWithRelatedQuiz;
   });
 
   form = this.#fb.group({
