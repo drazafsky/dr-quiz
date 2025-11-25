@@ -175,14 +175,22 @@ export const TestStore = signalStore(
     }),
   })),
   withComputed((state, answerStore = inject(AnswerStore)) => ({
-    nextUnasweredQuestionsAnswers: computed(() => {
+    nextUnansweredQuestionsAnswers: computed(() => {
       const question = state.nextUnasweredQuestion();
-      return answerStore.getQuestionAnswers(question.id);
+      if (question) {
+        return answerStore.getQuestionAnswers(question.id);
+      }
+
+      return undefined;
     }), 
 
     previousQuestionAnswers: computed(() => {
       const question = state.previousQuestion();
       return answerStore.getQuestionAnswers(question.id);
+    }),
+
+    previousQuestionSubmittedAnswer: computed(() => {
+      return state.selectedTest()?.selectedAnswers[-1];
     }),
   })),
   withHooks((state, testRepo = inject(TestRepo)) => {
