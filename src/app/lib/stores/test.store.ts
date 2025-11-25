@@ -48,7 +48,7 @@ export const TestStore = signalStore(
           });
         } else {
           // Updated test 
-          const isSubmitted = newTest.questions.length === newTest.selectedAnswers.length;
+          const isSubmitted = newTest.isSubmitted || (newTest.questions.length === newTest.selectedAnswers.length);
 
           // Calculate the score if the test has been submitted
           if (isSubmitted) {

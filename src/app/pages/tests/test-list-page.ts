@@ -40,7 +40,7 @@ export class TestListPage {
   readonly #selectedQuizQuestions$ = this.#questionStore.quizQuestions;
   readonly publishedQuizzes$ = this.#quizStore.publishedQuizzes;
 
-  currentTime = signal(Date.now());
+  readonly currentTime = signal(Date.now());
 
   constructor() {
     effect(() => {
