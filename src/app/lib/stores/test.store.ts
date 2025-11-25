@@ -3,9 +3,9 @@ import { TestRepo } from '../repos/test-repo';
 import { Test } from '../types/test';
 import { signalStore, withHooks, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { setLoading, stopLoading } from './loading-feature';
-import { setSuccess } from './save-status-feature';
 import { QuestionStore } from './question.store';
 import { AnswerStore } from './answer.store';
+import { setSuccess } from './save-status-feature';
 
 type TestState = {
   tests: Test[];
@@ -29,7 +29,7 @@ const initialState: TestState = {
 
 export const TestStore = signalStore(
   withState(initialState),
-  withMethods((state, testRepo = inject(TestRepo)) => {
+  withMethods((state, testRepo = inject(TestRepo), questionStore = inject(QuestionStore)) => {
     return {
       selectTest(selectedTestId: string | undefined) {
         patchState(state, { selectedTestId });
@@ -51,15 +51,15 @@ export const TestStore = signalStore(
           const isSubmitted = newTest.questions.length === newTest.selectedAnswers.length;
 
           // Calculate the score if the test has been submitted
-          let correct = 0;
-          let incorrect = 0;
-          let points = 0;
-          const totalPoints = newTest.questions.reduce((sum, questionId) => {
-            const question = questionStore.questions().find(q => q.id === questionId);
-            return sum + (question?.pointValue || 0);
-          }, 0);
-
           if (isSubmitted) {
+            let correct = 0;
+            let incorrect = 0;
+            let points = 0;
+            const totalPoints = newTest.questions.reduce((sum, questionId) => {
+              const question = questionStore.questions().find(q => q.id === questionId);
+              return sum + (question?.pointValue || 0);
+            }, 0);
+
             newTest.selectedAnswers.forEach((answerId, index) => {
               const questionId = newTest.questions[index];
               const question = questionStore.questions().find(q => q.id === questionId);
@@ -70,19 +70,22 @@ export const TestStore = signalStore(
                 incorrect++;
               }
             });
-          }
 
-          const percent = totalPoints > 0 ? Math.round((points / totalPoints) * 100) : 0;
+            const percent = totalPoints > 0 ? Math.round((points / totalPoints) * 100) : 0;
+            newTest = {
+              ...newTest,
+              score: {
+                correct,
+                incorrect,
+                points,
+                percent,
+              },
+            };
+          }
 
           newTest = {
             ...newTest,
-            isSubmitted,
-            score: {
-              correct,
-              incorrect,
-              points,
-              percent,
-            },
+            isSubmitted, 
           };
 
         const updatedTests = state.tests().map((test) =>

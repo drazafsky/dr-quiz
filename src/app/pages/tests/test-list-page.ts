@@ -137,10 +137,6 @@ export class TestListPage {
     this.#testStore.deleteTest(test);
   }
 
-  handlePublish(test: Test) {
-    this.#testStore.publish(test);
-  }
-
   formatDuration(seconds: number): string {
     return calcDuration(seconds);
   }
