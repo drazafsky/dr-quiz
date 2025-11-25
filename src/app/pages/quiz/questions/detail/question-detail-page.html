@@ -62,23 +62,25 @@
     </div>
 </app-card>
 
-<app-card>
-  <div header>
-    <app-toolbar>
-        <div left>
-            <h1 class="text-2xl font-bold mb-4">Answers</h1>
-        </div>
-        <div right>
-            <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleCreateAnswer()">Create</button>
-        </div>
-    </app-toolbar>
-  </div>
+@if(question && question?.id) {
+  <app-card>
+    <div header>
+      <app-toolbar>
+          <div left>
+              <h1 class="text-2xl font-bold mb-4">Answers</h1>
+          </div>
+          <div right>
+              <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleCreateAnswer()">Create</button>
+          </div>
+      </app-toolbar>
+    </div>
 
-  <div content>
-    <app-answer-table
-            [questionId]="question?.id"
-            [processing]="processing$()"
-            [isPublished]="quiz$()?.isPublished || false">
-        </app-answer-table>
-  </div>
-</app-card>
+    <div content>
+      <app-answer-table
+              [questionId]="question.id"
+              [processing]="processing$()"
+              [isPublished]="quiz$()?.isPublished || false">
+          </app-answer-table>
+    </div>
+  </app-card>
+}
