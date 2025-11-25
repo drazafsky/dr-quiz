@@ -45,12 +45,10 @@ export class TestDetailPage {
 
   readonly currentQuestion$ = this.#testStore.nextUnasweredQuestion;
   readonly currentAnswers$ = this.#testStore.nextUnasweredQuestionsAnswers;
-  showResults = false;
+  readonly lastQuestion$ = this.#testStore.previousQuestion;
+  readonly lastQuestionAnswers$ = this.#testStore.previousQuestionAnswers;
 
-  handleNextQuestion() {
-    this.showResults = false;
-    this.form.reset();
-  }
+  showResults = false; 
 
   constructor() {
     effect(() => {
@@ -91,5 +89,10 @@ export class TestDetailPage {
     }
 
     this.showResults = true;
+  }
+
+  handleNextQuestion() {
+    this.showResults = false;
+    this.form.reset();
   }
 }

@@ -160,10 +160,28 @@ export const TestStore = signalStore(
 
       return questions[answeredQuestions.length];
     }),
+
+    previousQuestion: computed(() => {
+      const test = state.selectedTest();
+      const answeredQuestions = test?.selectedAnswers || [];
+
+      questionStore.setQuizId(test?.quizId);
+      const questions = questionStore
+        .quizQuestions()
+        .sort((q1, q2) => (test?.questions.indexOf(q1.id) || 0) - (test?.questions.indexOf(q2.id) || 0));
+
+      const questionIndex = answeredQuestions.length > 0 ? answeredQuestions.length - 1 : 0;
+      return questions[questionIndex];
+    }),
   })),
   withComputed((state, answerStore = inject(AnswerStore)) => ({
     nextUnasweredQuestionsAnswers: computed(() => {
       const question = state.nextUnasweredQuestion();
+      return answerStore.getQuestionAnswers(question.id);
+    }), 
+
+    previousQuestionAnswers: computed(() => {
+      const question = state.previousQuestion();
       return answerStore.getQuestionAnswers(question.id);
     }),
   })),
