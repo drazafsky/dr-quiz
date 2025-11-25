@@ -2,55 +2,62 @@
   <div header>
     <app-toolbar>
       <div left>
-        @if (!showResults) {
+        @if (testCompleted()) {
+          <h1 class="text-2xl font-bold mb-4">Test Completed!</h1>
+        } @else if (!showResults) {
           <h1 class="text-2xl font-bold mb-4">{{ currentQuestion$().prompt }}</h1>
         } @else {
           <h1 class="text-2xl font-bold mb-4">{{ lastQuestion$().prompt }}</h1>
         }
       </div>
       <div right>
-        <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleSubmitAnswer()">Submit</button>
+        @if (!testCompleted()) {
+          <button type="button" class="mr-4" [disabled]="processing$()" (click)="handleSubmitAnswer()">Submit</button>
+        }
       </div>
     </app-toolbar>
   </div>
 
-  <div content>
-    <form [formGroup]="form">
-      @if (showResults) {
-        <fieldset>
-          @for (answer of lastQuestionAnswers$() || []; track answer.id) {
-            <div class="flex items-center space-x-2">
-              <span
-                class="font-bold px-2 py-1 rounded w-6"
-                [class.text-green-500]="answer.id === lastQuestion$().correctAnswer"
-                [class.text-red-500]="answer.id !== lastQuestion$().correctAnswer">
-                @if (answer.id === lastQuestion$().correctAnswer) {
-                  ✔
-                } @else {
-                  ✘
-                }
-              </span>
-              <span>{{ answer.value }}</span>
-            </div>
-          }
-        </fieldset>
-        <button type="button" class="mt-4" (click)="handleNextQuestion()">Next Question</button>
-      } @else {
-        <fieldset>
-          @for (answer of currentAnswers$() || []; track answer.id) {
-            <div>
-              <label>
-                <input type="radio" [value]="answer.id" formControlName="selectedAnswer" />
-                {{ answer.value }}
-              </label>
-            </div>
-          }
-        </fieldset>
-      }
-    </form>
+  <div content >
+    @if (testCompleted()) {
+      Score goes here
+    } @else {
+      <form [formGroup]="form">
+        @if (showResults) {
+          {{ lastQuestionSubmittedAnswer$() }}
+          <fieldset>
+            @for (answer of lastQuestionAnswers$() || []; track answer.id) {
+              <div class="flex items-center space-x-2">
+                <span class="font-bold px-2 py-1 rounded w-6">
+                  @if (answer.id === lastQuestion$().correctAnswer) {
+                    ✅
+                  } @else {
+                    ❌
+                  }
+                </span>
+                <span>{{ answer.value }}</span>
+              </div>
+            }
+          </fieldset>
+          <button type="button" class="mt-4" (click)="handleNextQuestion()">Next Question</button>
+        } @else {
+          <fieldset>
+            @for (answer of currentAnswers$() || []; track answer.id) {
+              <div>
+                <label>
+                  <input type="radio" [value]="answer.id" formControlName="selectedAnswer" />
+                  {{ answer.value }}
+                </label>
+              </div>
+            }
+          </fieldset>
+        }
+      </form>
+    }
   </div>
 
   <div footer>
+    <!--
     @if (processing$()) {
       <h3 class="alert">Saving...</h3>
     }
@@ -62,5 +69,6 @@
     @if (saveStatus$().error) {
       <h3 class="alert">An error occurred while saving the test. Please try again.</h3>
     }
+    -->
   </div>
 </app-card>

@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -44,9 +44,15 @@ export class TestDetailPage {
   readonly questions$ = this.#questionStore.quizQuestions;
 
   readonly currentQuestion$ = this.#testStore.nextUnasweredQuestion;
-  readonly currentAnswers$ = this.#testStore.nextUnasweredQuestionsAnswers;
+  readonly currentAnswers$ = this.#testStore.nextUnansweredQuestionsAnswers;
   readonly lastQuestion$ = this.#testStore.previousQuestion;
   readonly lastQuestionAnswers$ = this.#testStore.previousQuestionAnswers;
+  readonly lastQuestionSubmittedAnswer$ = this.#testStore.previousQuestionSubmittedAnswer;
+
+  readonly testCompleted = computed(() => {
+    const test = this.test$();
+    return test?.questions.length === test?.selectedAnswers.length;
+  });
 
   showResults = false; 
 
