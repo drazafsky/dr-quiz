@@ -9,7 +9,7 @@ import { UserRepo } from '../repos/user-repo';
 import { UserStore } from './user.store';
 
 type QuizState = {
-    quizzes: Quiz[];
+    allQuizzes: Quiz[];
     selectedQuizId: string | undefined;
     loading: boolean;
     save: {
@@ -19,7 +19,7 @@ type QuizState = {
 }
 
 const initialState: QuizState = {
-    quizzes: [],
+    allQuizzes: [],
     selectedQuizId: undefined,
     loading: false,
     save: {
@@ -33,7 +33,14 @@ export const QuizStore = signalStore(
     withMethods((state, quizRepo = inject(QuizRepo), userStore = inject(UserStore)) => {
         return {
             selectQuiz(selectedQuizId: string | undefined) {
-                patchState(state, { selectedQuizId });
+                const quiz = state.allQuizzes().find(q => q.id === selectedQuizId);
+                const userId = userStore.loggedInUser()?.id;
+
+                if (quiz?.userId === userId) {
+                    patchState(state, { selectedQuizId });
+                } else {
+                    patchState(state, { selectedQuizId: undefined });
+                }
             },
 
             saveQuiz(newQuiz: Quiz, ) {
@@ -57,21 +64,21 @@ export const QuizStore = signalStore(
 
                 newQuiz.id = newQuiz.id ? newQuiz.id : selectedQuizId;
 
-                const quizzes = state.quizzes();
-                const replaceIndex = quizzes.findIndex(eq => eq.id === newQuiz.id);
+                const allQuizzes = state.allQuizzes();
+                const replaceIndex = allQuizzes.findIndex(eq => eq.id === newQuiz.id);
 
                 if (replaceIndex > -1) {
                     const mergedQuizValues = {
-                        ...quizzes[replaceIndex],
+                        ...allQuizzes[replaceIndex],
                         ...newQuiz
                     };
-                    quizzes.splice(replaceIndex, 1, mergedQuizValues);
+                    allQuizzes.splice(replaceIndex, 1, mergedQuizValues);
                 } else {
-                    quizzes.push(newQuiz);
+                    allQuizzes.push(newQuiz);
                 }
 
-                patchState(state, { quizzes, selectedQuizId: newQuiz.id });
-                quizRepo.setItem(quizzes);
+                patchState(state, { allQuizzes, selectedQuizId: newQuiz.id });
+                quizRepo.setItem(allQuizzes);
 
                 // Simulate time taken by an API so that visual feedback can be given to the user
                 setTimeout(() => {
@@ -95,13 +102,13 @@ export const QuizStore = signalStore(
 
             deleteQuiz(quiz: Quiz) {
                 patchState(state, setLoading());
-                const quizIndex = state.quizzes().findIndex(eq => eq.id === quiz.id);
+                const quizIndex = state.allQuizzes().findIndex(eq => eq.id === quiz.id);
 
                 if (quizIndex > -1) {
-                    const quizzes = [...state.quizzes()];
-                    quizzes.splice(quizIndex, 1);
-                    patchState(state, { quizzes });
-                    quizRepo.setItem(state.quizzes());
+                    const allQuizzes = [...state.allQuizzes()];
+                    allQuizzes.splice(quizIndex, 1);
+                    patchState(state, { allQuizzes });
+                    quizRepo.setItem(state.allQuizzes());
                 }
 
                 // Simulate time taken by an API so that visual feedback can be given to the user
@@ -113,17 +120,17 @@ export const QuizStore = signalStore(
 
             publish(quiz: Quiz) {
                 patchState(state, setLoading());
-                const quizIndex = state.quizzes().findIndex(eq => eq.id === quiz.id);
+                const quizIndex = state.allQuizzes().findIndex(eq => eq.id === quiz.id);
 
                 if (quizIndex > -1) {
-                    const quizzes = [...state.quizzes()];
+                    const allQuizzes = [...state.allQuizzes()];
                     const updatedQuiz = {
-                        ...quizzes[quizIndex],
+                        ...allQuizzes[quizIndex],
                         isPublished: true,
                     };
-                    quizzes.splice(quizIndex, 1, updatedQuiz);
-                    patchState(state, { quizzes });
-                    quizRepo.setItem(state.quizzes());
+                    allQuizzes.splice(quizIndex, 1, updatedQuiz);
+                    patchState(state, { allQuizzes });
+                    quizRepo.setItem(state.allQuizzes());
                 }
 
                 // Simulate time taken by an API so that visual feedback can be given to the user
@@ -134,16 +141,24 @@ export const QuizStore = signalStore(
             },
         }
     }),
-    withComputed((state) => ({
-        publishedQuizzes: computed(() => state.quizzes().filter(quiz => quiz.isPublished)),
-        quizCount: computed(() => state.quizzes().length),
+    withComputed((state, userStore = inject(UserStore)) => ({
+        publishedQuizzes: computed(() => state.allQuizzes().filter(quiz => quiz.isPublished)),
+        quizCount: computed(() => state.allQuizzes().length),
         selectedQuiz: computed(() => {
             const selectedQuizId = state.selectedQuizId();
             if (!selectedQuizId || selectedQuizId?.toLowerCase() === 'create') {
                 return state.newQuiz();
             }
 
-            return state.quizzes().find(q => q.id === selectedQuizId);
+            return state.allQuizzes().find(q => q.id === selectedQuizId);
+        }),
+        quizzes: computed(() => {
+            const user = userStore.loggedInUser();
+            if (user === undefined) {
+                return [];
+            }
+
+            return state.allQuizzes().filter(quiz => quiz.userId === user.id);
         }),
     })),
     withHooks((state) => {
@@ -151,20 +166,20 @@ export const QuizStore = signalStore(
         return {
             onInit() {
                 patchState(state, setLoading());
-                const quizzes = quizRepo.getItem();
-                if (quizzes !== null) {
-                    patchState(state, { quizzes });
+                const allQuizzes = quizRepo.getItem();
+                if (allQuizzes !== null) {
+                    patchState(state, { allQuizzes });
                 } else {
-                    patchState(state, { quizzes: [] });
+                    patchState(state, { allQuizzes: [] });
                 }
                 patchState(state, stopLoading());
             },
 
             onDestroy() {
                 patchState(state, setLoading());
-                const quizzes = quizRepo.getItem();
-                if (quizzes !== null) {
-                    quizRepo.setItem(quizzes);
+                const allQuizzes = quizRepo.getItem();
+                if (allQuizzes !== null) {
+                    quizRepo.setItem(allQuizzes);
                 } else {
                     quizRepo.removeItem();
                 }
