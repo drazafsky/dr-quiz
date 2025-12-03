@@ -6,6 +6,7 @@ import { setLoading, stopLoading } from './loading-feature';
 import { QuestionStore } from './question.store';
 import { AnswerStore } from './answer.store';
 import { setSuccess } from './save-status-feature';
+import { UserStore } from './user.store';
 
 type TestState = {
   tests: Test[];
@@ -29,7 +30,7 @@ const initialState: TestState = {
 
 export const TestStore = signalStore(
   withState(initialState),
-  withMethods((state, testRepo = inject(TestRepo), questionStore = inject(QuestionStore)) => {
+  withMethods((state, testRepo = inject(TestRepo), questionStore = inject(QuestionStore), userStore = inject(UserStore)) => {
     return {
       selectTest(selectedTestId: string | undefined) {
         patchState(state, { selectedTestId });
@@ -42,6 +43,11 @@ export const TestStore = signalStore(
         const testIndex = state.tests().findIndex(test => test.id === newTest.id);
         if (testIndex === -1) {
           // New test
+          const userId = userStore.loggedInUser()?.id;
+          if (userId !== undefined) {
+              newTest.userId = userId;
+          }
+                    
           patchState(state, {
             tests: [...state.tests(), newTest],
             selectedTestId: newTest.id,
@@ -124,6 +130,7 @@ export const TestStore = signalStore(
               points: 0,
               percent: 0
             },
+            userId: ''
           };
 
           return test;

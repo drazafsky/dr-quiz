@@ -5,6 +5,8 @@ import { QuizRepo } from '../repos/quiz-repo';
 import { v4 as uuidv4 } from 'uuid';
 import { setLoading, stopLoading, withLoadingFeature } from './loading-feature';
 import { clearSaveStatus, setSuccess, withSaveStatusFeature } from './save-status-feature';
+import { UserRepo } from '../repos/user-repo';
+import { UserStore } from './user.store';
 
 type QuizState = {
     quizzes: Quiz[];
@@ -28,13 +30,13 @@ const initialState: QuizState = {
 
 export const QuizStore = signalStore(
     withState(initialState),
-    withMethods((state, quizRepo = inject(QuizRepo)) => {
+    withMethods((state, quizRepo = inject(QuizRepo), userStore = inject(UserStore)) => {
         return {
             selectQuiz(selectedQuizId: string | undefined) {
                 patchState(state, { selectedQuizId });
             },
 
-            saveQuiz(newQuiz: Quiz) {
+            saveQuiz(newQuiz: Quiz, ) {
                 patchState(state, setLoading());
                 patchState(state, clearSaveStatus());
 
@@ -46,6 +48,11 @@ export const QuizStore = signalStore(
                     || selectedQuizId === ''
                 ) {
                     selectedQuizId = uuidv4();
+
+                    const userId = userStore.loggedInUser()?.id;
+                    if (userId !== undefined) {
+                        newQuiz.userId = userId;
+                    }
                 }
 
                 newQuiz.id = newQuiz.id ? newQuiz.id : selectedQuizId;
@@ -75,6 +82,7 @@ export const QuizStore = signalStore(
 
             newQuiz() {
                 const quiz: Quiz = {
+                    userId: '',
                     title: '',
                     description: '',
                     timeLimit: 60,

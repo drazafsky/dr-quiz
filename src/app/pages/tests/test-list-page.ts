@@ -109,6 +109,7 @@ export class TestListPage {
               points: 0,
               percent: 0
             },
+            userId: ''
           };
 
           const quizWithQuestions: QuizWithRelatedQuestions = {

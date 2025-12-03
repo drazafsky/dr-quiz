@@ -1,0 +1,21 @@
+<app-card>
+    <div header>
+        <app-toolbar>
+            <div left>
+                <h3>Login</h3>
+            </div>
+            <div right>
+                <button (click)="handleLoginSubmit()">Login</button>
+            </div>
+        </app-toolbar>
+    </div>
+
+    <div content>
+        <form [formGroup]="form">
+            <div>
+                <label for="username">Username</label>
+                <input type="text" formControlName="username" />
+            </div>
+        </form>
+    </div>
+</app-card>
